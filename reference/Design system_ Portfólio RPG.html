@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design system: Portfólio RPG</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+:root{--bg:#efe3c8;--surface:#f9f0da;--ink:#2a1f3d;--mute:#5e5470;--line:#2a1f3d;--gold:#c98a0b;--on-gold:#1a1330;--mana:#2f6fd1;--ember:#c2412d;--forest:#2f8f5b;--royal:#6b3fa0;
+--px:"Press Start 2P","Courier New",monospace;--tx:"Source Sans 3",system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14122a;--surface:#221f42;--ink:#f4ecd6;--mute:#b3accb;--line:#f4ecd6;--gold:#f2b632;--mana:#6fa8ff;--ember:#ff6b57;--forest:#5fd394;--royal:#b394f2}}
+:root[data-theme="dark"]{--bg:#14122a;--surface:#221f42;--ink:#f4ecd6;--mute:#b3accb;--line:#f4ecd6;--gold:#f2b632;--mana:#6fa8ff;--ember:#ff6b57;--forest:#5fd394;--royal:#b394f2}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 18px/1.6 var(--tx)}
+main{max-width:960px;margin:0 auto;padding:40px 20px 56px}
+h1,h2,h3{font-family:var(--px);font-weight:400;line-height:1.5;margin:0}
+h1{font-size:clamp(1.1rem,5vw,1.7rem)}
+h2{font-size:1rem;margin:56px 0 16px;padding-bottom:10px;border-bottom:3px solid var(--line)}
+h3{font-size:.7rem;margin:24px 0 10px;color:var(--mute)}
+p{margin:8px 0 0;max-width:42em}
+.mute{color:var(--mute)}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+code,pre{font:14px/1.5 ui-monospace,Menlo,Consolas,monospace}
+pre{background:var(--surface);border:3px solid var(--line);padding:14px;overflow-x:auto;margin:12px 0 0}
+.sw i{display:block;height:48px;border:3px solid var(--line);box-shadow:4px 4px 0 var(--line)}
+.sw b{display:block;margin-top:10px;font:600 15px var(--tx)}.sw span{font-size:14px;color:var(--mute)}
+.btn{font:400 .7rem var(--px);padding:12px 16px;border:3px solid var(--line);background:var(--gold);color:var(--on-gold);box-shadow:4px 4px 0 var(--line);cursor:pointer;transition:transform .1s steps(2),box-shadow .1s steps(2)}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--line)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--line)}
+.btn.sec{background:var(--surface);color:var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:4px 4px 0 var(--line)}
+:focus-visible{outline:3px solid var(--mana);outline-offset:3px}
+.panel{background:var(--surface);border:3px solid var(--line);box-shadow:6px 6px 0 var(--line);padding:16px;max-width:420px}
+.panel h4{font:400 .7rem var(--px);margin:0 0 8px;color:var(--gold)}
+.panel p{margin:0;font-size:16px}
+.tag{display:inline-block;border:2px solid var(--line);background:var(--surface);padding:2px 8px;font:400 .6rem var(--px);margin:0 6px 6px 0}
+.bar{height:16px;border:3px solid var(--line);background:var(--surface);width:220px}
+.bar i{display:block;height:100%;background:var(--forest)}
+.obj{width:84px;height:84px;border:3px solid var(--line);background:var(--surface);display:grid;place-items:center;font:400 .55rem var(--px);text-align:center;cursor:pointer;transition:box-shadow .1s steps(2)}
+.obj.hv,.obj:hover{box-shadow:0 0 0 4px var(--gold)}
+.obj.sel{background:var(--gold);color:var(--on-gold);box-shadow:4px 4px 0 var(--line)}
+.hero{width:20px;height:20px;background:var(--gold);border:3px solid var(--line);box-shadow:0 8px 0 -2px rgba(0,0,0,.35)}
+.hud{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--surface);border:3px solid var(--line);padding:10px 14px;width:100%}
+.hud span{font:400 .65rem var(--px)}
+.chip{width:100%;height:12px;border:2px solid var(--line);margin-top:8px}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{border:2px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font:400 .6rem var(--px);background:var(--surface)}
+.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><div><h1>Design system<br>Portfólio RPG</h1><p class="mute">Pixel art de fantasia, com blocos de contorno grosso e sombras duras. Funciona em tema dia (pergaminho) e noite (masmorra).</p></div>
+<button class="btn sec" id="t" type="button">Alternar dia / noite</button></div>
+
+<h2>1. Princípios</h2>
+<div class="grid">
+<div class="panel"><h4>Jogo primeiro</h4><p>Tudo parece parte do mundo: bordas grossas, sombras sem desfoque.</p></div>
+<div class="panel"><h4>Legível sempre</h4><p>Fonte pixel só em títulos e rótulos curtos. Texto longo usa fonte comum.</p></div>
+<div class="panel"><h4>Sem barreiras</h4><p>Teclado, contraste alto e atalho para a versão simples.</p></div>
+</div>
+
+<h2>2. Cores</h2>
+<div class="grid">
+<div class="sw"><i style="background:var(--bg)"></i><b>Fundo</b><span>--bg · cenário</span></div>
+<div class="sw"><i style="background:var(--surface)"></i><b>Superfície</b><span>--surface · painéis</span></div>
+<div class="sw"><i style="background:var(--ink)"></i><b>Tinta</b><span>--ink · texto</span></div>
+<div class="sw"><i style="background:var(--mute)"></i><b>Tinta suave</b><span>--mute · apoio</span></div>
+<div class="sw"><i style="background:var(--gold)"></i><b>Ouro</b><span>--gold · ação e herói</span></div>
+<div class="sw"><i style="background:var(--mana)"></i><b>Mana</b><span>--mana · foco e links</span></div>
+<div class="sw"><i style="background:var(--ember)"></i><b>Brasa</b><span>--ember · alerta</span></div>
+<div class="sw"><i style="background:var(--forest)"></i><b>Floresta</b><span>--forest · concluído</span></div>
+<div class="sw"><i style="background:var(--royal)"></i><b>Realeza</b><span>--royal · aposentos</span></div>
+</div>
+<h3>Cor de cada sala</h3>
+<div class="grid">
+<div><b>Arsenal</b><div class="chip" style="background:var(--ember)"></div></div>
+<div><b>Laboratório</b><div class="chip" style="background:var(--mana)"></div></div>
+<div><b>Biblioteca</b><div class="chip" style="background:var(--forest)"></div></div>
+<div><b>Aposentos</b><div class="chip" style="background:var(--royal)"></div></div>
+<div><b>Sala do trono</b><div class="chip" style="background:var(--gold)"></div></div>
+</div>
+<p class="mute">Texto escuro (--on-gold) sobre ouro. Nunca use só a cor para transmitir informação: sempre acompanhe de texto ou ícone.</p>
+
+<h2>3. Tipografia</h2>
+<table>
+<tr><th>Uso</th><th>Fonte</th><th>Tamanho</th><th>Exemplo</th></tr>
+<tr><td>Título de tela</td><td>Press Start 2P</td><td>24–28 px</td><td style="font:400 1rem var(--px)">Arsenal</td></tr>
+<tr><td>Título de painel</td><td>Press Start 2P</td><td>11 px</td><td style="font:400 .7rem var(--px)">Espada: TypeScript</td></tr>
+<tr><td>Rótulo e botão</td><td>Press Start 2P</td><td>10–12 px</td><td style="font:400 .6rem var(--px)">VOLTAR AO MAPA</td></tr>
+<tr><td>Corpo</td><td>Source Sans 3</td><td>16–18 px</td><td>Aqui entram descrições e histórias.</td></tr>
+<tr><td>Código</td><td>Monoespaçada</td><td>14 px</td><td><code>npm run dev</code></td></tr>
+</table>
+<p class="mute">Altura de linha: 1,5 nos títulos pixel e 1,6 no corpo. Textos longos nunca em fonte pixel.</p>
+
+<h2>4. Espaçamento e grid</h2>
+<p>Base de 4 px. Escala: 4, 8, 16, 24, 32, 48. O mapa usa tiles de 32 px (em telas grandes, 48 px); o herói ocupa 1 tile e se move de tile em tile.</p>
+<pre>--space-1:4px; --space-2:8px; --space-3:16px;
+--space-4:24px; --space-5:32px; --space-6:48px;
+--border:3px; --shadow:4px 4px 0 var(--line); --tile:32px;</pre>
+
+<h2>5. Componentes</h2>
+<h3>Botões</h3>
+<div class="row"><button class="btn" type="button">Entrar</button><button class="btn sec" type="button">Pular o jogo</button><button class="btn" type="button" disabled>Bloqueado</button></div>
+<p class="mute">Passe o mouse, clique e use Tab para ver os estados de hover, pressionado e foco.</p>
+
+<h3>Barra da sala (HUD)</h3>
+<div class="hud"><span>Mapa ▸ Arsenal</span><button class="btn sec" type="button">← Voltar</button></div>
+
+<h3>Painel de diálogo</h3>
+<div class="panel"><h4>Espada: TypeScript</h4><p>Minha arma principal. Usei em 6 projetos, inclusive neste castelo.</p><div style="margin-top:12px"><span class="tag">React</span><span class="tag">Node.js</span></div></div>
+
+<h3>Objeto clicável e herói</h3>
+<div class="row" style="align-items:center">
+<div class="obj">Normal</div><div class="obj hv">Hover</div><div class="obj sel">Ativo</div>
+<div style="text-align:center"><div class="hero" style="margin:0 auto 14px"></div><span class="mute" style="font-size:14px">Herói (1 tile)</span></div>
+</div>
+
+<h3>Barra de nível</h3>
+<div class="row" style="align-items:center"><div class="bar" role="img" aria-label="TypeScript, nível 80 de 100"><i style="width:80%"></i></div><span>TypeScript 80%</span></div>
+
+<h2>6. Movimento</h2>
+<table>
+<tr><th>Ação</th><th>Duração</th><th>Curva</th></tr>
+<tr><td>Herói anda um tile</td><td>120 ms</td><td>linear</td></tr>
+<tr><td>Aproximar a câmera na sala</td><td>400 ms</td><td>ease-out</td></tr>
+<tr><td>Abrir painel</td><td>160 ms</td><td>steps(4), efeito pixel</td></tr>
+<tr><td>Hover e clique</td><td>100 ms</td><td>steps(2)</td></tr>
+</table>
+<p class="mute">Com prefers-reduced-motion ativo, o herói vai direto ao destino e a câmera troca de tela sem animação.</p>
+
+<h2>7. Acessibilidade</h2>
+<table>
+<tr><th>Regra</th><th>Como aplicar</th></tr>
+<tr><td>Contraste</td><td>Mínimo de 4,5:1 no texto, nos dois temas.</td></tr>
+<tr><td>Teclado</td><td>Setas movem o herói, Enter interage, Esc volta ao mapa.</td></tr>
+<tr><td>Foco</td><td>Contorno de 3 px na cor mana, sempre visível.</td></tr>
+<tr><td>Leitor de tela</td><td>Cada sala e objeto tem rótulo de texto (aria-label).</td></tr>
+<tr><td>Alternativa</td><td>"Pular o jogo" sempre visível na tela inicial.</td></tr>
+</table>
+</main>
+<script>
+document.getElementById("t").onclick=function(){var r=document.documentElement,d=r.getAttribute("data-theme");
+if(!d)d=matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";r.setAttribute("data-theme",d==="dark"?"light":"dark")}
+</script>
+</body>
+</html>
