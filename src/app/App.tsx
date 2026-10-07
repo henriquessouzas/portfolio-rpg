@@ -1,3 +1,5 @@
+import { CastleScreen } from '@/screens/CastleScreen';
+
 export default function App() {
-  return <h1>Castle Portfolio</h1>;
+  return <CastleScreen onEnter={() => {}} onSkip={() => {}} />;
 }
