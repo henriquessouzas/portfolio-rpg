@@ -1,0 +1,13 @@
+.panel {
+  background: var(--surface);
+  border: var(--border) solid var(--line);
+  box-shadow: 6px 6px 0 var(--line);
+  padding: var(--space-3);
+}
+
+.title {
+  font: 400 0.7rem var(--px);
+  margin: 0 0 8px;
+  color: var(--gold);
+  line-height: 1.5;
+}
