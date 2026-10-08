@@ -1,0 +1,106 @@
+.scene {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-3);
+  background: color-mix(in srgb, var(--forest) 8%, var(--bg));
+}
+
+/* ── Bookshelf ── */
+.shelf {
+  width: 100%;
+  max-width: 640px;
+  aspect-ratio: 16 / 10;
+  background: #5c3a1e; /* wood — fixed, theme-independent */
+  border: var(--border) solid var(--line);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  gap: 6px;
+  position: relative;
+}
+
+/* ── Row (one per category) ── */
+.row {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rowLabel {
+  font: 400 0.5rem var(--px);
+  color: #f5deb3; /* wheat — readable on dark wood */
+  margin-bottom: 4px;
+  line-height: 1;
+}
+
+.books {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  background: #3e2510;
+  border: 2px solid #2a1a0a;
+  padding: 4px 6px 0;
+}
+
+/* ── Individual book ── */
+.book {
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font: 400 0.45rem var(--px);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 2px;
+  width: 22px;
+  transition:
+    transform 0.15s steps(2),
+    box-shadow 0.15s steps(2);
+  /* height set inline per book */
+}
+
+.book:hover,
+.book:focus-visible {
+  transform: translateY(-8px);
+  box-shadow: 0 0 0 2px var(--gold);
+  outline: none;
+}
+
+.book.active {
+  transform: translateY(-8px);
+  box-shadow: 0 0 0 3px var(--gold);
+}
+
+/* ── Hero on floor ── */
+.floor {
+  width: 100%;
+  max-width: 640px;
+  height: 40px;
+  position: relative;
+}
+
+.hero {
+  position: absolute;
+  bottom: 4px;
+  width: 20px;
+  height: 20px;
+  background: var(--gold);
+  border: 2px solid var(--line);
+  box-shadow: 0 6px 0 -2px rgba(0, 0, 0, 0.35);
+  transition: left 300ms linear;
+  transform: translateX(-50%);
+}
+
+/* ── Detail panel ── */
+.panel {
+  width: 100%;
+  max-width: 640px;
+}
