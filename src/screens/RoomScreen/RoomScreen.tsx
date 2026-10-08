@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Hud } from '@/components/ui';
 import { rooms } from '@/content/rooms';
+import { LibraryScene } from '@/features/rooms/LibraryScene';
 import { RoomStage } from '@/features/rooms/RoomStage';
 import type { RoomKey } from '@/types/room';
 import styles from './RoomScreen.module.css';
@@ -24,7 +25,11 @@ export function RoomScreen({ roomKey, onBack }: RoomScreenProps) {
   return (
     <div className={styles.screen}>
       <Hud label={`Mapa ▸ ${room.name}`} onBack={onBack} />
-      <RoomStage room={room} autoSelect={roomKey === 'throne'} />
+      {roomKey === 'library' ? (
+        <LibraryScene />
+      ) : (
+        <RoomStage room={room} autoSelect={roomKey === 'throne'} />
+      )}
     </div>
   );
 }
