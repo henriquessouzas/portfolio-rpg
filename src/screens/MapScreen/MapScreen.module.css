@@ -1,0 +1,139 @@
+.screen {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+}
+
+.mapWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  overflow: hidden;
+}
+
+/* Zoom container — transform-origin set inline per room */
+.mapZoom {
+  transition: transform 450ms ease-out;
+  transform: scale(1);
+}
+
+.mapZoom.zoomed {
+  transform: scale(2.4);
+}
+
+/* Grid: 13 cols × 11 rows */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(13, var(--tile));
+  grid-template-rows: repeat(11, var(--tile));
+  position: relative;
+  border: var(--border) solid var(--line);
+}
+
+/* ── Tile types ── */
+.tile {
+  width: var(--tile);
+  height: var(--tile);
+}
+
+.tileWall {
+  background: color-mix(in srgb, var(--ink) 80%, var(--surface));
+}
+
+.tileFloor {
+  background: color-mix(in srgb, var(--bg) 60%, var(--surface));
+}
+
+.tileDoor {
+  background: color-mix(in srgb, var(--gold) 40%, var(--surface));
+}
+
+.tileEntrance {
+  background: color-mix(in srgb, var(--gold) 25%, var(--bg));
+}
+
+.tilePatio {
+  background: color-mix(in srgb, var(--bg) 40%, var(--surface));
+}
+
+.tileLibrary {
+  background: color-mix(in srgb, var(--forest) 20%, var(--surface));
+}
+
+.tileThrone {
+  background: color-mix(in srgb, var(--gold) 20%, var(--surface));
+}
+
+.tileQuarters {
+  background: color-mix(in srgb, var(--royal) 20%, var(--surface));
+}
+
+.tileArmory {
+  background: color-mix(in srgb, var(--ember) 20%, var(--surface));
+}
+
+.tileLab {
+  background: color-mix(in srgb, var(--mana) 20%, var(--surface));
+}
+
+/* ── Room buttons ── */
+.roomBtn {
+  position: absolute;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: 400 0.55rem var(--px);
+  color: var(--ink);
+  line-height: 1.4;
+  text-align: center;
+  /* covers the 3×3 room tile area */
+  width: calc(var(--tile) * 3);
+  height: calc(var(--tile) * 3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roomBtn:hover {
+  color: var(--gold);
+}
+
+.roomBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* ── Hero ── */
+.hero {
+  position: absolute;
+  width: var(--tile);
+  height: var(--tile);
+  background: var(--gold);
+  border: 2px solid var(--line);
+  box-shadow: 0 4px 0 -1px rgba(0, 0, 0, 0.4);
+  transition:
+    left 120ms linear,
+    top 120ms linear;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* ── Decorations ── */
+.decoration {
+  position: absolute;
+  width: var(--tile);
+  height: var(--tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  pointer-events: none;
+}
