@@ -18,6 +18,7 @@ type MapScreenProps = {
   onHeroMove: (pos: Pos) => void;
   onSelectRoom: (room: RoomKey) => void;
   onExit: () => void;
+  focusRef?: React.RefObject<HTMLElement | null>;
 };
 
 /** Map tile letter → CSS module class */
@@ -46,7 +47,7 @@ const ROOM_ORIGINS: Record<RoomKey, Pos> = {
   lab:      { x: 9, y: 7 },
 };
 
-export function MapScreen({ heroPos, onHeroMove, onSelectRoom, onExit }: MapScreenProps) {
+export function MapScreen({ heroPos, onHeroMove, onSelectRoom, onExit, focusRef }: MapScreenProps) {
   const { walking, walkTo } = useHeroWalk({ pos: heroPos, onMove: onHeroMove });
   const [zoomedRoom, setZoomedRoom] = useState<RoomKey | null>(null);
   const zoomRef = useRef<HTMLDivElement>(null);
@@ -77,7 +78,7 @@ export function MapScreen({ heroPos, onHeroMove, onSelectRoom, onExit }: MapScre
 
   return (
     <div className={styles.screen}>
-      <Hud label="Castelo ▸ Mapa" onBack={onExit} />
+      <Hud label="Castelo ▸ Mapa" onBack={onExit} focusRef={focusRef} />
 
       <div className={styles.mapWrapper}>
         <div

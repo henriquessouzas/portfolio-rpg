@@ -8,11 +8,12 @@ import { CastleSvg } from './CastleSvg';
 type CastleScreenProps = {
   onEnter: () => void;
   onSkip: () => void;
+  focusRef?: React.RefObject<HTMLElement | null>;
 };
 
 type Phase = 'idle' | 'zooming' | 'opening' | 'done';
 
-export function CastleScreen({ onEnter, onSkip }: CastleScreenProps) {
+export function CastleScreen({ onEnter, onSkip, focusRef }: CastleScreenProps) {
   const reduced = useReducedMotion();
   const [phase, setPhase] = useState<Phase>('idle');
 
@@ -39,7 +40,13 @@ export function CastleScreen({ onEnter, onSkip }: CastleScreenProps) {
   return (
     <div className={styles.screen}>
       <header className={styles.header}>
-        <h1 className={styles.name}>{profile.name}</h1>
+        <h1
+          className={styles.name}
+          tabIndex={-1}
+          ref={(el) => { if (focusRef) focusRef.current = el; }}
+        >
+          {profile.name}
+        </h1>
         <Button variant="secondary" onClick={onSkip} aria-label="Pular o jogo e ver versão simples">
           Pular o jogo
         </Button>

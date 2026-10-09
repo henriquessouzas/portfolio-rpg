@@ -9,9 +9,10 @@ import styles from './RoomScreen.module.css';
 type RoomScreenProps = {
   roomKey: RoomKey;
   onBack: () => void;
+  focusRef?: React.RefObject<HTMLElement | null>;
 };
 
-export function RoomScreen({ roomKey, onBack }: RoomScreenProps) {
+export function RoomScreen({ roomKey, onBack, focusRef }: RoomScreenProps) {
   const room = rooms.find((r) => r.key === roomKey)!;
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export function RoomScreen({ roomKey, onBack }: RoomScreenProps) {
 
   return (
     <div className={styles.screen}>
-      <Hud label={`Mapa ▸ ${room.name}`} onBack={onBack} />
+      <Hud label={`Mapa ▸ ${room.name}`} onBack={onBack} focusRef={focusRef} />
       {roomKey === 'library' ? (
         <LibraryScene />
       ) : (
