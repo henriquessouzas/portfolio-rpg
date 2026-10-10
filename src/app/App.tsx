@@ -2,6 +2,7 @@ import { useEffect, useReducer, useRef } from 'react';
 import { CastleScreen } from '@/screens/CastleScreen';
 import { MapScreen } from '@/screens/MapScreen';
 import { RoomScreen } from '@/screens/RoomScreen';
+import { SimpleScreen } from '@/screens/SimpleScreen';
 import { initialState, navReducer } from './navReducer';
 
 export default function App() {
@@ -12,6 +13,12 @@ export default function App() {
   useEffect(() => {
     focusTargetRef.current?.focus();
   }, [state.screen]);
+
+  if (state.screen === 'simple') {
+    return (
+      <SimpleScreen onBack={() => dispatch({ type: 'closeSimple' })} />
+    );
+  }
 
   if (state.screen === 'room' && state.room) {
     return (
