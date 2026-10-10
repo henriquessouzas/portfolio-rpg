@@ -1,5 +1,4 @@
 .scene {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,20 +11,21 @@
 .shelf {
   width: 100%;
   max-width: 640px;
-  aspect-ratio: 16 / 10;
-  background: #5c3a1e; /* wood — fixed, theme-independent */
+  height: 70vh;
+  background: #5c3a1e;
   border: var(--border) solid var(--line);
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
   padding: 8px 12px;
   gap: 6px;
-  position: relative;
+  overflow: hidden;
 }
 
 /* ── Row (one per category) ── */
 .row {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -33,13 +33,15 @@
 
 .rowLabel {
   font: 400 0.5rem var(--px);
-  color: #f5deb3; /* wheat — readable on dark wood */
-  margin-bottom: 4px;
+  color: #f5deb3;
+  margin-bottom: 3px;
   line-height: 1;
+  flex-shrink: 0;
 }
 
 .books {
   flex: 1;
+  min-height: 0;
   display: flex;
   align-items: flex-end;
   gap: 3px;
