@@ -12,6 +12,12 @@ dist
 dist-ssr
 *.local
 
+# Kit source (not part of the project)
+kit-portagem/
+
+# Stray lib folder at root
+/lib/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
