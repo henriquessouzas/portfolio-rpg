@@ -22,8 +22,8 @@ import {
 import { CLR } from './palette';
 
 const ROOM_IDS = Object.keys(ROOM_BOUNDS) as PlanRoomId[];
-const FLOORS = ['floor-tile', 'floor-hover', 'floor-active'] as const;
-const TILE = (id: (typeof FLOORS)[number], fill: string, line: string, edge: string) => (
+type FloorTileId = 'floor-tile' | 'floor-hover' | 'floor-active';
+const TILE = (id: FloorTileId, fill: string, line: string, edge: string) => (
   <pattern id={id} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
     <rect width="20" height="20" fill={fill} />
     <rect x=".5" y=".5" width="9" height="9" fill={fill} stroke={line} strokeWidth=".6" />

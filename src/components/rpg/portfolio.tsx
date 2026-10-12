@@ -84,6 +84,7 @@ export default function Portfolio() {
     query.addEventListener('change', update);
     return () => {
       query.removeEventListener('change', update);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       operation.current++;
     };
   }, []);
