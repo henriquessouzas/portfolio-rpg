@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   CASTLE_H,
   CASTLE_W,
@@ -10,7 +10,7 @@ import {
   ROOM_BOUNDS,
   WALL,
   type PlanRoomId,
-} from "@/lib/castle-plan";
+} from '@/lib/castle-plan';
 import {
   ArsenalFurnishings,
   HallFurnishings,
@@ -18,11 +18,11 @@ import {
   LibraryFurnishings,
   QuartersFurnishings,
   ThroneFurnishings,
-} from "./room-furnishings";
-import { CLR } from "./palette";
+} from './room-furnishings';
+import { CLR } from './palette';
 
 const ROOM_IDS = Object.keys(ROOM_BOUNDS) as PlanRoomId[];
-const FLOORS = ["floor-tile", "floor-hover", "floor-active"] as const;
+const FLOORS = ['floor-tile', 'floor-hover', 'floor-active'] as const;
 const TILE = (id: (typeof FLOORS)[number], fill: string, line: string, edge: string) => (
   <pattern id={id} x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
     <rect width="20" height="20" fill={fill} />
@@ -75,8 +75,8 @@ function RoomLabel({
         width={92}
         height={22}
         rx="2"
-        fill={active ? "#1e1a0e" : "#14110a"}
-        stroke={active ? CLR.gold : hovered ? CLR.goldDim : "#2a2010"}
+        fill={active ? '#1e1a0e' : '#14110a'}
+        stroke={active ? CLR.gold : hovered ? CLR.goldDim : '#2a2010'}
         strokeWidth={active ? 1.2 : 0.7}
         opacity=".92"
       />
@@ -86,8 +86,8 @@ function RoomLabel({
         x={visited ? 4 : 0}
         y={3}
         fontSize="6.5"
-        style={{ fontFamily: "var(--font-pixel), serif" }}
-        fill={active ? CLR.gold : hovered ? CLR.goldDim : "#9a8a6a"}
+        style={{ fontFamily: 'var(--font-pixel), serif' }}
+        fill={active ? CLR.gold : hovered ? CLR.goldDim : '#9a8a6a'}
       >
         {name.toUpperCase()}
       </text>
@@ -115,11 +115,11 @@ export function CastleMap({
   const highlight = hovered ?? focusRoom;
   const floorFor = (id: PlanRoomId) =>
     activeRoom === id
-      ? "url(#floor-active)"
+      ? 'url(#floor-active)'
       : highlight === id
-        ? "url(#floor-hover)"
-        : "url(#floor-tile)";
-  const [gx, gy, gw] = DOORS["GATE"] ?? [0, 0, 0];
+        ? 'url(#floor-hover)'
+        : 'url(#floor-tile)';
+  const [gx, gy, gw] = DOORS['GATE'] ?? [0, 0, 0];
   const towers = [
     [CX0 - 6, CY0 - 6],
     [CX0 + CASTLE_W - 20, CY0 - 6],
@@ -142,9 +142,9 @@ export function CastleMap({
             opacity=".6"
           />
         </pattern>
-        {TILE("floor-tile", CLR.floor, CLR.floorLine, CLR.floorLine)}
-        {TILE("floor-hover", CLR.floorHover, "#312818", "#2d2514")}
-        {TILE("floor-active", CLR.floorActive, "#3a2e18", "#342a16")}
+        {TILE('floor-tile', CLR.floor, CLR.floorLine, CLR.floorLine)}
+        {TILE('floor-hover', CLR.floorHover, '#312818', '#2d2514')}
+        {TILE('floor-active', CLR.floorActive, '#3a2e18', '#342a16')}
         <radialGradient id="void-fade" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor="#0d0a08" stopOpacity="0" />
           <stop offset="100%" stopColor="#060402" stopOpacity=".38" />
@@ -203,10 +203,10 @@ export function CastleMap({
             width={w}
             height={h}
             fill={floorFor(id)}
-            style={{ cursor: id === "H" ? "default" : "pointer", transition: "fill .25s ease" }}
-            onMouseEnter={() => id !== "H" && setHovered(id)}
+            style={{ cursor: id === 'H' ? 'default' : 'pointer', transition: 'fill .25s ease' }}
+            onMouseEnter={() => id !== 'H' && setHovered(id)}
             onMouseLeave={() => setHovered(null)}
-            onClick={() => id !== "H" && onSelectRoom?.(id)}
+            onClick={() => id !== 'H' && onSelectRoom?.(id)}
           />
         );
       })}
@@ -221,7 +221,7 @@ export function CastleMap({
       <HallFurnishings />
       <QuartersFurnishings />
 
-      {ROOM_IDS.filter((id) => id !== "H" && (activeRoom === id || highlight === id)).map((id) => {
+      {ROOM_IDS.filter((id) => id !== 'H' && (activeRoom === id || highlight === id)).map((id) => {
         const [x, y, w, h] = ROOM_BOUNDS[id];
         return (
           <rect
@@ -231,10 +231,10 @@ export function CastleMap({
             width={w + 2}
             height={h + 2}
             fill="none"
-            stroke={activeRoom === id ? CLR.gold : "#5a4a28"}
+            stroke={activeRoom === id ? CLR.gold : '#5a4a28'}
             strokeWidth={activeRoom === id ? 1.8 : 0.8}
             opacity={activeRoom === id ? 0.7 : 0.5}
-            filter={activeRoom === id ? "url(#glow-gold)" : undefined}
+            filter={activeRoom === id ? 'url(#glow-gold)' : undefined}
             pointerEvents="none"
           />
         );
@@ -260,7 +260,7 @@ export function CastleMap({
         x={CX0 + 8}
         y={MAP_HEIGHT - 6}
         fontSize="6"
-        style={{ fontFamily: "var(--font-pixel), serif" }}
+        style={{ fontFamily: 'var(--font-pixel), serif' }}
         fill="#6a5a3a"
         opacity=".6"
       >

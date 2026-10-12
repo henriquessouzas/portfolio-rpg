@@ -30,43 +30,95 @@ export function WindScene({ reducedMotion }: { reducedMotion: boolean }) {
   useEffect(() => {
     const element = canvas.current;
     if (!element || reducedMotion) return;
-    const gl = element.getContext('webgl', { alpha:false, antialias:false });
+    const gl = element.getContext('webgl', { alpha: false, antialias: false });
     if (!gl) return;
-    let frame = 0, cancelled = false;
-    const compile = (type:number, source:string) => {
+    let frame = 0,
+      cancelled = false;
+    const compile = (type: number, source: string) => {
       const shader = gl.createShader(type);
       if (!shader) return null;
-      gl.shaderSource(shader,source);gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader,gl.COMPILE_STATUS)) {gl.deleteShader(shader);return null;}
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        gl.deleteShader(shader);
+        return null;
+      }
       return shader;
     };
-    const vertex=compile(gl.VERTEX_SHADER,'attribute vec2 position;varying vec2 uv;void main(){uv=vec2((position.x+1.0)/2.0,(1.0-position.y)/2.0);gl_Position=vec4(position,0.0,1.0);}');
-    const frag=compile(gl.FRAGMENT_SHADER,fragment);
-    const program=gl.createProgram();
-    if(!vertex||!frag||!program) return;
-    gl.attachShader(program,vertex);gl.attachShader(program,frag);gl.linkProgram(program);
-    if(!gl.getProgramParameter(program,gl.LINK_STATUS)) return;
+    const vertex = compile(
+      gl.VERTEX_SHADER,
+      'attribute vec2 position;varying vec2 uv;void main(){uv=vec2((position.x+1.0)/2.0,(1.0-position.y)/2.0);gl_Position=vec4(position,0.0,1.0);}',
+    );
+    const frag = compile(gl.FRAGMENT_SHADER, fragment);
+    const program = gl.createProgram();
+    if (!vertex || !frag || !program) return;
+    gl.attachShader(program, vertex);
+    gl.attachShader(program, frag);
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return;
     gl.useProgram(program);
-    const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);
-    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);
-    const position=gl.getAttribLocation(program,'position');gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0);
-    const texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,texture);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
-    const hideCanvas=()=>{delete element.dataset['ready'];cancelAnimationFrame(frame);};
-    element.addEventListener('webglcontextlost',hideCanvas);
-    const image=new Image();
-    image.onload=()=>{
-      if(cancelled) return;
-      element.width=image.naturalWidth;element.height=image.naturalHeight;
-      gl.viewport(0,0,element.width,element.height);
-      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,image);
-      const time=gl.getUniformLocation(program,'time');
-      const draw=(now:number)=>{if(cancelled)return;gl.uniform1f(time,now/1000);gl.drawArrays(gl.TRIANGLES,0,6);element.dataset['ready']='true';frame=requestAnimationFrame(draw);};
-      frame=requestAnimationFrame(draw);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(
+      gl.ARRAY_BUFFER,
+      new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+      gl.STATIC_DRAW,
+    );
+    const position = gl.getAttribLocation(program, 'position');
+    gl.enableVertexAttribArray(position);
+    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    const hideCanvas = () => {
+      delete element.dataset['ready'];
+      cancelAnimationFrame(frame);
     };
-    image.src=castleImage;
-    return ()=>{cancelled=true;image.onload=null;element.removeEventListener('webglcontextlost',hideCanvas);cancelAnimationFrame(frame);delete element.dataset['ready'];gl.deleteTexture(texture);gl.deleteBuffer(buffer);gl.deleteProgram(program);gl.deleteShader(vertex);gl.deleteShader(frag);};
-  },[reducedMotion]);
-  return <span className="wind-scene"><img src={castleImage} alt="Castelo de pedra com torres vermelhas, cercado por montanhas e um fosso azul" width="1536" height="1024" fetchPriority="high"/><canvas ref={canvas} aria-hidden="true" className="wind-canvas"/></span>;
+    element.addEventListener('webglcontextlost', hideCanvas);
+    const image = new Image();
+    image.onload = () => {
+      if (cancelled) return;
+      element.width = image.naturalWidth;
+      element.height = image.naturalHeight;
+      gl.viewport(0, 0, element.width, element.height);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      const time = gl.getUniformLocation(program, 'time');
+      const draw = (now: number) => {
+        if (cancelled) return;
+        gl.uniform1f(time, now / 1000);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+        element.dataset['ready'] = 'true';
+        frame = requestAnimationFrame(draw);
+      };
+      frame = requestAnimationFrame(draw);
+    };
+    image.src = castleImage;
+    return () => {
+      cancelled = true;
+      image.onload = null;
+      element.removeEventListener('webglcontextlost', hideCanvas);
+      cancelAnimationFrame(frame);
+      delete element.dataset['ready'];
+      gl.deleteTexture(texture);
+      gl.deleteBuffer(buffer);
+      gl.deleteProgram(program);
+      gl.deleteShader(vertex);
+      gl.deleteShader(frag);
+    };
+  }, [reducedMotion]);
+  return (
+    <span className="wind-scene">
+      <img
+        src={castleImage}
+        alt="Castelo de pedra com torres vermelhas, cercado por montanhas e um fosso azul"
+        width="1536"
+        height="1024"
+        fetchPriority="high"
+      />
+      <canvas ref={canvas} aria-hidden="true" className="wind-canvas" />
+    </span>
+  );
 }

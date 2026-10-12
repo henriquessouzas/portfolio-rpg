@@ -1,4 +1,4 @@
-import { ROOM_BOUNDS } from "@/lib/castle-plan";
+import { ROOM_BOUNDS } from '@/lib/castle-plan';
 import {
   ArmorStand,
   Banner,
@@ -17,8 +17,8 @@ import {
   Throne,
   WallTorch,
   WeaponRack,
-} from "./furniture";
-import { CLR } from "./palette";
+} from './furniture';
+import { CLR } from './palette';
 
 /* Uma peça de componente por sala: cada uma recebe só a posição da sala. */
 

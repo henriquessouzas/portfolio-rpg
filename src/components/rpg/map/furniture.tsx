@@ -1,4 +1,4 @@
-import { BOOK_COLORS, CLR } from "./palette";
+import { BOOK_COLORS, CLR } from './palette';
 
 /* Peças reutilizáveis das salas (vista de cima). */
 

@@ -1,7 +1,7 @@
-import type { Point, RoomId } from "./portfolio-data";
+import type { Point, RoomId } from './portfolio-data';
 
 /** Planta do castelo (coordenadas do SVG 640x520). Hall = entrada. */
-export type PlanRoomId = RoomId | "H";
+export type PlanRoomId = RoomId | 'H';
 type Rect = readonly [x: number, y: number, w: number, h: number];
 
 export const MAP_WIDTH = 640;
@@ -83,21 +83,21 @@ const nodes: Record<string, Point> = {
   ...Object.fromEntries(Object.entries(DOORS).map(([id, r]) => [`d${id}`, center(r)])),
 };
 const edges: [string, string][] = [
-  ["B", "dBT"],
-  ["dBT", "T"],
-  ["T", "dTL"],
-  ["dTL", "L"],
-  ["B", "dBR"],
-  ["dBR", "R"],
-  ["T", "dTH"],
-  ["dTH", "H"],
-  ["L", "dLA"],
-  ["dLA", "A"],
-  ["R", "dRH"],
-  ["dRH", "H"],
-  ["H", "dHA"],
-  ["dHA", "A"],
-  ["H", "dGATE"],
+  ['B', 'dBT'],
+  ['dBT', 'T'],
+  ['T', 'dTL'],
+  ['dTL', 'L'],
+  ['B', 'dBR'],
+  ['dBR', 'R'],
+  ['T', 'dTH'],
+  ['dTH', 'H'],
+  ['L', 'dLA'],
+  ['dLA', 'A'],
+  ['R', 'dRH'],
+  ['dRH', 'H'],
+  ['H', 'dHA'],
+  ['dHA', 'A'],
+  ['H', 'dGATE'],
 ];
 const dist = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 
@@ -131,7 +131,7 @@ function nodePath(from: string, to: string): string[] {
   }
   const path = [to];
   while (path[0] !== from) {
-    const before = prev.get(path[0] ?? "");
+    const before = prev.get(path[0] ?? '');
     if (!before) return [];
     path.unshift(before);
   }

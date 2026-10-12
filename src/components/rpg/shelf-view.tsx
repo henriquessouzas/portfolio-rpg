@@ -1,7 +1,7 @@
-import type { CSSProperties } from "react";
-import { X } from "lucide-react";
-import { Button } from "@/components/rpg/ui/button";
-import type { Artifact, Book } from "@/lib/portfolio-data";
+import type { CSSProperties } from 'react';
+import { X } from 'lucide-react';
+import { Button } from '@/components/rpg/ui/button';
+import type { Artifact, Book } from '@/lib/portfolio-data';
 
 const ROW_SIZE = 4;
 const chunk = <T,>(items: T[], size: number): T[][] =>
@@ -41,12 +41,12 @@ export function ShelfView({
               {row.map((b) => {
                 const i = index++;
                 const open = book?.title === b.title;
-                const style = { "--h": `${62 + ((i * 37) % 34)}%` } as CSSProperties;
+                const style = { '--h': `${62 + ((i * 37) % 34)}%` } as CSSProperties;
                 return (
                   <button
                     type="button"
                     key={b.title}
-                    className={`book book-${b.color} ${open ? "book-open" : ""}`}
+                    className={`book book-${b.color} ${open ? 'book-open' : ''}`}
                     style={style}
                     aria-pressed={open}
                     aria-label={`${b.title}, ${b.subtitle}`}

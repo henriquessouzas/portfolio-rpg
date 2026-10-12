@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { castleMap, castleNavigationGrid, castleObstacles, entrance, findPath, rooms } from './portfolio-data';
+import {
+  castleMap,
+  castleNavigationGrid,
+  castleObstacles,
+  entrance,
+  findPath,
+  rooms,
+} from './portfolio-data';
 
 describe('castle pathfinding', () => {
   it('reaches every room from the entrance without crossing walls', () => {
@@ -15,15 +22,21 @@ describe('castle pathfinding', () => {
     }
   });
   it('connects every pair of rooms', () => {
-    rooms.forEach(a => rooms.forEach(b => expect(findPath(a.destination, b.destination).at(-1)).toEqual(b.destination)));
+    rooms.forEach((a) =>
+      rooms.forEach((b) =>
+        expect(findPath(a.destination, b.destination).at(-1)).toEqual(b.destination),
+      ),
+    );
   });
   it('walks around the courtyard fountain on every route', () => {
-    for (const start of [entrance, ...rooms.map(room => room.destination)]) {
+    for (const start of [entrance, ...rooms.map((room) => room.destination)]) {
       for (const room of rooms) {
         const path = findPath(start, room.destination);
         expect(path.at(-1)).toEqual(room.destination);
-        path.forEach(tile => expect(castleNavigationGrid[tile.y]?.[tile.x]).not.toBe('#'));
-        expect(path.some(tile => castleObstacles.some(p => p.x === tile.x && p.y === tile.y))).toBe(false);
+        path.forEach((tile) => expect(castleNavigationGrid[tile.y]?.[tile.x]).not.toBe('#'));
+        expect(
+          path.some((tile) => castleObstacles.some((p) => p.x === tile.x && p.y === tile.y)),
+        ).toBe(false);
       }
     }
   });
