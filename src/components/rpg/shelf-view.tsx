@@ -144,6 +144,19 @@ function formatBookDate(value?: string): string {
   return parsed.toLocaleDateString('pt-BR');
 }
 
+function isGitHubUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value);
+    return parsed.hostname === 'github.com' || parsed.hostname.endsWith('.github.com');
+  } catch {
+    return false;
+  }
+}
+
+function isDocumentUrl(value: string): boolean {
+  return /\.(pdf|doc|docx|ppt|pptx|png|jpg|jpeg|webp)(?:[?#].*)?$/i.test(value);
+}
+
 export function ShelfView({
   artifact,
   book,
@@ -172,7 +185,7 @@ export function ShelfView({
   useEffect(() => {
     let active = true;
 
-    if (!book?.url) {
+    if (!book?.url || !isGitHubUrl(book.url)) {
       setReadme('');
       setReadmeState('idle');
       setReadmeOpen(false);
@@ -254,18 +267,20 @@ export function ShelfView({
             <div className="book-actions">
               {book.url ? (
                 <a className="book-link" href={book.url} target="_blank" rel="noopener noreferrer">
-                  Ver no GitHub
+                  {isDocumentUrl(book.url) ? (book.subtitle === 'Certificado' ? 'Abrir certificado' : 'Abrir documento') : 'Ver no GitHub'}
                 </a>
               ) : null}
-              <button
-                type="button"
-                className="book-link"
-                aria-label="Abrir README"
-                disabled={readmeState === 'loading' || readmeState === 'error'}
-                onClick={() => setReadmeOpen(true)}
-              >
-                {readmeButtonLabel}
-              </button>
+              {!isDocumentUrl(book.url ?? '') && isGitHubUrl(book.url ?? '') ? (
+                <button
+                  type="button"
+                  className="book-link"
+                  aria-label="Abrir README"
+                  disabled={readmeState === 'loading' || readmeState === 'error'}
+                  onClick={() => setReadmeOpen(true)}
+                >
+                  {readmeButtonLabel}
+                </button>
+              ) : null}
             </div>
           </div>
           {readmeOpen && readme ? (

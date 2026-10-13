@@ -1,32 +1,12 @@
 # Portfólio RPG — Henrique Santos de Souza
 
-Um portfólio interativo em formato de RPG de castelo. O visitante entra por um portão animado, caminha pelo mapa do castelo e explora cinco salas, cada uma representando uma área da trajetória profissional: habilidades, projetos, formação, história pessoal e experimentos.
+Portfólio interativo em formato de RPG de castelo, com uma jornada por cinco salas que apresentam formação, habilidades, projetos, certificações e contato profissional.
 
 ![Tela inicial do castelo com efeito de vento em WebGL](src/assets/castle.jpg)
 
 ---
 
-## Sumário
-
-- [Demo](#demo)
-- [Funcionalidades](#funcionalidades)
-- [Arquitetura](#arquitetura)
-- [Estrutura de pastas](#estrutura-de-pastas)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação e uso](#instalação-e-uso)
-- [Scripts disponíveis](#scripts-disponíveis)
-- [Stack e dependências](#stack-e-dependências)
-- [Personalização do conteúdo](#personalização-do-conteúdo)
-- [Acessibilidade](#acessibilidade)
-- [Decisões técnicas](#decisões-técnicas)
-- [Problemas conhecidos](#problemas-conhecidos)
-- [Licença](#licença)
-
----
-
 ## Demo
-
-> Substitua pela URL de produção após o deploy.
 
 ```
 https://henriquessouzas.github.io/portfolio-rpg

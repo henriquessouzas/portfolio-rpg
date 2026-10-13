@@ -1,13 +1,17 @@
 import { act } from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { rooms, type Artifact, type Book } from '@/lib/portfolio-data';
 import { ShelfView } from './shelf-view';
 
 (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 const shelves: Artifact[] = rooms[0].objects;
+
+afterEach(() => {
+  cleanup();
+});
 
 function mount(artifact: Artifact, book: Book | null, onBook: (b: Book | null) => void) {
   const host = document.createElement('div');
@@ -145,5 +149,25 @@ describe('library shelves', () => {
       'https://github.com/henriquessouzas/portfolio-rpg',
     );
     expect(screen.getByText(/Atualizado em/i)).toBeInTheDocument();
+  });
+
+  it('uses document links for certificate books and hides the README action', () => {
+    const certShelf = rooms[0].objects[1];
+    const certBook: Book = {
+      title: 'AI Fundamentals with IBM SkillsBuild',
+      subtitle: 'Certificado',
+      description: 'Certificação de fundamentos de IA com IBM SkillsBuild.',
+      tags: ['AI'],
+      color: 'forest',
+      url: '/certificados/AI_Fundamentals_with_IBM_SkillsBuild_certificate_22301658-aluno-cotemig-com-br_b604b128-e051-4846-b20e-02acfbadaa85.pdf',
+    };
+
+    render(<ShelfView artifact={certShelf} book={certBook} onBook={() => {}} onClose={() => {}} books={[certBook]} status="ready" />);
+
+    expect(screen.getByRole('link', { name: /abrir certificado/i })).toHaveAttribute(
+      'href',
+      '/certificados/AI_Fundamentals_with_IBM_SkillsBuild_certificate_22301658-aluno-cotemig-com-br_b604b128-e051-4846-b20e-02acfbadaa85.pdf',
+    );
+    expect(screen.queryByRole('button', { name: /abrir readme/i })).toBeNull();
   });
 });
