@@ -3,6 +3,7 @@ import {
   castleMap,
   castleNavigationGrid,
   castleObstacles,
+  certificateBooks,
   entrance,
   findPath,
   rooms,
@@ -47,5 +48,13 @@ describe('castle pathfinding', () => {
   });
   it('handles the current position as a destination', () => {
     expect(findPath(entrance, entrance)).toEqual([entrance]);
+  });
+
+  it('uses clean certificate names without codes, duplicated entries, or institution noise', () => {
+    expect(certificateBooks.some((book) => book.title === 'AI Fundamentals with IBM SkillsBuild')).toBe(true);
+    expect(certificateBooks.some((book) => book.title === 'Introduction to Cybersecurity')).toBe(true);
+    expect(certificateBooks.every((book) => !/[0-9]{6,}/.test(book.title))).toBe(true);
+    expect(certificateBooks.every((book) => !/cotemig/i.test(book.title))).toBe(true);
+    expect(new Set(certificateBooks.map((book) => book.title)).size).toBe(certificateBooks.length);
   });
 });

@@ -498,6 +498,33 @@ export default function Portfolio() {
                         status={selected.name === 'Projetos' ? githubBooksStatus : 'ready'}
                         githubUser={selected.name === 'Projetos' ? githubUser : undefined}
                       />
+                    ) : selected.name === 'Pergaminho' ? (
+                      <div className="popup-detail-content">
+                        <span className="eyebrow">
+                          {room.name} / {selected.name}
+                        </span>
+                        <h3>{selected.title}</h3>
+                        <p>{selected.description}</p>
+                        <div className="tags">
+                          {selected.tags.map((tag) => (
+                            <span key={tag}>{tag}</span>
+                          ))}
+                        </div>
+                        {(profile.cv.pt || profile.cv.en) && (
+                          <div className="book-actions" style={{ marginTop: 16 }}>
+                            {profile.cv.pt ? (
+                              <a className="book-link" href={profile.cv.pt} target="_blank" rel="noopener noreferrer">
+                                Abrir currículo em português
+                              </a>
+                            ) : null}
+                            {profile.cv.en ? (
+                              <a className="book-link" href={profile.cv.en} target="_blank" rel="noopener noreferrer">
+                                Abrir currículo em inglês
+                              </a>
+                            ) : null}
+                          </div>
+                        )}
+                      </div>
                     ) : (
                       <div className="popup-detail-content">
                         <span className="eyebrow">
