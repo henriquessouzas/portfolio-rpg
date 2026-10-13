@@ -990,6 +990,78 @@ progress::-webkit-progress-value {
 .arsenal-orb {
   filter: drop-shadow(0 0 18px color-mix(in oklab, var(--mana) 30%, transparent));
 }
+.tech-sphere-shell {
+  position: relative;
+  z-index: 1;
+}
+.tech-sphere-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+.tech-sphere-toggle {
+  border: 1px solid var(--outline);
+  background: color-mix(in oklab, var(--background) 66%, var(--surface));
+  color: var(--foreground);
+  padding: 0.55rem 0.8rem;
+  font: 11px/1.4 var(--font-pixel);
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 3px 3px 0 var(--outline);
+}
+.tech-sphere-toggle:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 var(--outline);
+}
+.tech-sphere-toggle:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 var(--outline);
+}
+.tech-sphere-surface {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+}
+.tech-sphere-node {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transform: translate(-50%, -50%);
+  border: 1px solid color-mix(in srgb, var(--primary) 54%, transparent);
+  background: color-mix(in srgb, var(--card) 82%, transparent);
+  color: var(--foreground);
+  border-radius: 999px;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--primary) 12%, transparent);
+  backdrop-filter: blur(4px);
+  font: 12px/1.2 inherit;
+  z-index: 2;
+}
+.tech-sphere-node:hover {
+  border-color: color-mix(in srgb, var(--primary) 78%, transparent);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+.tech-sphere-node-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--primary) 18%, var(--background));
+  font-weight: 700;
+}
+.tech-sphere-core {
+  position: absolute;
+  inset: 17%;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  box-shadow: inset 0 0 30px color-mix(in srgb, var(--primary) 14%, transparent), 0 0 30px color-mix(in srgb, var(--primary) 14%, transparent);
+  background: radial-gradient(circle at center, color-mix(in srgb, var(--primary) 16%, transparent), transparent 62%);
+}
 .tech-search-panel {
   display: flex;
   flex-direction: column;

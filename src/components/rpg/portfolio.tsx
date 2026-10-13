@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -45,6 +45,8 @@ import { Messenger } from './messenger';
 import { TechSearch } from './arsenal/tech-search';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 import { useGithubBooks } from '@/hooks/use-github-books';
+
+const LazyTechSphere = lazy(() => import('./tech-sphere/tech-sphere'));
 
 type Screen = 'castle' | 'map' | 'room' | 'simple';
 const pause = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -539,7 +541,17 @@ export default function Portfolio() {
                           {room.name} / {selected.name}
                         </span>
                         <h3>{selected.title}</h3>
-                        <TechSearch items={profile.technologies} onClose={closePopup} />
+                        <Suspense fallback={<TechSearch items={profile.technologies} onClose={closePopup} />}>
+                          <LazyTechSphere
+                            items={profile.technologies.map((tech) => ({
+                              name: tech.name,
+                              category: tech.category,
+                              level: tech.years ?? 1,
+                            }))}
+                            reducedMotion={reducedMotion}
+                            onSelect={(name) => setAnnouncement(`Tecnologia selecionada: ${name}`)}
+                          />
+                        </Suspense>
                       </div>
                     ) : (
                       <div className="popup-detail-content">

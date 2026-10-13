@@ -325,19 +325,6 @@ export function RoomScene({
     <div className={`room-world furnished-room room-${room.id}`}>
       <svg className="furnished-art" viewBox="0 0 960 672" aria-hidden="true">
         <rect width="960" height="672" className="fill-floor" />
-        {room.id === 'R' && (
-          <g className="arsenal-orb" aria-hidden="true">
-            <ellipse cx="480" cy="278" rx="118" ry="76" className="fill-stone-dark" opacity="0.65" />
-            <circle cx="480" cy="250" r="62" className="fill-ink" />
-            <circle cx="480" cy="250" r="50" className="fill-mana" opacity="0.8" />
-            <circle cx="480" cy="250" r="30" className="fill-gold" />
-            <circle cx="480" cy="250" r="10" className="fill-surface" />
-            <path d="M480 168v164M388 250h184M420 196l120 108M420 304l120-108" className="stroke-gold" opacity="0.7" strokeWidth="3" fill="none" />
-            <path d="M480 122l16 24 22-10 6 22 24 6-10 22 16 16-16 16 10 22-24 6-6 22-22-10-16 24-16-24-22 10-6-22-24-6 10-22-16-16 16-16-10-22 24-6 6-22 22 10z" className="stroke-gold" opacity="0.45" fill="none" strokeWidth="2" />
-            <rect x="452" y="314" width="56" height="26" rx="8" className="fill-wood" />
-            <rect x="462" y="320" width="36" height="14" rx="5" className="fill-gold" opacity="0.9" />
-          </g>
-        )}
         {Array.from({ length: 20 }, (_, x) =>
           Array.from({ length: 14 }, (_, y) => (
             <g key={`${x},${y}`}>
