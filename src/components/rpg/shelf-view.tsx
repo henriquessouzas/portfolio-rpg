@@ -336,6 +336,7 @@ export function ShelfView({
                   const i = index++;
                   const open = book?.title === b.title;
                   const style = { '--h': `${62 + ((i * 37) % 34)}%` } as CSSProperties;
+                  const shortTitle = b.title.split(/\s+/).slice(0, 2).join(' ');
                   return (
                     <button
                       type="button"
@@ -346,7 +347,7 @@ export function ShelfView({
                       aria-label={`${b.title}, ${b.subtitle}`}
                       onClick={() => onBook(open ? null : b)}
                     >
-                      <span>{b.title}</span>
+                      <span>{shortTitle}</span>
                     </button>
                   );
                 })}

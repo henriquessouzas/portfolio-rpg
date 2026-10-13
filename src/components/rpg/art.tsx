@@ -86,6 +86,14 @@ export function ObjectArt({ kind, className = '' }: { kind: string; className?: 
         <path d="M11 59h42" className="stroke-wood" />
       </>
     ),
+    orb: (
+      <>
+        <circle cx="32" cy="32" r="20" className="fill-mana" />
+        <circle cx="32" cy="32" r="15" className="fill-royal" />
+        <path d="M15 32h34M32 15v34" className="stroke-gold" />
+        <circle cx="32" cy="32" r="7" className="fill-surface" />
+      </>
+    ),
     trophy: (
       <>
         <path

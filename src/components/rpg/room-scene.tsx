@@ -168,20 +168,32 @@ function Furniture({ fixture: f, art }: { fixture: Fixture; art?: string | undef
     case 'shield-rack':
       contents = (
         <>
+          {/* Painel de pedra na parede */}
           <rect
-            x="8"
-            y="8"
-            width={w - 16}
-            height={h - 16}
-            className="fill-wood stroke-ink"
-            strokeWidth="4"
+            x="4"
+            y="4"
+            width={w - 8}
+            height={h - 8}
+            className="fill-stone stroke-stone-dark"
+            strokeWidth="3"
           />
-          <path
-            d={`M15 20h${w - 30}M15 ${h - 25}h${w - 30}`}
-            className="stroke-gold"
-            strokeWidth="4"
+          {/* Tijolos decorativos */}
+          <path d={`M4 ${h*0.35}h${w-8}M4 ${h*0.65}h${w-8}`} className="stroke-stone-dark" strokeWidth="1.5" opacity=".5" />
+          <path d={`M${w*0.5} 4v${h*0.35}M${w*0.25} ${h*0.35}v${h*0.3}M${w*0.75} ${h*0.35}v${h*0.3}`} className="stroke-stone-dark" strokeWidth="1.5" opacity=".4" />
+          {/* Suporte horizontal de madeira */}
+          <rect x="6" y={h * 0.18} width={w - 12} height="10" className="fill-wood stroke-ink" strokeWidth="2" />
+          <rect x="6" y={h * 0.72} width={w - 12} height="8" className="fill-wood stroke-ink" strokeWidth="2" />
+          {/* Ganchos */}
+          {[0.28, 0.5, 0.72].map((px) => (
+            <circle key={px} cx={w * px} cy={h * 0.23} r="4" className="fill-steel stroke-ink" strokeWidth="1.5" />
+          ))}
+          {/* Arte da arma */}
+          {icon(art ?? 'sword', w * 0.18, h * 0.08, w * 0.64)}
+          {/* Brilho de cor por tipo */}
+          <rect x="4" y="4" width={w-8} height={h-8} fill="none"
+            className={f.kind === 'weapon-rack' ? 'stroke-ember' : f.kind === 'bow-rack' ? 'stroke-forest' : 'stroke-mana'}
+            strokeWidth="2" opacity=".4"
           />
-          {icon(art ?? 'sword', w * 0.22, h * 0.09, w * 0.57)}
         </>
       );
       break;
@@ -216,6 +228,55 @@ function Furniture({ fixture: f, art }: { fixture: Fixture; art?: string | undef
               opacity=".5"
             />
           </g>
+        </>
+      );
+      break;
+    case 'tech-pedestal':
+      contents = (
+        <>
+          {/* Sombra/base do pedestal */}
+          <ellipse cx={w / 2} cy={h * 0.88} rx={w * 0.44} ry={h * 0.1} className="fill-stone-dark" opacity=".6" />
+          {/* Corpo do pedestal — dois degraus */}
+          <path
+            d={`M${w * 0.12} ${h * 0.78}h${w * 0.76}v${h * 0.14}h-${w * 0.76}z`}
+            className="fill-stone stroke-ink"
+            strokeWidth="3"
+          />
+          <path
+            d={`M${w * 0.22} ${h * 0.64}h${w * 0.56}v${h * 0.16}h-${w * 0.56}z`}
+            className="fill-stone-dark stroke-ink"
+            strokeWidth="2"
+          />
+          {/* Detalhes rúnicos no pedestal */}
+          <path d={`M${w*0.3} ${h*0.71}h${w*0.4}`} className="stroke-gold" strokeWidth="2" opacity=".5" />
+          <path d={`M${w*0.35} ${h*0.67}h${w*0.3}`} className="stroke-mana" strokeWidth="1.5" opacity=".4" />
+          {/* Halo de brilho mágico */}
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.34} className="fill-mana" opacity=".07" />
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.28} className="fill-mana" opacity=".09" />
+          {/* Anel orbital */}
+          <ellipse cx={w/2} cy={h*0.38} rx={Math.min(w,h)*0.26} ry={Math.min(w,h)*0.08}
+            fill="none" className="stroke-gold" strokeWidth="2" opacity=".55"
+            style={{ animation: 'map-spin 20s linear infinite', transformBox: 'fill-box', transformOrigin: 'center' }}
+          />
+          {/* Esfera principal */}
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.22} className="fill-mana" opacity=".9" />
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.22} fill="none" className="stroke-gold" strokeWidth="2" />
+          {/* Núcleo interno */}
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.12} className="fill-royal" />
+          {/* Reflexos */}
+          <circle cx={w/2 - Math.min(w,h)*0.08} cy={h*0.3} r={Math.min(w,h)*0.04} fill="white" opacity=".55" />
+          <circle cx={w/2 + Math.min(w,h)*0.1} cy={h*0.44} r={Math.min(w,h)*0.02} fill="white" opacity=".3" />
+          {/* Cruz de luz */}
+          <path d={`M${w*0.26} ${h*0.38}h${w*0.48}M${w/2} ${h*0.18}v${h*0.4}`} className="stroke-gold" strokeWidth="2" opacity=".35" />
+          {/* Partículas subindo */}
+          {[0,1,2].map((i) => (
+            <circle key={i}
+              cx={w/2 + (i-1)*Math.min(w,h)*0.12}
+              cy={h*0.22 - i*8}
+              r="3" className="fill-mana" opacity=".5"
+              style={{ animation: `steam ${1.4 + i*0.3}s ease-in-out ${i*0.4}s infinite` }}
+            />
+          ))}
         </>
       );
       break;
@@ -383,6 +444,36 @@ export function RoomScene({
         />
         <rect x="437" y="624" width="86" height="48" className="fill-wood" />
         <path d="M452 628v40m17-40v40m17-40v40m17-40v40" className="stroke-gold" opacity=".4" />
+
+        {/* Arsenal — decorações especiais */}
+        {room.id === 'R' && (
+          <>
+            {/* Tapete rúnico circular sob o pedestal (tiles 8-11, y 6-9 → px 384-528, 288-432) */}
+            <ellipse cx="480" cy="384" rx="148" ry="96" className="fill-royal" opacity=".18" />
+            <ellipse cx="480" cy="384" rx="112" ry="72" fill="none" className="stroke-mana" strokeWidth="3" opacity=".35" />
+            <ellipse cx="480" cy="384" rx="76" ry="48" fill="none" className="stroke-gold" strokeWidth="2" opacity=".4" />
+            {/* Runas nos anéis */}
+            {[0,1,2,3,4,5].map((i) => {
+              const a = (i / 6) * Math.PI * 2 - Math.PI / 2;
+              return (
+                <text key={i} x={480 + Math.cos(a) * 128} y={384 + Math.sin(a) * 82} textAnchor="middle" dominantBaseline="middle"
+                  fontSize="11" className="fill-mana" opacity=".5" fontFamily="monospace">
+                  {['ᚠ','ᚢ','ᚦ','ᚨ','ᚱ','ᚲ'][i]}
+                </text>
+              );
+            })}
+            {/* Brilho mágico azul sob o pedestal */}
+            <ellipse cx="480" cy="400" rx="80" ry="28" className="fill-mana" opacity=".12" />
+            {/* Bandeira/estandarte na parede do fundo — centro */}
+            <rect x="444" y="48" width="72" height="52" className="fill-ember" opacity=".7" />
+            <path d="M444 48h72M444 100h72" className="stroke-ink" strokeWidth="2" />
+            <path d="M480 56v36M462 74h36" className="stroke-gold" strokeWidth="3" opacity=".8" />
+            {/* Correntes decorativas nas paredes laterais */}
+            <path d="M48 144q12 8 0 16q12 8 0 16q12 8 0 16" fill="none" className="stroke-stone-dark" strokeWidth="3" opacity=".5" />
+            <path d="M912 144q-12 8 0 16q-12 8 0 16q-12 8 0 16" fill="none" className="stroke-stone-dark" strokeWidth="3" opacity=".5" />
+          </>
+        )}
+
         {roomLayouts[room.id].map((f, i) => (
           <Furniture
             key={i}

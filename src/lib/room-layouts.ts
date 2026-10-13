@@ -39,8 +39,8 @@ export const roomLayouts: Record<RoomId, Fixture[]> = {
     { x: 7, y: 2, w: 3, h: 3, kind: 'bow-rack', object: 1, approach: { x: 8, y: 5 } },
     { x: 13, y: 2, w: 3, h: 3, kind: 'shield-rack', object: 2, approach: { x: 14, y: 5 } },
     { x: 14, y: 9, w: 3, h: 3, kind: 'forge', object: 3, approach: { x: 13, y: 10 } },
+    { x: 8, y: 6, w: 4, h: 4, kind: 'tech-pedestal', object: 4, approach: { x: 10, y: 11 } },
     { x: 2, y: 9, w: 3, h: 2, kind: 'crates' },
-    { x: 7, y: 8, w: 3, h: 2, kind: 'training' },
   ],
   L: [
     { x: 2, y: 3, w: 5, h: 2, kind: 'blue-workbench', object: 0, approach: { x: 5, y: 5 } },

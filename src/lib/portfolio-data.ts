@@ -15,12 +15,16 @@ export type Book = {
   updatedAt?: string;
   readme?: string;
 };
+export const technologyCategories = ['Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas'] as const;
+export type TechnologyCategory = (typeof technologyCategories)[number];
+
 export type Artifact = {
   name: string;
   title: string;
   description: string;
   tags: string[];
   art: string;
+  categories?: TechnologyCategory[];
   paragraphs?: string[];
   items?: string[];
   links?: { label: string; url: string; download?: boolean }[];
@@ -376,6 +380,14 @@ export const rooms: [Room, Room, Room, Room, Room] = [
         tags: ['Ferramentas'],
         art: 'anvil',
         categories: ['Ferramentas'],
+      },
+      {
+        name: 'Esfera das tecnologias',
+        title: 'Esfera das tecnologias',
+        description: 'Mapa interativo das principais tecnologias e competências que uso em software, dados e automação.',
+        tags: ['Tecnologias', 'Competências'],
+        art: 'orb',
+        categories: ['Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas'],
       },
     ],
   },

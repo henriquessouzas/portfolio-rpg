@@ -73,11 +73,6 @@ export function useDraggable({
     [clampPosition, onChange],
   );
 
-  useEffect(() => {
-    if (disabled) return;
-    setPositionState((current) => clampPosition(current));
-  }, [bounds.height, bounds.width, clampPosition, disabled]);
-
   const handlePointerDown = useCallback(
     (event: PointerLike) => {
       if (disabled || window.innerWidth < 640) return;

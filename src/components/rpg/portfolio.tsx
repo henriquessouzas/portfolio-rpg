@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
@@ -8,7 +8,6 @@ import {
   Heart,
   Map,
   Sparkles,
-  X,
 } from 'lucide-react';
 import { Button } from '@/components/rpg/ui/button';
 import {
@@ -41,8 +40,11 @@ import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
 import { Popup } from './popup';
 import { Messenger } from './messenger';
+import { TechSearch } from './arsenal/tech-search';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 import { useGithubBooks } from '@/hooks/use-github-books';
+
+const LazyTechSphere = lazy(() => import('./tech-sphere/tech-sphere'));
 
 type Screen = 'castle' | 'map' | 'room' | 'simple';
 const pause = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -70,6 +72,7 @@ export default function Portfolio() {
   const [position, setPosition] = useState<Point>(MAP_ENTRANCE);
   const [roomPosition, setRoomPosition] = useState<Point>(roomEntrance);
   const [selected, setSelected] = useState<Artifact | null>(null);
+  const [selectedTech, setSelectedTech] = useState<string | null>(null);
   const [book, setBook] = useState<Book | null>(null);
   const [popupAnchor, setPopupAnchor] = useState<{ x: number; y: number } | null>(null);
   const [busy, setBusy] = useState(false);
@@ -101,6 +104,7 @@ export default function Portfolio() {
 
   function closePopup() {
     setSelected(null);
+    setSelectedTech(null);
     setBook(null);
     setPopupAnchor(null);
   }
@@ -145,6 +149,7 @@ export default function Portfolio() {
     }
     setBusy(true);
     setSelected(null);
+    setSelectedTech(null);
     setBook(null);
     setPopupAnchor(null);
     for (const tile of reducedMotion ? [fixture.approach] : path.slice(1)) {
@@ -155,6 +160,9 @@ export default function Portfolio() {
     if (!reducedMotion) await pause(140);
     if (token !== operation.current) return;
     setSelected(artifact);
+    setSelectedTech(
+      artifact.name === 'Esfera das tecnologias' ? profile.technologies[0]?.name ?? null : null,
+    );
     setPopupAnchor(anchor);
     setBusy(false);
     setAnnouncement(artifact.title);
@@ -195,6 +203,25 @@ export default function Portfolio() {
     setAnnouncement(destination.name);
     if (destination.id === 'T') void pickObject(destination.objects[0], 0, destination);
   }
+
+  const techItems = profile.technologies.map((tech) => ({
+    name: tech.name,
+    category: tech.category,
+    level: tech.years ?? 1,
+  }));
+
+  const activeTech =
+    selected?.name === 'Esfera das tecnologias'
+      ? profile.technologies.find((tech) => tech.name === selectedTech) ?? profile.technologies[0] ?? null
+      : null;
+
+  const matchingGithubRepos = activeTech
+    ? githubBooks.filter((book) => {
+        const normalizedTitle = (book.subtitle ?? '').trim().toLocaleLowerCase();
+        const normalizedTech = activeTech.name.trim().toLocaleLowerCase();
+        return normalizedTitle === normalizedTech || normalizedTitle.includes(normalizedTech) || normalizedTech.includes(normalizedTitle);
+      })
+    : [];
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -461,18 +488,27 @@ export default function Portfolio() {
               </div>
             ) : (
               <>
-                <RoomScene
-                  room={room}
-                  position={roomPosition}
-                  selected={selected}
-                  walking={busy}
-                  onPick={(obj, i, anchor) => void pickObject(obj, i, room, anchor)}
-                />
+                <div
+                  className="room-scene-zoom"
+                  style={{
+                    transition: reducedMotion ? 'none' : 'transform 450ms ease-in-out',
+                    transform: selected?.name === 'Esfera das tecnologias' ? `scale(${reducedMotion ? 1 : 1.35})` : 'scale(1)',
+                    transformOrigin: '50% 48%',
+                  }}
+                >
+                  <RoomScene
+                    room={room}
+                    position={roomPosition}
+                    selected={selected}
+                    walking={busy}
+                    onPick={(obj, i, anchor) => void pickObject(obj, i, room, anchor)}
+                  />
+                </div>
                 {selected && (
                   <Popup
                     title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books || selected.name === 'Projetos' ? `Estante: ${selected.name}` : selected.title}
                     onClose={closePopup}
-                    width={selected.name === 'Mensageiro' ? 480 : selected.books || selected.name === 'Projetos' ? 760 : 560}
+                    width={selected.name === 'Mensageiro' ? 480 : selected.name === 'Esfera das tecnologias' ? 720 : selected.books || selected.name === 'Projetos' ? 760 : 560}
                     initialAnchor={popupAnchor}
                     footer={
                       selected.name === 'Projetos' ? (
@@ -524,6 +560,106 @@ export default function Portfolio() {
                             ) : null}
                           </div>
                         )}
+                      </div>
+                    ) : selected.name === 'Esfera das tecnologias' ? (
+                      <div className="tech-sphere-popup">
+                        <div className="tech-sphere-column">
+                          <Suspense fallback={<TechSearch items={techItems} selectedName={selectedTech ?? undefined} onClose={closePopup} />}>
+                            <LazyTechSphere
+                              items={techItems}
+                              selectedName={selectedTech ?? undefined}
+                              reducedMotion={reducedMotion}
+                              onSelect={(name) => {
+                                setSelectedTech(name);
+                                setAnnouncement(`Tecnologia selecionada: ${name}`);
+                              }}
+                            />
+                          </Suspense>
+                        </div>
+                        <div className="tech-sphere-column tech-sphere-sidebar">
+                          <TechSearch
+                            items={techItems}
+                            selectedName={selectedTech ?? undefined}
+                            onSelect={(name) => {
+                              setSelectedTech(name);
+                              setAnnouncement(`Tecnologia selecionada: ${name}`);
+                            }}
+                          />
+                          {activeTech ? (
+                            <div className="tech-sphere-detail">
+                              <h3>{activeTech.name}</h3>
+                              <dl>
+                                <div>
+                                  <dt>Nível</dt>
+                                  <dd>{Math.max(1, Math.round(activeTech.years ?? 1))} anos</dd>
+                                </div>
+                                <div>
+                                  <dt>Categoria</dt>
+                                  <dd>{activeTech.category}</dd>
+                                </div>
+                                <div>
+                                  <dt>Anos</dt>
+                                  <dd>{activeTech.years ?? 1}</dd>
+                                </div>
+                              </dl>
+                              {matchingGithubRepos.length > 0 ? (
+                                <div className="tech-sphere-repos">
+                                  <h4>Repositórios</h4>
+                                  <ul>
+                                    {matchingGithubRepos.map((repo) => (
+                                      <li key={repo.url ?? repo.title}>
+                                        <a href={repo.url ?? '#'} target="_blank" rel="noreferrer noopener">
+                                          {repo.title}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ) : (
+                                <p className="tech-sphere-empty">Nenhum repositório com a linguagem principal correspondente.</p>
+                              )}
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    ) : selected.categories ? (
+                      <div className="popup-detail-content">
+                        <span className="eyebrow">
+                          {room.name} / {selected.name}
+                        </span>
+                        <h3>{selected.title}</h3>
+                        <p>{selected.description}</p>
+                        <div className="tags" style={{ marginBottom: 16 }}>
+                          {selected.tags.map((tag) => (
+                            <span key={tag}>{tag}</span>
+                          ))}
+                        </div>
+                        <ul className="tech-search-results">
+                          {profile.technologies
+                            .filter((t) => selected.categories!.includes(t.category))
+                            .sort((a, b) => (b.years ?? 0) - (a.years ?? 0))
+                            .map((tech) => {
+                              const value = Math.min(100, Math.max(20, (tech.years ?? 1) * 22));
+                              return (
+                                <li key={tech.name} className="tech-search-item">
+                                  <div className="tech-search-item-header">
+                                    <strong>{tech.name}</strong>
+                                    <span>{tech.category}</span>
+                                  </div>
+                                  <div
+                                    className="tech-search-progress"
+                                    role="progressbar"
+                                    aria-label={`${tech.name}: ${value} de 100`}
+                                    aria-valuenow={value}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                  >
+                                    <span style={{ width: `${value}%` }} />
+                                  </div>
+                                </li>
+                              );
+                            })}
+                        </ul>
                       </div>
                     ) : (
                       <div className="popup-detail-content">

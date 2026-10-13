@@ -6,6 +6,7 @@ import {
   certificateBooks,
   entrance,
   findPath,
+  profile,
   rooms,
 } from './portfolio-data';
 
@@ -56,5 +57,15 @@ describe('castle pathfinding', () => {
     expect(certificateBooks.every((book) => !/[0-9]{6,}/.test(book.title))).toBe(true);
     expect(certificateBooks.every((book) => !/cotemig/i.test(book.title))).toBe(true);
     expect(new Set(certificateBooks.map((book) => book.title)).size).toBe(certificateBooks.length);
+  });
+
+  it('groups Arsenal items by objective technology categories and tracks known skills', () => {
+    const arsenal = rooms.find((room) => room.id === 'R');
+    expect(arsenal).toBeDefined();
+    expect(arsenal?.objects.every((obj) => Array.isArray(obj.categories) && obj.categories.length > 0)).toBe(true);
+    expect(arsenal?.objects.flatMap((obj) => obj.categories ?? [])).toEqual(
+      expect.arrayContaining(['Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas']),
+    );
+    expect(profile.technologies.some((tech) => tech.category === 'Front-end' && tech.name === 'React')).toBe(true);
   });
 });
