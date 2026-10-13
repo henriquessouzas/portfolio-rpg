@@ -18,6 +18,16 @@ kit-portagem/
 # Stray lib folder at root
 /lib/
 
+# Stray files from shell command artifacts
+/.crest
+/.object-art
+/button
+/img
+/span
+/strong
+/svg
+/pull_request.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
