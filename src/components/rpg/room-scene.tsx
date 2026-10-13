@@ -464,15 +464,6 @@ export function RoomScene({
             })}
             {/* Brilho mágico azul sob o pedestal */}
             <ellipse cx="480" cy="400" rx="80" ry="28" className="fill-mana" opacity=".12" />
-            {/* Tochas laterais com halo laranja — esquerda (x=336,y=192) e direita (x=576,y=192) */}
-            {[336, 576].map((tx) => (
-              <g key={tx}>
-                <ellipse cx={tx} cy="210" rx="38" ry="28" className="fill-ember" opacity=".13" />
-                <rect x={tx - 5} y="168" width="10" height="28" className="fill-wood" />
-                <path d={`M${tx - 8} 168l8-22 8 22`} className="fill-ember torch" />
-                <ellipse cx={tx} cy="168" rx="6" ry="4" className="fill-gold" opacity=".7" />
-              </g>
-            ))}
             {/* Bandeira/estandarte na parede do fundo — centro */}
             <rect x="444" y="48" width="72" height="52" className="fill-ember" opacity=".7" />
             <path d="M444 48h72M444 100h72" className="stroke-ink" strokeWidth="2" />
