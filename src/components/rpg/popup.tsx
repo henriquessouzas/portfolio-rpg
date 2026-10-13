@@ -59,10 +59,6 @@ export function Popup({
     const viewportHeight = window.innerHeight;
     const { width: popupWidth, height: popupHeight } = getBounds();
 
-    if (initialAnchor) {
-      return { x: initialAnchor.x, y: initialAnchor.y };
-    }
-
     return {
       x: clamp((viewportWidth - popupWidth) / 2, 8, Math.max(8, viewportWidth - popupWidth - 8)),
       y: clamp((viewportHeight - popupHeight) / 2, 8, Math.max(8, viewportHeight - popupHeight - 8)),
