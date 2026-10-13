@@ -30,8 +30,10 @@
 }
 
 :root {
+  color-scheme: light;
   --background: oklch(0.92 0.037 87);
   --foreground: oklch(0.26 0.049 304);
+  --outline: oklch(0.26 0.049 304);
   --primary: oklch(0.67 0.143 76);
   --primary-foreground: oklch(0.2 0.047 303);
   --secondary: oklch(0.96 0.03 88);
@@ -39,10 +41,10 @@
   --muted-foreground: oklch(0.44 0.042 304);
   --card: var(--secondary);
   --accent: oklch(0.86 0.054 86);
-  --border: var(--foreground);
+  --border: var(--outline);
   --gold: var(--primary);
   --surface: var(--secondary);
-  --ink: var(--foreground);
+  --ink: var(--outline);
   --mana: oklch(0.55 0.164 258);
   --ember: oklch(0.55 0.167 33);
   --forest: oklch(0.58 0.122 155);
@@ -56,9 +58,33 @@
   --skin: oklch(0.82 0.09 62);
   --scene-ink: oklch(0.99 0.021 88);
   --scene-shade: oklch(0.19 0.028 160);
-  --shadow-pixel: 4px 4px 0 var(--ink);
-  --shadow-scene: 6px 6px 0 var(--ink);
+  --shadow-pixel: 4px 4px 0 var(--outline);
+  --shadow-scene: 6px 6px 0 var(--outline);
   --font-pixel: 'Press Start 2P', monospace;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.20 0.03 290);
+  --foreground: oklch(0.93 0.03 88);
+  --outline: oklch(0.10 0.02 290);
+  --primary: oklch(0.78 0.14 82);
+  --primary-foreground: oklch(0.20 0.047 303);
+  --secondary: oklch(0.26 0.04 295);
+  --muted: oklch(0.30 0.035 295);
+  --muted-foreground: oklch(0.74 0.04 290);
+  --accent: oklch(0.34 0.05 295);
+  --mana: oklch(0.70 0.14 255);
+  --ember: oklch(0.68 0.16 35);
+  --forest: oklch(0.72 0.13 155);
+  --royal: oklch(0.65 0.16 305);
+  --wood: oklch(0.50 0.07 55);
+  --stone: oklch(0.40 0.03 87);
+  --stone-dark: oklch(0.30 0.03 87);
+  --floor: oklch(0.30 0.03 80);
+  --floor-dark: oklch(0.24 0.03 80);
+  --steel: oklch(0.62 0.02 237);
+  --ink: var(--foreground);
 }
 
 @layer base {
@@ -116,7 +142,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  border-bottom: 2px solid color-mix(in oklab, var(--ink) 19%, transparent);
+  border-bottom: 2px solid color-mix(in oklab, var(--outline) 19%, transparent);
 }
 .brand {
   display: flex;
@@ -157,9 +183,9 @@
   flex-shrink: 0;
 }
 .pixel-button {
-  border: 2px solid var(--ink);
+  border: 2px solid var(--outline);
   border-radius: 0;
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--outline);
   font: 9px/1.6 var(--font-pixel);
   min-height: 42px;
   height: auto;
@@ -178,11 +204,11 @@
 }
 .pixel-button:hover {
   transform: translate(-1px, -1px);
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--outline);
 }
 .pixel-button:active {
   transform: translate(2px, 2px);
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: 1px 1px 0 var(--outline);
 }
 .pixel-button svg {
   width: 15px;
@@ -223,7 +249,7 @@
   display: block;
   width: 100%;
   height: 500px;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   border-radius: 0;
   overflow: hidden;
   padding: 0;
@@ -299,7 +325,7 @@
 }
 .scene-button:hover .castle-cta {
   transform: translate(-50%, -3px);
-  box-shadow: 5px 6px 0 var(--ink);
+  box-shadow: 5px 6px 0 var(--outline);
 }
 .castle-coordinate {
   position: absolute;
@@ -320,7 +346,7 @@
   width: 12px;
   height: 12px;
   background: var(--gold);
-  border: 2px solid var(--ink);
+  border: 2px solid var(--outline);
   pointer-events: none;
 }
 .corner-tl {
@@ -359,7 +385,7 @@
 .room-directory {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  border-top: 2px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  border-top: 2px solid color-mix(in oklab, var(--outline) 18%, transparent);
   padding: 25px 0 29px;
   gap: 18px;
 }
@@ -383,7 +409,7 @@
   margin-top: 5px;
 }
 .site-footer {
-  border-top: 2px solid color-mix(in oklab, var(--ink) 18%, transparent);
+  border-top: 2px solid color-mix(in oklab, var(--outline) 18%, transparent);
   min-height: 85px;
   display: flex;
   align-items: center;
@@ -480,7 +506,7 @@
   overflow: visible;
 }
 .sprite-shadow {
-  fill: color-mix(in oklab, var(--ink) 30%, transparent);
+  fill: color-mix(in oklab, var(--outline) 30%, transparent);
 }
 .hero-sprite.walking {
   animation: hero-step 0.24s steps(2) infinite;
@@ -510,7 +536,7 @@
   justify-content: space-between;
   align-items: center;
   gap: 20px;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   background: var(--surface);
   padding: 13px 20px;
   font: 8px/1.8 var(--font-pixel);
@@ -538,7 +564,7 @@
 .map-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 260px;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   border-top: none;
   background: var(--surface);
   box-shadow: var(--shadow-scene);
@@ -552,7 +578,7 @@
   min-width: 0;
   max-width: 650px;
   aspect-ratio: 13/11;
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--outline);
   background: var(--floor);
   transition:
     transform 0.35s ease,
@@ -654,10 +680,10 @@
   height: auto;
   min-height: 28px;
   padding: 8px 7px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--outline);
   background: var(--surface);
   color: var(--ink);
-  box-shadow: 2px 2px 0 var(--ink);
+  box-shadow: 2px 2px 0 var(--outline);
   border-radius: 0;
   font: 7px/1.6 var(--font-pixel);
   gap: 3px;
@@ -693,7 +719,7 @@
   pointer-events: none;
 }
 .exploration-log {
-  border-left: 2px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  border-left: 2px solid color-mix(in oklab, var(--outline) 20%, transparent);
   margin: 24px 0;
   padding: 4px 24px 0;
 }
@@ -720,7 +746,7 @@
 progress {
   width: 100%;
   height: 10px;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--outline);
   background: var(--background);
 }
 progress::-webkit-progress-bar {
@@ -745,7 +771,7 @@ progress::-webkit-progress-value {
   height: 23px;
   display: grid;
   place-items: center;
-  border: 1px solid color-mix(in oklab, var(--ink) 25%, transparent);
+  border: 1px solid color-mix(in oklab, var(--outline) 25%, transparent);
   color: var(--muted-foreground);
 }
 .discovered .log-mark {
@@ -769,7 +795,7 @@ progress::-webkit-progress-value {
   gap: 10px;
   font-size: 14px;
   color: var(--muted-foreground);
-  border-top: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  border-top: 1px solid color-mix(in oklab, var(--outline) 20%, transparent);
   padding-top: 18px;
 }
 .journal-end svg {
@@ -780,7 +806,7 @@ progress::-webkit-progress-value {
 .room-world {
   height: 470px;
   position: relative;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   border-top: none;
   overflow: hidden;
   box-shadow: var(--shadow-scene);
@@ -831,7 +857,7 @@ progress::-webkit-progress-value {
   width: 106px;
   height: 116px;
   border-bottom: 12px solid var(--wood);
-  box-shadow: 0 4px 0 var(--ink);
+  box-shadow: 0 4px 0 var(--outline);
   background: color-mix(in oklab, var(--stone-dark) 15%, transparent);
 }
 .object-pedestal .object-art {
@@ -839,7 +865,7 @@ progress::-webkit-progress-value {
   height: 88px;
   margin-bottom: 9px;
   transition: transform 0.15s steps(3);
-  filter: drop-shadow(3px 4px 0 color-mix(in oklab, var(--ink) 30%, transparent));
+  filter: drop-shadow(3px 4px 0 color-mix(in oklab, var(--outline) 30%, transparent));
 }
 .artifact-button:hover .object-art,
 .artifact-selected .object-art {
@@ -847,8 +873,8 @@ progress::-webkit-progress-value {
 }
 .object-label {
   background: var(--surface);
-  border: 2px solid var(--ink);
-  box-shadow: 2px 2px 0 var(--ink);
+  border: 2px solid var(--outline);
+  box-shadow: 2px 2px 0 var(--outline);
   font: 8px/1.7 var(--font-pixel);
   padding: 7px 9px;
 }
@@ -868,7 +894,7 @@ progress::-webkit-progress-value {
   display: flex;
   align-items: flex-start;
   gap: 24px;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   box-shadow: var(--shadow-scene);
   background: var(--surface);
   padding: 25px;
@@ -881,7 +907,7 @@ progress::-webkit-progress-value {
   display: grid;
   place-items: center;
   background: color-mix(in oklab, var(--room-color) 15%, var(--surface));
-  border: 2px solid var(--ink);
+  border: 2px solid var(--outline);
   flex-shrink: 0;
 }
 .dialogue-portrait .object-art {
@@ -907,7 +933,7 @@ progress::-webkit-progress-value {
   margin-top: 14px;
 }
 .tags > span {
-  border: 1px solid color-mix(in oklab, var(--ink) 30%, transparent);
+  border: 1px solid color-mix(in oklab, var(--outline) 30%, transparent);
   padding: 3px 9px;
   font-size: 12px;
   background: var(--background);
@@ -941,8 +967,8 @@ progress::-webkit-progress-value {
   flex-wrap: wrap;
   gap: 10px 30px;
   padding: 18px 0 22px;
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
+  border-top: 2px solid var(--outline);
+  border-bottom: 2px solid var(--outline);
 }
 .simple-nav a {
   display: flex;
@@ -955,7 +981,7 @@ progress::-webkit-progress-value {
 }
 .simple-section {
   padding: 38px 0;
-  border-bottom: 1px solid color-mix(in oklab, var(--ink) 20%, transparent);
+  border-bottom: 1px solid color-mix(in oklab, var(--outline) 20%, transparent);
   scroll-margin-top: 20px;
 }
 .simple-section-heading {
@@ -1039,9 +1065,9 @@ progress::-webkit-progress-value {
   transform: translateX(-50%);
   font: 7px/1.6 var(--font-pixel);
   background: var(--surface);
-  border: 1px solid var(--ink);
+  border: 1px solid var(--outline);
   padding: 4px 6px;
-  box-shadow: 2px 2px 0 var(--ink);
+  box-shadow: 2px 2px 0 var(--outline);
   opacity: 0;
   white-space: nowrap;
   pointer-events: none;
@@ -1057,7 +1083,7 @@ progress::-webkit-progress-value {
   width: 7px;
   height: 7px;
   background: var(--gold);
-  border: 1px solid var(--ink);
+  border: 1px solid var(--outline);
   transform: rotate(45deg);
   top: -6px;
   right: -6px;
@@ -1296,7 +1322,7 @@ progress::-webkit-progress-value {
     margin: 3px 14px 19px;
     padding: 18px 0 0;
     border-left: none;
-    border-top: 2px solid color-mix(in oklab, var(--ink) 20%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--outline) 20%, transparent);
   }
   .exploration-log h2 {
     font-size: 12px;
@@ -1445,7 +1471,7 @@ progress::-webkit-progress-value {
   }
   .exploration-log {
     border-left: none;
-    border-top: 2px solid color-mix(in oklab, var(--ink) 20%, transparent);
+    border-top: 2px solid color-mix(in oklab, var(--outline) 20%, transparent);
     margin: 0 20px 24px;
     padding: 22px 0 0;
   }
@@ -1558,8 +1584,8 @@ progress::-webkit-progress-value {
   padding: 5px 7px;
   background: var(--surface);
   color: var(--ink);
-  border: 2px solid var(--ink);
-  box-shadow: 2px 2px 0 var(--ink);
+  border: 2px solid var(--outline);
+  box-shadow: 2px 2px 0 var(--outline);
   font: 7px/1.4 var(--font-pixel);
 }
 .map-tint {
@@ -1568,10 +1594,10 @@ progress::-webkit-progress-value {
 
 /* Estantes da biblioteca: uma estante por categoria, livros clicaveis */
 .shelf-view {
-  --wood-dark: color-mix(in oklab, var(--wood) 55%, var(--ink));
+  --wood-dark: color-mix(in oklab, var(--wood) 55%, var(--outline));
   position: relative;
   margin-top: 22px;
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   box-shadow: var(--shadow-scene);
   background: var(--surface);
   padding: 25px;
@@ -1599,7 +1625,7 @@ progress::-webkit-progress-value {
   flex-direction: column;
   gap: 10px;
   background: var(--wood-dark);
-  border: 4px solid var(--ink);
+  border: 4px solid var(--outline);
   padding: 10px;
 }
 .shelf-row {
@@ -1608,14 +1634,14 @@ progress::-webkit-progress-value {
   gap: 6px;
   height: 132px;
   padding: 8px 10px 0;
-  background: color-mix(in oklab, var(--ink) 55%, var(--wood));
+  background: color-mix(in oklab, var(--outline) 55%, var(--wood));
   border-bottom: 8px solid var(--wood);
 }
 .book {
   flex: 1 1 0;
   max-width: 64px;
   height: var(--h);
-  border: 2px solid var(--ink);
+  border: 2px solid var(--outline);
   color: var(--surface);
   font: 7px/1.4 var(--font-pixel);
   writing-mode: vertical-rl;
@@ -1652,7 +1678,7 @@ progress::-webkit-progress-value {
   color: var(--ink);
 }
 .book-detail {
-  border: 3px solid var(--ink);
+  border: 3px solid var(--outline);
   background: color-mix(in oklab, var(--room-color) 12%, var(--surface));
   padding: 18px;
   min-height: 200px;
