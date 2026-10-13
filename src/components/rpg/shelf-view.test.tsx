@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
 import { describe, expect, it, vi } from 'vitest';
 import { rooms, type Artifact, type Book } from '@/lib/portfolio-data';
@@ -91,7 +91,7 @@ describe('library shelves', () => {
     );
   });
 
-  it('shows GitHub metadata and the direct repo link on the selected project', () => {
+  it('shows GitHub metadata and the direct repo link on the selected project', async () => {
     const projectsShelf = rooms[0].objects[2];
     const githubBook: Book = {
       title: 'Portfolio RPG',
@@ -104,6 +104,19 @@ describe('library shelves', () => {
       updatedAt: '2026-10-13T18:02:01Z',
     };
 
+    const README_TEXT = '## Projeto\n\nEste é um README de teste para validar o scroll.\n\n- item 1\n- item 2';
+    const encodedReadme = btoa(String.fromCharCode(...new TextEncoder().encode(README_TEXT)));
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          content: encodedReadme,
+        }),
+      }),
+    );
+
     render(
       <ShelfView
         artifact={projectsShelf}
@@ -115,6 +128,17 @@ describe('library shelves', () => {
         githubUser="henriquessouzas"
       />,
     );
+
+    const readmeButton = await screen.findByRole('button', { name: /abrir readme/i });
+    expect(readmeButton).toBeInTheDocument();
+
+    await act(async () => {
+      readmeButton.click();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText(/Este é um README de teste/i)).toBeInTheDocument();
+    });
 
     expect(screen.getByText('Ver no GitHub')).toHaveAttribute(
       'href',

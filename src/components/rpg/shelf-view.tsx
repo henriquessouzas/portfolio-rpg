@@ -1,13 +1,141 @@
+import { useEffect, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Star, X } from 'lucide-react';
 import { Button } from '@/components/rpg/ui/button';
+import { fetchReadmeForRepo } from '@/lib/github';
 import type { Artifact, Book } from '@/lib/portfolio-data';
+import { Popup } from './popup';
 
 const ROW_SIZE = 4;
 const chunk = <T,>(items: T[], size: number): T[][] =>
   Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
     items.slice(i * size, i * size + size),
   );
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function formatInlineMarkdown(value: string): string {
+  const escaped = escapeHtml(value);
+
+  return escaped
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+|\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+    .replace(/_([^_]+)_/g, '<em>$1</em>');
+}
+
+function renderMarkdown(value: string): string {
+  const source = value.replace(/\r\n/g, '\n').trim();
+  if (!source) return '';
+
+  const lines = source.split('\n');
+  const blocks: string[] = [];
+  let paragraph: string[] = [];
+  let listItems: string[] = [];
+  let quoteLines: string[] = [];
+  let codeLines: string[] = [];
+  let inCodeBlock = false;
+
+  const flushParagraph = () => {
+    if (paragraph.length > 0) {
+      blocks.push(`<p>${formatInlineMarkdown(paragraph.join(' '))}</p>`);
+      paragraph = [];
+    }
+  };
+
+  const flushList = () => {
+    if (listItems.length > 0) {
+      blocks.push(`<ul>${listItems.map((item) => `<li>${formatInlineMarkdown(item)}</li>`).join('')}</ul>`);
+      listItems = [];
+    }
+  };
+
+  const flushQuote = () => {
+    if (quoteLines.length > 0) {
+      blocks.push(`<blockquote>${formatInlineMarkdown(quoteLines.join(' '))}</blockquote>`);
+      quoteLines = [];
+    }
+  };
+
+  const flushCode = () => {
+    if (codeLines.length > 0) {
+      blocks.push(`<pre><code>${escapeHtml(codeLines.join('\n'))}</code></pre>`);
+      codeLines = [];
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trimEnd();
+
+    if (!line.trim()) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      continue;
+    }
+
+    if (line.startsWith('```')) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      if (inCodeBlock) {
+        flushCode();
+        inCodeBlock = false;
+      } else {
+        inCodeBlock = true;
+      }
+      continue;
+    }
+
+    if (inCodeBlock) {
+      codeLines.push(rawLine);
+      continue;
+    }
+
+    const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+    if (headingMatch) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      const level = headingMatch[1].length;
+      const content = headingMatch[2].trim();
+      blocks.push(`<h${level}>${formatInlineMarkdown(content)}</h${level}>`);
+      continue;
+    }
+
+    if (/^>\s?/.test(line)) {
+      flushParagraph();
+      flushList();
+      quoteLines.push(line.replace(/^>\s?/, '').trim());
+      continue;
+    }
+
+    if (/^[-*]\s+/.test(line) || /^\d+\.\s+/.test(line)) {
+      flushParagraph();
+      flushQuote();
+      listItems.push(line.replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, '').trim());
+      continue;
+    }
+
+    paragraph.push(line.trim());
+  }
+
+  flushParagraph();
+  flushList();
+  flushQuote();
+  if (inCodeBlock) {
+    flushCode();
+  }
+
+  return blocks.join('\n');
+}
 
 function formatBookDate(value?: string): string {
   if (!value) return '—';
@@ -36,7 +164,36 @@ export function ShelfView({
   githubUser?: string;
 }) {
   const books = booksOverride ?? artifact.books ?? [];
+  const [readme, setReadme] = useState('');
+  const [readmeOpen, setReadmeOpen] = useState(false);
+  const [readmeState, setReadmeState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle');
   let index = 0;
+
+  useEffect(() => {
+    let active = true;
+
+    if (!book?.url) {
+      setReadme('');
+      setReadmeState('idle');
+      setReadmeOpen(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setReadmeOpen(false);
+    setReadmeState('loading');
+
+    void fetchReadmeForRepo(book.url).then((nextReadme) => {
+      if (!active) return;
+      setReadme(nextReadme.trim());
+      setReadmeState(nextReadme ? 'ready' : 'error');
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [book?.url]);
 
   const renderState = () => {
     if (status === 'loading') {
@@ -74,28 +231,59 @@ export function ShelfView({
     }
 
     if (book) {
+      const readmeButtonLabel =
+        readmeState === 'loading' ? 'Carregando README…' : readmeState === 'error' ? 'README indisponível' : 'Abrir README';
+
       return (
-        <>
-          <span className="eyebrow">{book.subtitle}</span>
-          <h3>{book.title}</h3>
-          <p>{book.description}</p>
-          <div className="book-meta">
-            <span className="book-stat">
-              <Star size={14} /> {book.stars ?? 0}
-            </span>
-            <span className="book-stat">Atualizado em {formatBookDate(book.updatedAt)}</span>
+        <div className="book-detail-layout">
+          <div className="book-detail-summary">
+            <span className="eyebrow">{book.subtitle}</span>
+            <h3>{book.title}</h3>
+            <p>{book.description}</p>
+            <div className="book-meta">
+              <span className="book-stat">
+                <Star size={14} /> {book.stars ?? 0}
+              </span>
+              <span className="book-stat">Atualizado em {formatBookDate(book.updatedAt)}</span>
+            </div>
+            <div className="tags">
+              {book.tags.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+            <div className="book-actions">
+              {book.url ? (
+                <a className="book-link" href={book.url} target="_blank" rel="noopener noreferrer">
+                  Ver no GitHub
+                </a>
+              ) : null}
+              <button
+                type="button"
+                className="book-link"
+                aria-label="Abrir README"
+                disabled={readmeState === 'loading' || readmeState === 'error'}
+                onClick={() => setReadmeOpen(true)}
+              >
+                {readmeButtonLabel}
+              </button>
+            </div>
           </div>
-          <div className="tags">
-            {book.tags.map((tag) => (
-              <span key={tag}>{tag}</span>
-            ))}
-          </div>
-          {book.url ? (
-            <a className="book-link" href={book.url} target="_blank" rel="noopener noreferrer">
-              Ver no GitHub
-            </a>
+          {readmeOpen && readme ? (
+            <Popup title={`${book.title} — README`} onClose={() => setReadmeOpen(false)} width={640} storageKey={`readme:${book.title}`}>
+              <div className="book-readme-popup">
+                <div className="book-readme-shell">
+                  <div className="royal-seal" aria-hidden="true">
+                    <span>H</span>
+                  </div>
+                  <div
+                    className="book-readme-content book-readme-markdown"
+                    dangerouslySetInnerHTML={{ __html: renderMarkdown(readme) }}
+                  />
+                </div>
+              </div>
+            </Popup>
           ) : null}
-        </>
+        </div>
       );
     }
 

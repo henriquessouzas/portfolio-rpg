@@ -54,14 +54,19 @@ function buildTags(language: string | null, topics: string[] | undefined): strin
   return Array.from(new Set(values)).slice(0, 4);
 }
 
-function getBookColor(language: string | null): Book['color'] {
+function getBookColor(language: string | null, index = 0): Book['color'] {
   const normalized = (language ?? '').toLowerCase();
+  const palette: Book['color'][] = ['mana', 'gold', 'forest', 'ember', 'royal'];
+  const languagePalette: Record<string, Book['color'][]> = {
+    typescript: ['mana', 'royal', 'forest', 'gold'],
+    javascript: ['gold', 'ember', 'mana', 'royal'],
+    python: ['forest', 'mana', 'gold', 'royal'],
+    html: ['ember', 'gold', 'royal', 'mana'],
+    css: ['ember', 'royal', 'gold', 'forest'],
+  };
 
-  if (normalized === 'typescript') return 'mana';
-  if (normalized === 'javascript') return 'gold';
-  if (normalized === 'python') return 'forest';
-  if (normalized === 'html' || normalized === 'css') return 'ember';
-  return 'royal';
+  const options = languagePalette[normalized] ?? palette;
+  return options[index % options.length] ?? options[0];
 }
 
 function readCacheEntry(user: string): { at: number; data: GitHubRepo[] } | null {
@@ -198,6 +203,47 @@ export async function fetchRepos(
   }
 }
 
+function decodeGitHubBase64(raw: string): string {
+  const sanitized = raw.replace(/\s+/g, '');
+  if (!sanitized) return '';
+
+  const binary = atob(sanitized);
+  const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+export function fetchReadmeForRepo(repoUrl: string): Promise<string> {
+  if (!repoUrl) return Promise.resolve('');
+
+  try {
+    const parsed = new URL(repoUrl);
+    const pathSegments = parsed.pathname.split('/').filter(Boolean);
+    const owner = pathSegments.at(-2);
+    const repo = pathSegments.at(-1);
+
+    if (!owner || !repo) return Promise.resolve('');
+
+    return fetch(`https://api.github.com/repos/${owner}/${repo}/readme`, {
+      headers: { Accept: 'application/vnd.github+json' },
+    })
+      .then(async (response) => {
+        if (!response.ok) return '';
+        const payload = (await response.json()) as { content?: string; encoding?: string };
+        const content = payload.content ?? '';
+        if (!content) return '';
+
+        try {
+          return decodeGitHubBase64(content);
+        } catch {
+          return '';
+        }
+      })
+      .catch(() => '');
+  } catch {
+    return Promise.resolve('');
+  }
+}
+
 export function toBooks(repos: GitHubRepo[], config: GitHubBooksConfig = {}): Book[] {
   const pinned = config.pinned ?? [];
   const excluded = new Set((config.exclude ?? []).map((name) => name.toLowerCase()));
@@ -226,7 +272,7 @@ export function toBooks(repos: GitHubRepo[], config: GitHubBooksConfig = {}): Bo
     return new Date(right.pushed_at).getTime() - new Date(left.pushed_at).getTime();
   });
 
-  return sorted.slice(0, max).map((repo) => {
+  return sorted.slice(0, max).map((repo, index) => {
     const override = overrides[repo.name] ?? overrides[repo.full_name];
     const title = override?.title ?? humanizeRepoName(repo.name);
     const descriptionSource = override?.description ?? repo.description ?? 'Sem descrição ainda.';
@@ -238,7 +284,7 @@ export function toBooks(repos: GitHubRepo[], config: GitHubBooksConfig = {}): Bo
       subtitle: repo.language ?? 'Projeto',
       description,
       tags,
-      color: getBookColor(repo.language),
+      color: getBookColor(repo.language, index),
       url: repo.html_url,
       stars: typeof repo.stargazers_count === 'number' ? repo.stargazers_count : undefined,
       updatedAt: repo.pushed_at ?? repo.updated_at,

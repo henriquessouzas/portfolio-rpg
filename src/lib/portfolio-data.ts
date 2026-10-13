@@ -12,6 +12,7 @@ export type Book = {
   url?: string;
   stars?: number;
   updatedAt?: string;
+  readme?: string;
 };
 export type Artifact = {
   name: string;
