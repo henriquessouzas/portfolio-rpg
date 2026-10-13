@@ -10,7 +10,17 @@ export function githubUrl(profile: ContactProfile): string {
 
 export function linkedinUrl(profile: ContactProfile): string {
   const value = String(profile.linkedin ?? '').trim();
-  return value || '';
+  if (!value) return '';
+
+  try {
+    const url = new URL(value);
+    if (!url.searchParams.has('isSelfProfile')) {
+      url.searchParams.set('isSelfProfile', 'true');
+    }
+    return url.toString();
+  } catch {
+    return value;
+  }
 }
 
 export function mailtoUrl({

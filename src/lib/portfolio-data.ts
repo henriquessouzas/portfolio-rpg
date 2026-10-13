@@ -381,6 +381,14 @@ export const rooms: [Room, Room, Room, Room, Room] = [
         art: 'anvil',
         categories: ['Ferramentas'],
       },
+      {
+        name: 'Esfera das tecnologias',
+        title: 'Esfera das tecnologias',
+        description: 'Mapa interativo das principais tecnologias e competências que uso em software, dados e automação.',
+        tags: ['Tecnologias', 'Competências'],
+        art: 'orb',
+        categories: ['Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas'],
+      },
     ],
   },
   {

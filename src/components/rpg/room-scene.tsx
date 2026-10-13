@@ -219,6 +219,26 @@ function Furniture({ fixture: f, art }: { fixture: Fixture; art?: string | undef
         </>
       );
       break;
+    case 'tech-pedestal':
+      contents = (
+        <>
+          <ellipse cx={w / 2} cy={h * 0.82} rx={w * 0.42} ry={h * 0.12} className="fill-stone-dark" />
+          <path
+            d={`M${w * 0.18} ${h * 0.7}h${w * 0.64}v${h * 0.18}h-${w * 0.64}z`}
+            className="fill-wood stroke-ink"
+            strokeWidth="3"
+          />
+          <path
+            d={`M${w * 0.34} ${h * 0.35}h${w * 0.32}v${h * 0.2}h-${w * 0.32}z`}
+            className="fill-wood stroke-gold"
+            strokeWidth="3"
+          />
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.22} className="fill-mana stroke-gold" strokeWidth="3" />
+          <circle cx={w / 2} cy={h * 0.38} r={Math.min(w, h) * 0.1} className="fill-royal" />
+          <path d={`M${w * 0.26} ${h * 0.38}h${w * 0.48}M${w / 2} ${h * 0.18}v${h * 0.38}`} className="stroke-gold" strokeWidth="3" />
+        </>
+      );
+      break;
     case 'plant':
       contents = (
         <>

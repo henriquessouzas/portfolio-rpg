@@ -36,7 +36,7 @@ export function canUse3D(): boolean {
     }
   }
 
-  if (navigator.connection?.saveData) {
+  if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) {
     return false;
   }
 

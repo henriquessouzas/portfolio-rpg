@@ -60,9 +60,7 @@ export function Popup({
     const { width: popupWidth, height: popupHeight } = getBounds();
 
     if (initialAnchor) {
-      const x = clamp(initialAnchor.x, 8, Math.max(8, viewportWidth - popupWidth - 8));
-      const y = clamp(initialAnchor.y, 8, Math.max(8, viewportHeight - popupHeight - 8));
-      return { x, y };
+      return { x: initialAnchor.x, y: initialAnchor.y };
     }
 
     return {
@@ -156,10 +154,18 @@ export function Popup({
         ArrowUp: { x: 0, y: -step },
       }[event.key];
 
-      setPosition((prev) => ({
-        x: prev.x + delta.x,
-        y: prev.y + delta.y,
-      }));
+      setPosition((prev) => {
+        const next = {
+          x: prev.x + delta.x,
+          y: prev.y + delta.y,
+        };
+
+        if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+          next.y = prev.y;
+        }
+
+        return next;
+      });
     }
   };
 

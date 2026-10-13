@@ -6,9 +6,13 @@ const categories = ['Todas', 'Linguagens', 'Front-end', 'Back-end', 'Dados', 'Fe
 export function TechSearch({
   items,
   onClose,
+  selectedName,
+  onSelect,
 }: {
   items: TechSearchItem[];
   onClose?: () => void;
+  selectedName?: string;
+  onSelect?: (name: string) => void;
 }) {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -105,22 +109,33 @@ export function TechSearch({
         <ul className="tech-search-results">
           {results.map((tech) => {
             const value = Math.min(100, Math.max(20, (tech.years ?? 1) * 22));
+            const isSelected = selectedName === tech.name;
             return (
-              <li key={`${tech.category}-${tech.name}`} className="tech-search-item">
-                <div className="tech-search-item-header">
-                  <strong>{tech.name}</strong>
-                  <span>{tech.category}</span>
-                </div>
-                <div
-                  className="tech-search-progress"
-                  role="progressbar"
-                  aria-label={`${tech.name}: ${value}% de domínio`}
-                  aria-valuenow={value}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
+              <li
+                key={`${tech.category}-${tech.name}`}
+                className={`tech-search-item ${isSelected ? 'is-selected' : ''}`}
+              >
+                <button
+                  type="button"
+                  className="tech-search-item-button"
+                  aria-pressed={isSelected}
+                  onClick={() => onSelect?.(tech.name)}
                 >
-                  <span style={{ width: `${value}%` }} />
-                </div>
+                  <div className="tech-search-item-header">
+                    <strong>{tech.name}</strong>
+                    <span>{tech.category}</span>
+                  </div>
+                  <div
+                    className="tech-search-progress"
+                    role="progressbar"
+                    aria-label={`${tech.name}: ${value}% de domínio`}
+                    aria-valuenow={value}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
+                    <span style={{ width: `${value}%` }} />
+                  </div>
+                </button>
               </li>
             );
           })}
