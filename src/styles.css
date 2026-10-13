@@ -1714,6 +1714,45 @@ progress::-webkit-progress-value {
   }
 }
 
+/* Seletor de tema */
+.theme-toggle {
+  display: flex;
+  gap: 0;
+}
+.theme-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 8px 10px;
+  font-size: 7px;
+  border-radius: 0;
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--outline);
+  box-shadow: none;
+  margin-right: -2px;
+}
+.theme-toggle-btn:last-child {
+  margin-right: 0;
+}
+.theme-toggle-btn:hover {
+  transform: none;
+  box-shadow: none;
+  background: var(--muted);
+}
+.theme-toggle-btn:active {
+  transform: none;
+  box-shadow: none;
+}
+.theme-toggle-active {
+  background: var(--primary) !important;
+  color: var(--primary-foreground) !important;
+  z-index: 1;
+  position: relative;
+}
+
+
 /* Mapa: brilho de fogo, circulo magico e bolhas */
 .map-glow {
   animation: map-glow 1.6s ease-in-out infinite;
