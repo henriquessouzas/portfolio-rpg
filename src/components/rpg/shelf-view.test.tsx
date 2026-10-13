@@ -1,4 +1,5 @@
 import { act } from 'react';
+import { render, screen } from '@testing-library/react';
 import { createRoot } from 'react-dom/client';
 import { describe, expect, it, vi } from 'vitest';
 import { rooms, type Artifact, type Book } from '@/lib/portfolio-data';
@@ -19,9 +20,10 @@ function mount(artifact: Artifact, book: Book | null, onBook: (b: Book | null) =
 }
 
 describe('library shelves', () => {
-  it('gives each library shelf its own books with unique titles', () => {
-    expect(shelves).toHaveLength(3);
-    for (const shelf of shelves) {
+  it('keeps the static library shelves populated with unique titles', () => {
+    const staticShelves = shelves.filter((shelf) => shelf.name !== 'Projetos');
+    expect(staticShelves).toHaveLength(2);
+    for (const shelf of staticShelves) {
       const titles = shelf.books?.map((b) => b.title) ?? [];
       expect(titles.length).toBeGreaterThan(0);
       expect(new Set(titles).size).toBe(titles.length);
@@ -41,13 +43,83 @@ describe('library shelves', () => {
     unmount();
   });
 
-  it('shows the description of the selected book', () => {
-    const shelf = shelves[2];
+  it('shows the description of the selected static book', () => {
+    const shelf = shelves[0];
     const book = shelf?.books?.[0];
     if (!shelf || !book) throw new Error('missing shelf data');
     const { host, unmount } = mount(shelf, book, () => {});
     expect(host.textContent).toContain(book.description);
     expect(host.querySelector('.book-open')).not.toBeNull();
     unmount();
+  });
+
+  it('renders the loading state with the GitHub status message', () => {
+    const projectsShelf = rooms[0].objects[2];
+    render(
+      <ShelfView
+        artifact={projectsShelf}
+        book={null}
+        onBook={() => {}}
+        onClose={() => {}}
+        books={[]}
+        status="loading"
+        githubUser="henriquessouzas"
+      />,
+    );
+
+    expect(screen.getByText('Buscando seus projetos no GitHub…')).toBeInTheDocument();
+  });
+
+  it('shows the error state with GitHub profile link when no snapshot is available', () => {
+    const projectsShelf = rooms[0].objects[2];
+    render(
+      <ShelfView
+        artifact={projectsShelf}
+        book={null}
+        onBook={() => {}}
+        onClose={() => {}}
+        books={[]}
+        status="error"
+        githubUser="henriquessouzas"
+      />,
+    );
+
+    expect(screen.getByText('Não consegui carregar os projetos agora.')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'github.com/henriquessouzas' })).toHaveAttribute(
+      'href',
+      'https://github.com/henriquessouzas',
+    );
+  });
+
+  it('shows GitHub metadata and the direct repo link on the selected project', () => {
+    const projectsShelf = rooms[0].objects[2];
+    const githubBook: Book = {
+      title: 'Portfolio RPG',
+      subtitle: 'TypeScript',
+      description: 'Meu portfólio interativo em formato de RPG.',
+      tags: ['react', 'typescript'],
+      color: 'mana',
+      url: 'https://github.com/henriquessouzas/portfolio-rpg',
+      stars: 12,
+      updatedAt: '2026-10-13T18:02:01Z',
+    };
+
+    render(
+      <ShelfView
+        artifact={projectsShelf}
+        book={githubBook}
+        onBook={() => {}}
+        onClose={() => {}}
+        books={[githubBook]}
+        status="ready"
+        githubUser="henriquessouzas"
+      />,
+    );
+
+    expect(screen.getByText('Ver no GitHub')).toHaveAttribute(
+      'href',
+      'https://github.com/henriquessouzas/portfolio-rpg',
+    );
+    expect(screen.getByText(/Atualizado em/i)).toBeInTheDocument();
   });
 });

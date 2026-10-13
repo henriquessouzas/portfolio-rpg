@@ -42,6 +42,7 @@ import { ThemeToggle } from './theme-toggle';
 import { Popup } from './popup';
 import { Messenger } from './messenger';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
+import { useGithubBooks } from '@/hooks/use-github-books';
 
 type Screen = 'castle' | 'map' | 'room' | 'simple';
 const pause = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -81,6 +82,7 @@ export default function Portfolio() {
   const [focusRoom, setFocusRoom] = useState<RoomId | null>(null);
   const operation = useRef(0);
   const heading = useRef<HTMLHeadingElement>(null);
+  const { books: githubBooks, status: githubBooksStatus, user: githubUser } = useGithubBooks();
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -468,20 +470,33 @@ export default function Portfolio() {
                 />
                 {selected && (
                   <Popup
-                    title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books ? `Estante: ${selected.name}` : selected.title}
+                    title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books || selected.name === 'Projetos' ? `Estante: ${selected.name}` : selected.title}
                     onClose={closePopup}
-                    width={selected.name === 'Mensageiro' ? 480 : selected.books ? 760 : 560}
+                    width={selected.name === 'Mensageiro' ? 480 : selected.books || selected.name === 'Projetos' ? 760 : 560}
                     initialAnchor={popupAnchor}
+                    footer={
+                      selected.name === 'Projetos' ? (
+                        <span>
+                          Atualizado automaticamente do GitHub{' '}
+                          <a href={`https://github.com/${profile.github}`} target="_blank" rel="noopener noreferrer">
+                            perfil
+                          </a>
+                        </span>
+                      ) : undefined
+                    }
                   >
                     {selected.name === 'Mensageiro' ? (
                       <Messenger profile={profile} />
-                    ) : selected.books ? (
+                    ) : selected.books || selected.name === 'Projetos' ? (
                       <ShelfView
                         artifact={selected}
                         book={book}
                         onBook={setBook}
                         onClose={closePopup}
                         showClose={false}
+                        books={selected.name === 'Projetos' ? githubBooks : selected.books ?? []}
+                        status={selected.name === 'Projetos' ? githubBooksStatus : 'ready'}
+                        githubUser={selected.name === 'Projetos' ? githubUser : undefined}
                       />
                     ) : (
                       <div className="popup-detail-content">
@@ -550,15 +565,18 @@ export default function Portfolio() {
                           <span key={tag}>{tag}</span>
                         ))}
                       </div>
-                      {obj.books && (
+                      {obj.books || obj.name === 'Projetos' ? (
                         <ul className="simple-books">
-                          {obj.books.map((b) => (
+                          {(obj.name === 'Projetos' ? githubBooks : obj.books ?? []).map((b) => (
                             <li key={b.title}>
-                              <strong>{b.title}</strong>: {b.description}
+                              <a href={b.url ?? '#'} target={b.url ? '_blank' : undefined} rel={b.url ? 'noopener noreferrer' : undefined}>
+                                <strong>{b.title}</strong>
+                              </a>
+                              : {b.description}
                             </li>
                           ))}
                         </ul>
-                      )}
+                      ) : null}
                     </article>
                   ))}
                 </div>
