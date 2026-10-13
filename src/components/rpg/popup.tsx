@@ -165,6 +165,7 @@ export function Popup({
 
   const handleTitlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (compact) return;
+    if ((event.target as HTMLElement | null)?.closest('.popup-close')) return;
     handlePointerDown({
       clientX: event.clientX,
       clientY: event.clientY,
@@ -217,6 +218,9 @@ export function Popup({
           type="button"
           className="popup-close"
           aria-label="Fechar"
+          onPointerDown={(event) => {
+            event.stopPropagation();
+          }}
           onClick={(event) => {
             event.stopPropagation();
             handleClose();

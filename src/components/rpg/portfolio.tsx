@@ -38,6 +38,7 @@ import { RoomScene } from './room-scene';
 import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
+import { Popup } from './popup';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 
 type Screen = 'castle' | 'map' | 'room' | 'simple';
@@ -67,6 +68,7 @@ export default function Portfolio() {
   const [roomPosition, setRoomPosition] = useState<Point>(roomEntrance);
   const [selected, setSelected] = useState<Artifact | null>(null);
   const [book, setBook] = useState<Book | null>(null);
+  const [popupAnchor, setPopupAnchor] = useState<{ x: number; y: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [visited, setVisited] = useState<string[]>([]);
@@ -93,9 +95,17 @@ export default function Portfolio() {
     if (screen !== 'castle') heading.current?.focus();
   }, [screen]);
 
+  function closePopup() {
+    setSelected(null);
+    setBook(null);
+    setPopupAnchor(null);
+  }
+
   function changeScreen(next: Screen) {
     operation.current++;
     setBook(null);
+    setSelected(null);
+    setPopupAnchor(null);
     setBusy(false);
     setTransitioning(false);
     setMapPath([]);
@@ -114,7 +124,12 @@ export default function Portfolio() {
     setTransitioning(false);
     setBusy(false);
   }
-  async function pickObject(artifact: Artifact, index: number, currentRoom = room) {
+  async function pickObject(
+    artifact: Artifact,
+    index: number,
+    currentRoom = room,
+    anchor: { x: number; y: number } | null = null,
+  ) {
     const token = ++operation.current;
     const fixture = roomLayouts[currentRoom.id].find((f) => f.object === index);
     if (!fixture?.approach) return;
@@ -127,6 +142,7 @@ export default function Portfolio() {
     setBusy(true);
     setSelected(null);
     setBook(null);
+    setPopupAnchor(null);
     for (const tile of reducedMotion ? [fixture.approach] : path.slice(1)) {
       if (!reducedMotion) await pause(100);
       if (token !== operation.current) return;
@@ -135,6 +151,7 @@ export default function Portfolio() {
     if (!reducedMotion) await pause(140);
     if (token !== operation.current) return;
     setSelected(artifact);
+    setPopupAnchor(anchor);
     setBusy(false);
     setAnnouncement(artifact.title);
   }
@@ -163,6 +180,7 @@ export default function Portfolio() {
     setRoom(destination);
     setSelected(null);
     setBook(null);
+    setPopupAnchor(null);
     setRoomPosition(roomEntrance);
     setScreen('room');
     setTransitioning(false);
@@ -177,6 +195,12 @@ export default function Portfolio() {
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
+        if (selected) {
+          event.preventDefault();
+          event.stopPropagation();
+          closePopup();
+          return;
+        }
         if (screen === 'room') changeScreen('map');
         else if (screen === 'map') changeScreen('castle');
         return;
@@ -438,48 +462,38 @@ export default function Portfolio() {
                   position={roomPosition}
                   selected={selected}
                   walking={busy}
-                  onPick={(obj, i) => void pickObject(obj, i)}
+                  onPick={(obj, i, anchor) => void pickObject(obj, i, room, anchor)}
                 />
-                {selected?.books ? (
-                  <ShelfView
-                    artifact={selected}
-                    book={book}
-                    onBook={setBook}
-                    onClose={() => {
-                      setSelected(null);
-                      setBook(null);
-                    }}
-                  />
-                ) : (
-                  <div className={`dialogue-panel room-${room.id}`} aria-live="polite">
-                    <div className="dialogue-portrait">
-                      <ObjectArt kind={selected?.art ?? room.objects[0].art} />
-                    </div>
-                    <div className="dialogue-content">
-                      <span className="eyebrow">
-                        {selected ? `${room.name} / ${selected.name}` : room.category}
-                      </span>
-                      <h2>{selected?.title ?? room.name}</h2>
-                      <p>{selected?.description ?? room.subtitle}</p>
-                      {selected && (
+                {selected && (
+                  <Popup
+                    title={selected.books ? `Estante: ${selected.name}` : selected.title}
+                    onClose={closePopup}
+                    width={selected.books ? 760 : 560}
+                    initialAnchor={popupAnchor}
+                  >
+                    {selected.books ? (
+                      <ShelfView
+                        artifact={selected}
+                        book={book}
+                        onBook={setBook}
+                        onClose={closePopup}
+                        showClose={false}
+                      />
+                    ) : (
+                      <div className="popup-detail-content">
+                        <span className="eyebrow">
+                          {room.name} / {selected.name}
+                        </span>
+                        <h3>{selected.title}</h3>
+                        <p>{selected.description}</p>
                         <div className="tags">
                           {selected.tags.map((tag) => (
                             <span key={tag}>{tag}</span>
                           ))}
                         </div>
-                      )}
-                    </div>
-                    {selected && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        aria-label="Fechar detalhes"
-                        onClick={() => setSelected(null)}
-                      >
-                        <X />
-                      </Button>
+                      </div>
                     )}
-                  </div>
+                  </Popup>
                 )}
               </>
             )}

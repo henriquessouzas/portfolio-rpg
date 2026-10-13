@@ -2,6 +2,8 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { Popup } from './popup';
+import { ShelfView } from './shelf-view';
+import { rooms } from '@/lib/portfolio-data';
 
 afterEach(() => {
   cleanup();
@@ -71,5 +73,20 @@ describe('Popup', () => {
     const dialog = screen.getByRole('dialog', { name: 'Mover' });
     expect(dialog.style.left).toBe('136px');
     expect(dialog.style.top).toBe('150px');
+  });
+
+  it('renders shelf content inside a popup with the shelf title', () => {
+    const artifact = rooms[0].objects[0];
+    const book = artifact.books?.[0];
+
+    render(
+      <Popup title={`Estante: ${artifact.name}`} onClose={() => {}} width={760}>
+        <ShelfView artifact={artifact} book={book ?? null} onBook={() => {}} onClose={() => {}} />
+      </Popup>,
+    );
+
+    const dialog = screen.getByRole('dialog', { name: `Estante: ${artifact.name}` });
+    expect(dialog).toBeTruthy();
+    expect(screen.getByText(book?.title ?? '')).toBeTruthy();
   });
 });

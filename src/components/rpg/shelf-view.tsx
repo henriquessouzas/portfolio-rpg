@@ -14,11 +14,13 @@ export function ShelfView({
   book,
   onBook,
   onClose,
+  showClose = true,
 }: {
   artifact: Artifact;
   book: Book | null;
   onBook: (book: Book | null) => void;
   onClose: () => void;
+  showClose?: boolean;
 }) {
   const books = artifact.books ?? [];
   let index = 0;
@@ -30,9 +32,11 @@ export function ShelfView({
           <h2>{artifact.title}</h2>
           <p>{artifact.description}</p>
         </div>
-        <Button variant="ghost" size="icon" aria-label="Fechar estante" onClick={onClose}>
-          <X />
-        </Button>
+        {showClose ? (
+          <Button variant="ghost" size="icon" aria-label="Fechar estante" onClick={onClose}>
+            <X />
+          </Button>
+        ) : null}
       </div>
       <div className="shelf-body">
         <div className="bookcase">
