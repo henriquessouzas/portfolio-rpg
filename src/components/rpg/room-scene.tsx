@@ -315,7 +315,11 @@ export function RoomScene({
   position: Point;
   selected: Artifact | null;
   walking: boolean;
-  onPick: (a: Artifact, i: number) => void;
+  onPick: (
+    a: Artifact,
+    i: number,
+    anchor?: { x: number; y: number } | null,
+  ) => void;
 }) {
   return (
     <div className={`room-world furnished-room room-${room.id}`}>
@@ -402,7 +406,12 @@ export function RoomScene({
               width: `${(f.w / 20) * 100}%`,
               height: `${(f.h / 14) * 100}%`,
             }}
-            onClick={() => onPick(obj, index)}
+            onClick={(event) =>
+              onPick(obj, index, {
+                x: event.clientX,
+                y: event.clientY,
+              })
+            }
             aria-label={`Explorar ${obj.name}`}
           >
             <span className="fixture-label">{obj.name}</span>
