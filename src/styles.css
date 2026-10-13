@@ -262,6 +262,20 @@
   display: block;
   transition: transform 1.1s ease;
 }
+.dark .wind-scene {
+  filter: brightness(0.58) saturate(1.15) hue-rotate(-8deg);
+}
+.dark .wind-scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    transparent 40%,
+    oklch(0.12 0.03 290 / 0.55) 100%
+  );
+  pointer-events: none;
+}
 .wind-scene > img,
 .wind-canvas {
   position: absolute;
@@ -579,6 +593,8 @@
   max-width: 650px;
   aspect-ratio: 13/11;
   outline: 3px solid var(--outline);
+  border: 3px solid var(--outline);
+  box-shadow: 4px 4px 0 var(--outline);
   background: var(--floor);
   transition:
     transform 0.35s ease,
@@ -1789,7 +1805,9 @@ progress::-webkit-progress-value {
 /* Planta do castelo (componente em components/rpg/map) */
 .map-world {
   aspect-ratio: 640 / 520;
-  background: #0d0a08;
+  background: color-mix(in oklab, var(--background) 38%, var(--outline));
+  border: 3px solid var(--outline);
+  box-shadow: 4px 4px 0 var(--outline);
 }
 .map-hero {
   width: 4.6%;
