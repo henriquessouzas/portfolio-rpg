@@ -133,6 +133,17 @@ describe('GitHub client', () => {
     expect(book.tags.length).toBeLessThanOrEqual(4);
   });
 
+  it('distributes colors across repos even when they share the same language', () => {
+    const repos: GitHubRepo[] = [
+      { id: 11, name: 'alpha-app', full_name: 'demo/alpha-app', html_url: 'https://github.com/demo/alpha-app', description: 'alpha', language: 'TypeScript', topics: [], pushed_at: '2024-07-01T00:00:00Z', archived: false, fork: false, owner: { login: 'demo' } },
+      { id: 12, name: 'beta-app', full_name: 'demo/beta-app', html_url: 'https://github.com/demo/beta-app', description: 'beta', language: 'TypeScript', topics: [], pushed_at: '2024-07-02T00:00:00Z', archived: false, fork: false, owner: { login: 'demo' } },
+      { id: 13, name: 'gamma-app', full_name: 'demo/gamma-app', html_url: 'https://github.com/demo/gamma-app', description: 'gamma', language: 'TypeScript', topics: [], pushed_at: '2024-07-03T00:00:00Z', archived: false, fork: false, owner: { login: 'demo' } },
+    ];
+
+    const colors = toBooks(repos, { max: 10 }).map((book) => book.color);
+    expect(new Set(colors).size).toBeGreaterThan(1);
+  });
+
   it('throws a helpful error for a missing GitHub user', async () => {
     vi.stubGlobal(
       'fetch',
