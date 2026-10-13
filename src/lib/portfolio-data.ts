@@ -26,6 +26,37 @@ export type Room = {
   destination: Point;
   objects: [Artifact, ...Artifact[]];
 };
+
+export type Profile = {
+  name: string;
+  role: string;
+  bio: string;
+  location: string;
+  stack: string[];
+  email: string;
+  github: string;
+  linkedin: string;
+  cvUrl: string;
+  githubFeatured: string[];
+  githubExclude: string[];
+  githubOverrides: Record<string, { title?: string; description?: string }>;
+};
+
+export const profile: Profile = {
+  name: 'Henrique Santos de Souza',
+  role: 'Seu cargo',
+  bio: '',
+  location: '',
+  stack: [],
+  email: '',
+  github: '',
+  linkedin: '',
+  cvUrl: '',
+  githubFeatured: [],
+  githubExclude: [],
+  githubOverrides: {},
+};
+
 export const castleMap = [
   '#############',
   '#BBB#TTT#AAA#',
