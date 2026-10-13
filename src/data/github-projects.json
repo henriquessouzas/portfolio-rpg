@@ -1,1 +1,208 @@
-[]
+[
+  {
+    "name": "portfolio-rpg",
+    "description": "Meu portfólio interativo em formato de RPG: explore um castelo em pixel art e conheça meus projetos, habilidades e história.",
+    "language": "TypeScript",
+    "topics": [
+      "game-ui",
+      "pixel-art",
+      "portfolio",
+      "react",
+      "rpg",
+      "typescript",
+      "vite"
+    ],
+    "html_url": "https://github.com/henriquessouzas/portfolio-rpg",
+    "stargazers_count": 0,
+    "pushed_at": "2026-10-13T18:02:01Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "ProgMod_XulambsFoods",
+    "description": "Base para o Xulambs Foods",
+    "language": "Java",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/ProgMod_XulambsFoods",
+    "stargazers_count": 0,
+    "pushed_at": "2026-10-05T23:23:30Z",
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "ProgMod_FormasGeometricas",
+    "description": "Código aula: formas geométricas e polimorfismo",
+    "language": "Java",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/ProgMod_FormasGeometricas",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-28T23:17:16Z",
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "Prova_DIAW",
+    "description": null,
+    "language": "Java",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/Prova_DIAW",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-23T21:47:43Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "Prova1_DIAW",
+    "description": null,
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/Prova1_DIAW",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-23T20:26:01Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "lab_AP1_2026-2_N1",
+    "description": null,
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/lab_AP1_2026-2_N1",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-21T23:49:05Z",
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "LoginPUC",
+    "description": null,
+    "language": "Java",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/LoginPUC",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-16T21:22:52Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "henriquessouzas",
+    "description": null,
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/henriquessouzas",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-14T19:57:07Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "stanley-spider",
+    "description": "crawler dos produtos da stanley",
+    "language": "Python",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/stanley-spider",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-09T19:48:37Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "Books_spider",
+    "description": "crawler de livros",
+    "language": "Python",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/Books_spider",
+    "stargazers_count": 0,
+    "pushed_at": "2026-09-09T19:00:07Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "ProgMod_TesteUnitario",
+    "description": "Repositorio Base para aula de Teste Unitário",
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/ProgMod_TesteUnitario",
+    "stargazers_count": 0,
+    "pushed_at": "2026-08-31T02:44:37Z",
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "Api-Clima",
+    "description": null,
+    "language": "Java",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/Api-Clima",
+    "stargazers_count": 1,
+    "pushed_at": "2026-08-27T01:03:08Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "Api_Clima",
+    "description": null,
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/Api_Clima",
+    "stargazers_count": 0,
+    "pushed_at": "2026-08-26T20:32:45Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "ProgMod_JavaBasico",
+    "description": "Template para aula ProgMod - Java Básico",
+    "language": "Java",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/ProgMod_JavaBasico",
+    "stargazers_count": 0,
+    "pushed_at": "2026-08-10T23:14:08Z",
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "Meu-Repositorio",
+    "description": null,
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/Meu-Repositorio",
+    "stargazers_count": 0,
+    "pushed_at": "2026-08-07T19:06:52Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "IntroAlgs_pygame_SpaceNinja",
+    "description": "Template para o trabalho final da disciplina de Introdução a Algoritmos",
+    "language": "Python",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/IntroAlgs_pygame_SpaceNinja",
+    "stargazers_count": 0,
+    "pushed_at": "2026-07-23T21:58:49Z",
+    "fork": true,
+    "archived": false
+  },
+  {
+    "name": "HTML-review",
+    "description": "revisando html, css, js",
+    "language": null,
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/HTML-review",
+    "stargazers_count": 0,
+    "pushed_at": "2026-04-23T19:41:07Z",
+    "fork": false,
+    "archived": false
+  },
+  {
+    "name": "exemplo-flex",
+    "description": null,
+    "language": "CSS",
+    "topics": [],
+    "html_url": "https://github.com/henriquessouzas/exemplo-flex",
+    "stargazers_count": 0,
+    "pushed_at": "2026-04-10T01:13:18Z",
+    "fork": false,
+    "archived": false
+  }
+]
