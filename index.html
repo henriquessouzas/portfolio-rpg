@@ -2,6 +2,19 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
+    <!-- Theme flash prevention: logic mirrors resolveTheme() in src/lib/theme.ts -->
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#faf1dc" />
+    <script>
+      try {
+        var t = localStorage.getItem('theme');
+        if (t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.content = '#1a1426';
+        }
+      } catch (e) {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Henrique Santos de Souza | Portfólio RPG</title>
     <meta name="description" content="Explore o castelo de Henrique Santos de Souza: habilidades, projetos e histórias em um portfólio RPG interativo." />

@@ -37,6 +37,7 @@ import { WindScene } from './wind-scene';
 import { RoomScene } from './room-scene';
 import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
+import { ThemeToggle } from './theme-toggle';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 
 type Screen = 'castle' | 'map' | 'room' | 'simple';
@@ -220,6 +221,7 @@ export default function Portfolio() {
           </span>
         </a>
         <div className="header-actions">
+          <ThemeToggle />
           <span className="availability">
             <span />
             Aberto a novas aventuras
