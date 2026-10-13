@@ -628,17 +628,38 @@ export default function Portfolio() {
                           {room.name} / {selected.name}
                         </span>
                         <h3>{selected.title}</h3>
-                        <Suspense fallback={<TechSearch items={techItems} onClose={closePopup} />}>
-                          <LazyTechSphere
-                            items={techItems}
-                            selectedName={selectedTech ?? undefined}
-                            reducedMotion={reducedMotion}
-                            onSelect={(name) => {
-                              setSelectedTech(name);
-                              setAnnouncement(`Tecnologia selecionada: ${name}`);
-                            }}
-                          />
-                        </Suspense>
+                        <p>{selected.description}</p>
+                        <div className="tags" style={{ marginBottom: 16 }}>
+                          {selected.tags.map((tag) => (
+                            <span key={tag}>{tag}</span>
+                          ))}
+                        </div>
+                        <ul className="tech-search-results">
+                          {profile.technologies
+                            .filter((t) => selected.categories!.includes(t.category))
+                            .sort((a, b) => (b.years ?? 0) - (a.years ?? 0))
+                            .map((tech) => {
+                              const value = Math.min(100, Math.max(20, (tech.years ?? 1) * 22));
+                              return (
+                                <li key={tech.name} className="tech-search-item">
+                                  <div className="tech-search-item-header">
+                                    <strong>{tech.name}</strong>
+                                    <span>{tech.category}</span>
+                                  </div>
+                                  <div
+                                    className="tech-search-progress"
+                                    role="progressbar"
+                                    aria-label={`${tech.name}: ${value} de 100`}
+                                    aria-valuenow={value}
+                                    aria-valuemin={0}
+                                    aria-valuemax={100}
+                                  >
+                                    <span style={{ width: `${value}%` }} />
+                                  </div>
+                                </li>
+                              );
+                            })}
+                        </ul>
                       </div>
                     ) : (
                       <div className="popup-detail-content">
