@@ -36,6 +36,7 @@ export function prefersDark(): boolean {
 }
 
 export function resolveTheme(theme: Theme): 'light' | 'dark' {
+  // Mirror of the inline script in index.html — keep both in sync.
   return theme === 'system' ? (prefersDark() ? 'dark' : 'light') : theme;
 }
 
