@@ -11,7 +11,9 @@
     "format": "prettier --write src",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "fetch:github": "node scripts/fetch-github-projects.mjs",
+    "prebuild": "npm run fetch:github"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",

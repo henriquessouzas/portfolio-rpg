@@ -9,6 +9,10 @@ export type Book = {
   description: string;
   tags: string[];
   color: BookColor;
+  url?: string;
+  stars?: number;
+  updatedAt?: string;
+  readme?: string;
 };
 export type Artifact = {
   name: string;
@@ -194,38 +198,7 @@ export const rooms: [Room, Room, Room, Room, Room] = [
           'Uma estante para projetos concluídos: o desafio inicial, as escolhas de tecnologia e o que cada construção ensinou.',
         tags: ['Projetos', 'Portfólio'],
         art: 'books',
-        books: [
-          {
-            title: 'Este castelo',
-            subtitle: 'Projeto',
-            description:
-              'O portfólio que você está explorando: salas, herói animado e interações acessíveis, feito com React e TypeScript.',
-            tags: ['React', 'TypeScript', 'Acessibilidade'],
-            color: 'mana',
-          },
-          {
-            title: 'Projeto 2',
-            subtitle: 'Projeto',
-            description:
-              'Conte o desafio inicial, as escolhas de tecnologia e o que este projeto ensinou. Inclua o link do repositório.',
-            tags: ['Em breve'],
-            color: 'forest',
-          },
-          {
-            title: 'Projeto 3',
-            subtitle: 'Projeto',
-            description: 'Outra história que virou código. Substitua pelo projeto real.',
-            tags: ['Em breve'],
-            color: 'royal',
-          },
-          {
-            title: 'Projeto 4',
-            subtitle: 'Projeto',
-            description: 'Um espaço para o próximo livro da estante.',
-            tags: ['Em breve'],
-            color: 'gold',
-          },
-        ],
+        books: [],
       },
     ],
   },
