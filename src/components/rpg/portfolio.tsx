@@ -42,6 +42,7 @@ import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
 import { Popup } from './popup';
 import { Messenger } from './messenger';
+import { TechSearch } from './arsenal/tech-search';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 import { useGithubBooks } from '@/hooks/use-github-books';
 
@@ -538,35 +539,7 @@ export default function Portfolio() {
                           {room.name} / {selected.name}
                         </span>
                         <h3>{selected.title}</h3>
-                        <p>{selected.description}</p>
-                        <div className="tags">
-                          {selected.tags.map((tag) => (
-                            <span key={tag}>{tag}</span>
-                          ))}
-                        </div>
-                        <div className="tech-meter-list">
-                          {selected.categories.map((category) => {
-                            const value = techMeterValue(category);
-                            return (
-                              <div key={category} className="tech-meter-row">
-                                <div className="tech-meter-header">
-                                  <strong>{category}</strong>
-                                  <span>{value}%</span>
-                                </div>
-                                <div
-                                  className="tech-meter"
-                                  aria-label={`${category}: ${value}% de domínio`}
-                                  aria-valuemin={0}
-                                  aria-valuemax={100}
-                                  aria-valuenow={value}
-                                  role="progressbar"
-                                >
-                                  <span style={{ width: `${value}%` }} />
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
+                        <TechSearch items={profile.technologies} onClose={closePopup} />
                       </div>
                     ) : (
                       <div className="popup-detail-content">
