@@ -15,12 +15,16 @@ export type Book = {
   updatedAt?: string;
   readme?: string;
 };
+export const technologyCategories = ['Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas'] as const;
+export type TechnologyCategory = (typeof technologyCategories)[number];
+
 export type Artifact = {
   name: string;
   title: string;
   description: string;
   tags: string[];
   art: string;
+  categories?: TechnologyCategory[];
   paragraphs?: string[];
   items?: string[];
   links?: { label: string; url: string; download?: boolean }[];

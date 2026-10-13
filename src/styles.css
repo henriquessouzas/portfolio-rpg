@@ -954,6 +954,42 @@ progress::-webkit-progress-value {
   font-size: 12px;
   background: var(--background);
 }
+.tech-meter-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+}
+.tech-meter-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.tech-meter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font: 8px/1.8 var(--font-pixel);
+  color: var(--muted-foreground);
+}
+.tech-meter {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 12px;
+  border: 2px solid var(--outline);
+  background: var(--background);
+}
+.tech-meter > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: block;
+  background: linear-gradient(90deg, var(--mana), var(--gold), var(--forest));
+}
+.arsenal-orb {
+  filter: drop-shadow(0 0 18px color-mix(in oklab, var(--mana) 30%, transparent));
+}
 .game-bottom {
   display: flex;
   align-items: center;

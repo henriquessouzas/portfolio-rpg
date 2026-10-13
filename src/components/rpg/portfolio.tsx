@@ -15,6 +15,7 @@ import {
   findPath,
   profile,
   rooms,
+  technologyCategories,
   type Artifact,
   type Book,
   type Point,
@@ -195,6 +196,12 @@ export default function Portfolio() {
     setAnnouncement(destination.name);
     if (destination.id === 'T') void pickObject(destination.objects[0], 0, destination);
   }
+
+  const techMeterValue = (category: (typeof technologyCategories)[number]) => {
+    const matching = profile.technologies.filter((tech) => tech.category === category);
+    const years = matching.reduce((total, tech) => total + (tech.years ?? 1), 0);
+    return Math.min(100, Math.max(28, years * 22));
+  };
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -524,6 +531,42 @@ export default function Portfolio() {
                             ) : null}
                           </div>
                         )}
+                      </div>
+                    ) : selected.categories ? (
+                      <div className="popup-detail-content">
+                        <span className="eyebrow">
+                          {room.name} / {selected.name}
+                        </span>
+                        <h3>{selected.title}</h3>
+                        <p>{selected.description}</p>
+                        <div className="tags">
+                          {selected.tags.map((tag) => (
+                            <span key={tag}>{tag}</span>
+                          ))}
+                        </div>
+                        <div className="tech-meter-list">
+                          {selected.categories.map((category) => {
+                            const value = techMeterValue(category);
+                            return (
+                              <div key={category} className="tech-meter-row">
+                                <div className="tech-meter-header">
+                                  <strong>{category}</strong>
+                                  <span>{value}%</span>
+                                </div>
+                                <div
+                                  className="tech-meter"
+                                  aria-label={`${category}: ${value}% de domínio`}
+                                  aria-valuemin={0}
+                                  aria-valuemax={100}
+                                  aria-valuenow={value}
+                                  role="progressbar"
+                                >
+                                  <span style={{ width: `${value}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
                       </div>
                     ) : (
                       <div className="popup-detail-content">
