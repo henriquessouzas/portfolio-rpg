@@ -13,6 +13,7 @@ import {
 import { Button } from '@/components/rpg/ui/button';
 import {
   findPath,
+  profile,
   rooms,
   type Artifact,
   type Book,
@@ -39,6 +40,7 @@ import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
 import { Popup } from './popup';
+import { Messenger } from './messenger';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 
 type Screen = 'castle' | 'map' | 'room' | 'simple';
@@ -466,12 +468,14 @@ export default function Portfolio() {
                 />
                 {selected && (
                   <Popup
-                    title={selected.books ? `Estante: ${selected.name}` : selected.title}
+                    title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books ? `Estante: ${selected.name}` : selected.title}
                     onClose={closePopup}
-                    width={selected.books ? 760 : 560}
+                    width={selected.name === 'Mensageiro' ? 480 : selected.books ? 760 : 560}
                     initialAnchor={popupAnchor}
                   >
-                    {selected.books ? (
+                    {selected.name === 'Mensageiro' ? (
+                      <Messenger profile={profile} />
+                    ) : selected.books ? (
                       <ShelfView
                         artifact={selected}
                         book={book}
