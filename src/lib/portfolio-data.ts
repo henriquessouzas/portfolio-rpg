@@ -9,6 +9,9 @@ export type Book = {
   description: string;
   tags: string[];
   color: BookColor;
+  url?: string;
+  stars?: number;
+  updatedAt?: string;
 };
 export type Artifact = {
   name: string;
