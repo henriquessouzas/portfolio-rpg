@@ -1,7 +1,10 @@
 import { Hero } from './art';
 import { ThemeToggle } from './theme-toggle';
+import { LangToggle } from './lang-toggle';
+import { useLang } from '@/hooks/use-lang';
 
 export function Hud({ visited }: { visited: number }) {
+  const { t } = useLang();
   return (
     <div className="hud-bar">
       <div className="hud-bar-left">
@@ -11,10 +14,13 @@ export function Hud({ visited }: { visited: number }) {
           aria-live="polite"
           style={{ minWidth: '11ch' }}
         >
-          Salas visitadas: {visited}/5
+          {t.roomsVisited(visited)}
         </span>
       </div>
-      <ThemeToggle />
+      <div style={{ display: 'flex', gap: 4 }}>
+        <LangToggle />
+        <ThemeToggle />
+      </div>
     </div>
   );
 }

@@ -38,6 +38,8 @@ import { RoomScene } from './room-scene';
 import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
+import { LangToggle } from './lang-toggle';
+import { LangProvider, useLang } from '@/hooks/use-lang';
 import { Hud } from './hud';
 import { ExplorerAchievement, hasSeenAchievement, markAchievementSeen } from './explorer-achievement';
 import { TypewriterDescription } from './typewriter-description';
@@ -70,6 +72,15 @@ const planNames: Record<PlanRoomId, string> = {
 };
 
 export default function Portfolio() {
+  return (
+    <LangProvider>
+      <PortfolioInner />
+    </LangProvider>
+  );
+}
+
+function PortfolioInner() {
+  const { t } = useLang();
   const [screen, setScreen] = useState<Screen>('castle');
   const [room, setRoom] = useState<Room>(rooms[0]);
   const [position, setPosition] = useState<Point>(MAP_ENTRANCE);
@@ -154,7 +165,7 @@ export default function Portfolio() {
     const start = screen === 'room' && currentRoom.id === room.id ? roomPosition : roomEntrance;
     const path = findPath(start, fixture.approach, roomGrid(currentRoom.id));
     if (!path.length) {
-      setAnnouncement('Não há caminho até esse objeto.');
+      setAnnouncement(t.noPathToObject);
       return;
     }
     setBusy(true);
@@ -180,7 +191,7 @@ export default function Portfolio() {
   async function goToRoom(destination: Room) {
     const route = planRoute(position, ROOM_STAND[destination.id]);
     if (!route.length) {
-      setAnnouncement('Não há caminho até essa sala.');
+      setAnnouncement(t.noPathToRoom);
       return;
     }
     const steps = sampleRoute(route, 22);
@@ -189,7 +200,7 @@ export default function Portfolio() {
     setTransitioning(false);
     setMapTarget(destination.id);
     setMapPath(steps);
-    setAnnouncement(`A caminho: ${destination.name}`);
+    setAnnouncement(t.headingTo(destination.name));
     for (const point of reducedMotion ? steps.slice(-1) : steps) {
       if (!reducedMotion) await pause(80);
       if (token !== operation.current) return;
@@ -282,14 +293,15 @@ export default function Portfolio() {
         <a href="/" className="brand" aria-label="Henrique Santos de Souza — início">
           <Crest />
           <span>
-            HENRIQUE<span className="brand-sub">PORTFÓLIO • RPG</span>
+            HENRIQUE<span className="brand-sub">{t.brandSub}</span>
           </span>
         </a>
         <div className="header-actions">
+          <LangToggle />
           <ThemeToggle />
           <span className="availability">
             <span />
-            Aberto a novas aventuras
+            {t.openToAdventures}
           </span>
           <Button
             variant="parchment"
@@ -298,11 +310,11 @@ export default function Portfolio() {
             {screen === 'simple' ? (
               <>
                 <Compass />
-                Voltar ao jogo
+                {t.backToGame}
               </>
             ) : (
               <>
-                Pular o jogo
+                {t.skipGame}
                 <ArrowRight />
               </>
             )}
@@ -315,34 +327,34 @@ export default function Portfolio() {
           <section className="castle-screen">
             <div className="intro">
               <span className="eyebrow">
-                <span /> UM PORTFÓLIO, UMA AVENTURA <span />
+                <span /> {t.eyebrowCastle} <span />
               </span>
               <h1>
                 Henrique Santos
                 <br />
                 <span>de Souza</span>
               </h1>
-              <p>Código, criatividade e um mundo para descobrir.</p>
+              <p>{t.heroSubtitle}</p>
             </div>
             <div className="castle-world">
               <Button
                 variant="scene"
                 onClick={() => void enterCastle()}
-                aria-label="Entrar no castelo"
+                aria-label={t.enterCastle}
                 disabled={busy}
                 className={transitioning ? 'castle-entering' : ''}
               >
                 <WindScene reducedMotion={reducedMotion} />
                 <span className="scene-vignette" />
                 <span className="world-label">
-                  <span className="live-dot" /> REINO DE HENRIQUE
+                  <span className="live-dot" /> {t.worldLabel}
                 </span>
                 <span className="castle-cta pixel-button pixel-primary">
-                  {busy ? 'Abrindo os portões...' : 'Entrar no castelo'}
+                  {busy ? t.openingGates : t.enterCastle}
                   {!busy && <ArrowRight size={18} />}
                 </span>
                 <span className="castle-coordinate">
-                  EST. 2026 <span>✦</span> UMA NOVA JORNADA
+                  {t.castleCoordinate}
                 </span>
               </Button>
               <div className="corner corner-tl" />
@@ -352,9 +364,9 @@ export default function Portfolio() {
             </div>
             <div className="world-caption">
               <span>
-                <Compass size={16} /> Cinco salas. Muitas histórias.
+                <Compass size={16} /> {t.fiveRooms}
               </span>
-              <span>DESENVOLVEDOR & EXPLORADOR</span>
+              <span>{t.devExplorer}</span>
             </div>
             <section className="room-directory" aria-label="As cinco salas do castelo">
               {rooms.map((r, i) => (
@@ -377,14 +389,12 @@ export default function Portfolio() {
             <Hud visited={visited.length} />
             <div className="game-heading">
               <div>
-                <span className="eyebrow">A JORNADA CONTINUA</span>
+                <span className="eyebrow">{t.eyebrowJourney}</span>
                 <h1 ref={heading} tabIndex={-1}>
-                  {screen === 'map' ? 'Dentro do castelo' : room.name}
+                  {screen === 'map' ? t.insideCastle : room.name}
                 </h1>
                 <p>
-                  {screen === 'map'
-                    ? 'Um reino de ideias, conquistas e possibilidades.'
-                    : room.subtitle}
+                  {screen === 'map' ? t.castleDesc : room.subtitle}
                 </p>
               </div>
               <Button
@@ -392,19 +402,19 @@ export default function Portfolio() {
                 onClick={() => changeScreen(screen === 'room' ? 'map' : 'castle')}
               >
                 <ArrowLeft />
-                {screen === 'room' ? 'Voltar ao mapa' : 'Sair do castelo'}
+                {screen === 'room' ? t.backToMap : t.leaveCastle}
               </Button>
             </div>
             <div className="game-hud">
               <span>
-                <Map size={16} /> CASTELO <ChevronRight size={14} />
-                {screen === 'map' ? 'MAPA' : room.name.toUpperCase()}
+                <Map size={16} /> {t.castle} <ChevronRight size={14} />
+                {screen === 'map' ? t.map : room.name.toUpperCase()}
               </span>
               <div className="hud-health">
                 <Heart />
                 <Heart />
                 <Heart />
-                <span>EXPLORADOR</span>
+                <span>{t.explorer}</span>
               </div>
             </div>
             {screen === 'map' ? (
@@ -459,15 +469,15 @@ export default function Portfolio() {
                 </div>
                 <aside className="exploration-log">
                   <span className="eyebrow">
-                    <Compass size={15} /> SEU MAPA
+                    <Compass size={15} /> {t.yourMap}
                   </span>
                   <h2>
-                    Diário de
-                    <br />
-                    exploração
+                    {t.explorationDiary.split('\n').map((line, i) => (
+                      <span key={i}>{line}{i === 0 && <br />}</span>
+                    ))}
                   </h2>
                   <div className="exploration-progress">
-                    <span>Salas descobertas</span>
+                    <span>{t.roomsDiscovered}</span>
                     <strong>
                       {visited.length}
                       <span> / 5</span>
@@ -500,8 +510,8 @@ export default function Portfolio() {
                     <Sparkles size={17} />
                     <span>
                       {visited.length === 5
-                        ? 'Todos os caminhos foram descobertos.'
-                        : 'Cada sala guarda uma parte da jornada.'}
+                        ? t.allPathsFound
+                        : t.eachRoomHolds}
                     </span>
                   </div>
                 </aside>
@@ -526,16 +536,16 @@ export default function Portfolio() {
                 </div>
                 {selected && (
                   <Popup
-                    title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books || selected.name === 'Projetos' ? `Estante: ${selected.name}` : selected.title}
+                    title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books || selected.name === 'Projetos' ? `${t.shelfPrefix} ${selected.name}` : selected.title}
                     onClose={closePopup}
                     width={selected.name === 'Mensageiro' ? 480 : selected.name === 'Esfera das tecnologias' ? 720 : selected.books || selected.name === 'Projetos' ? 760 : 560}
                     initialAnchor={popupAnchor}
                     footer={
                       selected.name === 'Projetos' ? (
                         <span>
-                          Atualizado automaticamente do GitHub{' '}
+                          {t.autoUpdatedGitHub}{' '}
                           <a href={`https://github.com/${profile.github}`} target="_blank" rel="noopener noreferrer">
-                            perfil
+                            {t.profile}
                           </a>
                         </span>
                       ) : undefined
@@ -570,12 +580,12 @@ export default function Portfolio() {
                           <div className="book-actions" style={{ marginTop: 16 }}>
                             {profile.cv.pt ? (
                               <a className="book-link" href={profile.cv.pt} target="_blank" rel="noopener noreferrer">
-                                Abrir currículo em português
+                                {t.openCvPt}
                               </a>
                             ) : null}
                             {profile.cv.en ? (
                               <a className="book-link" href={profile.cv.en} target="_blank" rel="noopener noreferrer">
-                                Abrir currículo em inglês
+                                {t.openCvEn}
                               </a>
                             ) : null}
                           </div>
@@ -591,7 +601,7 @@ export default function Portfolio() {
                               reducedMotion={reducedMotion}
                               onSelect={(name) => {
                                 setSelectedTech(name);
-                                setAnnouncement(`Tecnologia selecionada: ${name}`);
+                                setAnnouncement(t.techSelected(name));
                               }}
                             />
                           </Suspense>
@@ -602,7 +612,7 @@ export default function Portfolio() {
                             selectedName={selectedTech ?? undefined}
                             onSelect={(name) => {
                               setSelectedTech(name);
-                              setAnnouncement(`Tecnologia selecionada: ${name}`);
+                              setAnnouncement(t.techSelected(name));
                             }}
                           />
                           {activeTech ? (
@@ -610,21 +620,21 @@ export default function Portfolio() {
                               <h3>{activeTech.name}</h3>
                               <dl>
                                 <div>
-                                  <dt>Nível</dt>
-                                  <dd>{Math.max(1, Math.round(activeTech.years ?? 1))} anos</dd>
+                                  <dt>{t.level}</dt>
+                                  <dd>{t.yearsUnit(Math.max(1, Math.round(activeTech.years ?? 1)))}</dd>
                                 </div>
                                 <div>
-                                  <dt>Categoria</dt>
+                                  <dt>{t.category}</dt>
                                   <dd>{activeTech.category}</dd>
                                 </div>
                                 <div>
-                                  <dt>Anos</dt>
+                                  <dt>{t.years}</dt>
                                   <dd>{activeTech.years ?? 1}</dd>
                                 </div>
                               </dl>
                               {matchingGithubRepos.length > 0 ? (
                                 <div className="tech-sphere-repos">
-                                  <h4>Repositórios</h4>
+                                  <h4>{t.repositories}</h4>
                                   <ul>
                                     {matchingGithubRepos.map((repo) => (
                                       <li key={repo.url ?? repo.title}>
@@ -636,7 +646,7 @@ export default function Portfolio() {
                                   </ul>
                                 </div>
                               ) : (
-                                <p className="tech-sphere-empty">Nenhum repositório com a linguagem principal correspondente.</p>
+                                <p className="tech-sphere-empty">{t.noRepos}</p>
                               )}
                             </div>
                           ) : null}
@@ -702,9 +712,9 @@ export default function Portfolio() {
             <div className="game-bottom">
               <span>
                 <Hero /> HENRIQUE <span className="status-dot" />
-                {busy ? 'Explorando...' : 'Pronto para a próxima aventura'}
+                {busy ? t.exploring : t.readyNext}
               </span>
-              <span>{screen === 'map' ? '01 / O CASTELO' : `02 / ${room.name.toUpperCase()}`}</span>
+              <span>{screen === 'map' ? `01 / ${t.castle}` : `02 / ${room.name.toUpperCase()}`}</span>
             </div>
           </section>
         )}
@@ -713,15 +723,15 @@ export default function Portfolio() {
           <section className="simple-screen">
             <div className="game-heading">
               <div>
-                <span className="eyebrow">A MESMA HISTÓRIA, OUTRO CAMINHO</span>
+                <span className="eyebrow">{t.eyebrowSimple}</span>
                 <h1 ref={heading} tabIndex={-1}>
                   Henrique Santos de Souza
                 </h1>
-                <p>Código, criatividade e um mundo para descobrir.</p>
+                <p>{t.heroSubtitle}</p>
               </div>
               <Crest />
             </div>
-            <nav className="simple-nav" aria-label="Seções do portfólio">
+            <nav className="simple-nav" aria-label={t.portfolioSections}>
               {rooms.map((r) => (
                 <a key={r.id} href={`#simple-${r.id}`}>
                   {r.name}
@@ -770,10 +780,10 @@ export default function Portfolio() {
       </main>
       <footer className="site-footer">
         <span>
-          <Crest /> FEITO DE CÓDIGO & CURIOSIDADE
+          <Crest /> {t.madeOf}
         </span>
         <span>
-          HENRIQUE SANTOS DE SOUZA <span>© 2026</span>
+          HENRIQUE SANTOS DE SOUZA <span>{t.copyright}</span>
         </span>
       </footer>
       <span className="sr-only" role="status">

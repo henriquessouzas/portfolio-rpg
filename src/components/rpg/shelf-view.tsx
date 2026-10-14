@@ -4,6 +4,7 @@ import { Star, X } from 'lucide-react';
 import { Button } from '@/components/rpg/ui/button';
 import { fetchReadmeForRepo } from '@/lib/github';
 import type { Artifact, Book } from '@/lib/portfolio-data';
+import { useLang } from '@/hooks/use-lang';
 import { Popup } from './popup';
 
 const ROW_SIZE = 4;
@@ -176,6 +177,7 @@ export function ShelfView({
   status?: 'loading' | 'ready' | 'error';
   githubUser?: string;
 }) {
+  const { t } = useLang();
   const books = booksOverride ?? artifact.books ?? [];
   const [readme, setReadme] = useState('');
   const [readmeOpen, setReadmeOpen] = useState(false);
@@ -212,8 +214,8 @@ export function ShelfView({
     if (status === 'loading') {
       return (
         <div className="book-detail empty" aria-live="polite">
-          <span className="eyebrow">Projetos</span>
-          <h3>Buscando seus projetos no GitHub…</h3>
+          <span className="eyebrow">{t.projects}</span>
+          <h3>{t.loadingProjects}</h3>
         </div>
       );
     }
@@ -221,8 +223,8 @@ export function ShelfView({
     if (status === 'error' && books.length === 0) {
       return (
         <div className="book-detail empty" aria-live="polite">
-          <span className="eyebrow">Projetos</span>
-          <h3>Não consegui carregar os projetos agora.</h3>
+          <span className="eyebrow">{t.projects}</span>
+          <h3>{t.errorProjects}</h3>
           {githubUser ? (
             <p>
               <a href={`https://github.com/${githubUser}`} target="_blank" rel="noreferrer noopener">
@@ -237,15 +239,15 @@ export function ShelfView({
     if (books.length === 0) {
       return (
         <div className="book-detail empty" aria-live="polite">
-          <span className="eyebrow">Projetos</span>
-          <h3>Nenhum projeto para mostrar por enquanto.</h3>
+          <span className="eyebrow">{t.projects}</span>
+          <h3>{t.emptyProjects}</h3>
         </div>
       );
     }
 
     if (book) {
       const readmeButtonLabel =
-        readmeState === 'loading' ? 'Carregando README…' : readmeState === 'error' ? 'README indisponível' : 'Abrir README';
+        readmeState === 'loading' ? t.loadingReadme : readmeState === 'error' ? t.readmeUnavailable : t.openReadme;
 
       return (
         <div className="book-detail-layout">
@@ -257,7 +259,7 @@ export function ShelfView({
               <span className="book-stat">
                 <Star size={14} /> {book.stars ?? 0}
               </span>
-              <span className="book-stat">Atualizado em {formatBookDate(book.updatedAt)}</span>
+              <span className="book-stat">{t.updatedAt(formatBookDate(book.updatedAt))}</span>
             </div>
             <div className="tags">
               {book.tags.map((tag) => (
@@ -267,14 +269,14 @@ export function ShelfView({
             <div className="book-actions">
               {book.url ? (
                 <a className="book-link" href={book.url} target="_blank" rel="noopener noreferrer">
-                  {isDocumentUrl(book.url) ? (book.subtitle === 'Certificado' ? 'Abrir certificado' : 'Abrir documento') : 'Ver no GitHub'}
+                  {isDocumentUrl(book.url) ? (book.subtitle === 'Certificado' ? t.openCertificate : t.openDocument) : t.viewOnGitHub}
                 </a>
               ) : null}
               {!isDocumentUrl(book.url ?? '') && isGitHubUrl(book.url ?? '') ? (
                 <button
                   type="button"
                   className="book-link"
-                  aria-label="Abrir README"
+                  aria-label={t.openReadme}
                   disabled={readmeState === 'loading' || readmeState === 'error'}
                   onClick={() => setReadmeOpen(true)}
                 >
@@ -304,9 +306,9 @@ export function ShelfView({
 
     return (
       <>
-        <span className="eyebrow">Escolha um livro</span>
-        <h3>{books.length} projetos nesta estante</h3>
-        <p>Clique em uma lombada para abrir o projeto e ler os detalhes.</p>
+        <span className="eyebrow">{t.chooseBook}</span>
+        <h3>{t.projectsOnShelf(books.length)}</h3>
+        <p>{t.clickSpine}</p>
       </>
     );
   };
@@ -320,7 +322,7 @@ export function ShelfView({
           <p>{artifact.description}</p>
         </div>
         {showClose ? (
-          <Button variant="ghost" size="icon" aria-label="Fechar estante" onClick={onClose}>
+          <Button variant="ghost" size="icon" aria-label={t.closeShelf} onClick={onClose}>
             <X />
           </Button>
         ) : null}

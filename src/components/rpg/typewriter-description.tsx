@@ -1,4 +1,5 @@
 import { useTypewriter } from '@/hooks/use-typewriter';
+import { useLang } from '@/hooks/use-lang';
 
 const SPEED = 40; // chars/s
 
@@ -10,6 +11,7 @@ export function TypewriterDescription({
   reducedMotion: boolean;
 }) {
   const { visible, done, skip } = useTypewriter(text, SPEED, reducedMotion);
+  const { t } = useLang();
 
   return (
     <div
@@ -33,7 +35,7 @@ export function TypewriterDescription({
 
       {!done && (
         <span className="typewriter-hint" aria-hidden="true">
-          clique para pular
+          {t.clickToSkip}
         </span>
       )}
     </div>

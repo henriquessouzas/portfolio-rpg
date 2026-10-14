@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useLang } from '@/hooks/use-lang';
 
 const STORAGE_KEY = 'achievement:explorer';
 
@@ -20,6 +21,7 @@ function markAchievementSeen(): void {
 
 export function ExplorerAchievement({ onClose }: { onClose: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const { t } = useLang();
 
   useEffect(() => {
     closeRef.current?.focus();
@@ -38,14 +40,14 @@ export function ExplorerAchievement({ onClose }: { onClose: () => void }) {
     <div className="achievement-toast" role="status" aria-live="polite">
       <div className="achievement-icon">✦</div>
       <div className="achievement-body">
-        <strong className="achievement-title">Explorador do castelo</strong>
-        <p className="achievement-text">Você visitou as cinco salas. Obrigado pela visita!</p>
+        <strong className="achievement-title">{t.achievementTitle}</strong>
+        <p className="achievement-text">{t.achievementText}</p>
       </div>
       <button
         ref={closeRef}
         type="button"
         className="achievement-close"
-        aria-label="Fechar conquista"
+        aria-label={t.closeAchievement}
         onClick={onClose}
       >
         ×
