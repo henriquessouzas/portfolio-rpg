@@ -2721,3 +2721,20 @@ progress::-webkit-progress-value {
     animation: none;
   }
 }
+
+/* Herói negro: cores próprias (não mudam com o tema claro/escuro) */
+:root {
+  --hero-skin: oklch(0.40 0.06 50);
+  --hero-skin-shade: oklch(0.31 0.052 46);
+  --hero-hair: oklch(0.17 0.015 290);
+  --hero-eye: oklch(0.97 0.01 90);
+  --hero-boots: oklch(0.2 0.02 290);
+  --hero-rim: oklch(0.96 0.03 88 / 0.9);
+}
+.fill-hero-skin { fill: var(--hero-skin); }
+.fill-hero-skin-shade { fill: var(--hero-skin-shade); }
+.fill-hero-hair { fill: var(--hero-hair); }
+.fill-hero-eye { fill: var(--hero-eye); }
+.fill-hero-boots { fill: var(--hero-boots); }
+/* contorno claro fino: o herói continua visível sobre o mapa escuro */
+.hero-sprite { filter: drop-shadow(0 0 0.7px var(--hero-rim)); }
