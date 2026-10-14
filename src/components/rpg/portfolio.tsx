@@ -12,8 +12,8 @@ import {
 import { Button } from '@/components/rpg/ui/button';
 import {
   findPath,
-  profile,
-  rooms,
+  getProfile,
+  getRooms,
   type Artifact,
   type Book,
   type Point,
@@ -67,10 +67,7 @@ const roomBox = (id: RoomId) => {
     height: `${(h / MAP_HEIGHT) * 100}%`,
   };
 };
-const planNames: Record<PlanRoomId, string> = {
-  ...(Object.fromEntries(rooms.map((r) => [r.id, r.name])) as Record<RoomId, string>),
-  H: 'Entrada',
-};
+
 
 export default function Portfolio() {
   return (
@@ -81,7 +78,13 @@ export default function Portfolio() {
 }
 
 function PortfolioInner() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const rooms = getRooms(lang);
+  const profile = getProfile(lang);
+  const planNames: Record<PlanRoomId, string> = {
+    ...(Object.fromEntries(rooms.map((r) => [r.id, r.name])) as Record<RoomId, string>),
+    H: lang === 'en' ? 'Entrance' : 'Entrada',
+  };
 
   // ── deep-link: resolve initial screen/room from hash ──────────────────────
   const initialTarget = parseHash(window.location.hash);
@@ -118,6 +121,12 @@ function PortfolioInner() {
   const operation = useRef(0);
   const heading = useRef<HTMLHeadingElement>(null);
   const { books: githubBooks, status: githubBooksStatus, user: githubUser } = useGithubBooks();
+
+  // keep room in sync when lang changes
+  useEffect(() => {
+    setRoom((prev) => rooms.find((r) => r.id === prev.id) ?? prev);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
 
   useEffect(() => {
     if (visited.length === 5 && !hasSeenAchievement()) {
@@ -203,7 +212,7 @@ function PortfolioInner() {
     if (token !== operation.current) return;
     setSelected(artifact);
     setSelectedTech(
-      artifact.name === 'Esfera das tecnologias' ? profile.technologies[0]?.name ?? null : null,
+      artifact.art === 'orb' ? profile.technologies[0]?.name ?? null : null,
     );
     setPopupAnchor(anchor);
     setBusy(false);
@@ -254,7 +263,7 @@ function PortfolioInner() {
   }));
 
   const activeTech =
-    selected?.name === 'Esfera das tecnologias'
+    selected?.art === 'orb'
       ? profile.technologies.find((tech) => tech.name === selectedTech) ?? profile.technologies[0] ?? null
       : null;
 
@@ -571,7 +580,7 @@ function PortfolioInner() {
                   className="room-scene-zoom"
                   style={{
                     transition: reducedMotion ? 'none' : 'transform 450ms ease-in-out',
-                    transform: selected?.name === 'Esfera das tecnologias' ? `scale(${reducedMotion ? 1 : 1.35})` : 'scale(1)',
+                    transform: selected?.art === 'orb' ? `scale(${reducedMotion ? 1 : 1.35})` : 'scale(1)',
                     transformOrigin: '50% 48%',
                   }}
                 >
@@ -585,12 +594,12 @@ function PortfolioInner() {
                 </div>
                 {selected && (
                   <Popup
-                    title={selected.name === 'Mensageiro' ? 'Mensageiro' : selected.books || selected.name === 'Projetos' ? `${t.shelfPrefix} ${selected.name}` : selected.title}
+                    title={selected.art === 'letter' ? selected.name : selected.books || selected.art === 'books' ? `${t.shelfPrefix} ${selected.name}` : selected.title}
                     onClose={closePopup}
-                    width={selected.name === 'Mensageiro' ? 480 : selected.name === 'Esfera das tecnologias' ? 720 : selected.books || selected.name === 'Projetos' ? 760 : 560}
+                    width={selected.art === 'letter' ? 480 : selected.art === 'orb' ? 720 : selected.books || selected.art === 'books' ? 760 : 560}
                     initialAnchor={popupAnchor}
                     footer={
-                      selected.name === 'Projetos' ? (
+                      selected.art === 'books' ? (
                         <span>
                           {t.autoUpdatedGitHub}{' '}
                           <a href={`https://github.com/${profile.github}`} target="_blank" rel="noopener noreferrer">
@@ -600,20 +609,21 @@ function PortfolioInner() {
                       ) : undefined
                     }
                   >
-                    {selected.name === 'Mensageiro' ? (
+                    {selected.art === 'letter' ? (
                       <Messenger profile={profile} />
-                    ) : selected.books || selected.name === 'Projetos' ? (
+                    ) : selected.books || selected.art === 'books' ? (
                       <ShelfView
                         artifact={selected}
                         book={book}
                         onBook={setBook}
                         onClose={closePopup}
                         showClose={false}
-                        books={selected.name === 'Projetos' ? githubBooks : selected.books ?? []}
-                        status={selected.name === 'Projetos' ? githubBooksStatus : 'ready'}
-                        githubUser={selected.name === 'Projetos' ? githubUser : undefined}
+                        books={selected.art === 'books' ? githubBooks : selected.books ?? []}
+                        status={selected.art === 'books' ? githubBooksStatus : 'ready'}
+                        githubUser={selected.art === 'books' ? githubUser : undefined}
+                        roomName={room.name}
                       />
-                    ) : selected.name === 'Pergaminho' ? (
+                    ) : selected.art === 'scroll' && room.id === 'T' ? (
                       <div className="popup-detail-content">
                         <span className="eyebrow">
                           {room.name} / {selected.name}
@@ -640,7 +650,7 @@ function PortfolioInner() {
                           </div>
                         )}
                       </div>
-                    ) : selected.name === 'Esfera das tecnologias' ? (
+                    ) : selected.art === 'orb' ? (
                       <div className="tech-sphere-popup">
                         <div className="tech-sphere-column">
                           <Suspense fallback={<TechSearch items={techItems} selectedName={selectedTech ?? undefined} onClose={closePopup} />}>
@@ -807,9 +817,9 @@ function PortfolioInner() {
                           <span key={tag}>{tag}</span>
                         ))}
                       </div>
-                      {obj.books || obj.name === 'Projetos' ? (
+                      {obj.books || obj.art === 'books' ? (
                         <ul className="simple-books">
-                          {(obj.name === 'Projetos' ? githubBooks : obj.books ?? []).map((b) => (
+                          {(obj.art === 'books' ? githubBooks : obj.books ?? []).map((b) => (
                             <li key={b.title}>
                               <a href={b.url ?? '#'} target={b.url ? '_blank' : undefined} rel={b.url ? 'noopener noreferrer' : undefined}>
                                 <strong>{b.title}</strong>

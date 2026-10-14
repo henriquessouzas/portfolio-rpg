@@ -138,11 +138,11 @@ function renderMarkdown(value: string): string {
   return blocks.join('\n');
 }
 
-function formatBookDate(value?: string): string {
+function formatBookDate(value?: string, lang = 'pt'): string {
   if (!value) return '—';
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return '—';
-  return parsed.toLocaleDateString('pt-BR');
+  return parsed.toLocaleDateString(lang === 'en' ? 'en-GB' : 'pt-BR');
 }
 
 function isGitHubUrl(value: string): boolean {
@@ -167,6 +167,7 @@ export function ShelfView({
   books: booksOverride,
   status = 'ready',
   githubUser,
+  roomName,
 }: {
   artifact: Artifact;
   book: Book | null;
@@ -176,8 +177,9 @@ export function ShelfView({
   books?: Book[];
   status?: 'loading' | 'ready' | 'error';
   githubUser?: string;
+  roomName?: string;
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const books = booksOverride ?? artifact.books ?? [];
   const [readme, setReadme] = useState('');
   const [readmeOpen, setReadmeOpen] = useState(false);
@@ -259,7 +261,7 @@ export function ShelfView({
               <span className="book-stat">
                 <Star size={14} /> {book.stars ?? 0}
               </span>
-              <span className="book-stat">{t.updatedAt(formatBookDate(book.updatedAt))}</span>
+              <span className="book-stat">{t.updatedAt(formatBookDate(book.updatedAt, lang))}</span>
             </div>
             <div className="tags">
               {book.tags.map((tag) => (
@@ -269,7 +271,7 @@ export function ShelfView({
             <div className="book-actions">
               {book.url ? (
                 <a className="book-link" href={book.url} target="_blank" rel="noopener noreferrer">
-                  {isDocumentUrl(book.url) ? (book.subtitle === 'Certificado' ? t.openCertificate : t.openDocument) : t.viewOnGitHub}
+                  {isDocumentUrl(book.url) ? (book.subtitle === t.certificateSubtitle ? t.openCertificate : t.openDocument) : t.viewOnGitHub}
                 </a>
               ) : null}
               {!isDocumentUrl(book.url ?? '') && isGitHubUrl(book.url ?? '') ? (
@@ -314,10 +316,10 @@ export function ShelfView({
   };
 
   return (
-    <section className="shelf-view room-B" aria-label={`Estante: ${artifact.name}`}>
+    <section className="shelf-view room-B" aria-label={`${t.shelfPrefix} ${artifact.name}`}>
       <div className="shelf-head">
         <div>
-          <span className="eyebrow">Biblioteca / {artifact.name}</span>
+          <span className="eyebrow">{roomName ? `${roomName} / ${artifact.name}` : artifact.name}</span>
           <h2>{artifact.title}</h2>
           <p>{artifact.description}</p>
         </div>

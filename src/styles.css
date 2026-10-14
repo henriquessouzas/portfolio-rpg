@@ -100,6 +100,7 @@
     font-family: 'Source Sans 3', sans-serif;
     font-size: 17px;
     line-height: 1.55;
+    overflow-x: hidden;
   }
   button,
   a {
@@ -136,6 +137,7 @@
   max-width: 1200px;
   margin: auto;
   padding: 0 48px;
+  overflow-x: hidden;
 }
 .site-header {
   min-height: 102px;
@@ -189,7 +191,7 @@
   border-radius: 0;
   box-shadow: 3px 3px 0 var(--outline);
   font: 11px/1.6 var(--font-sans);
-  min-height: 42px;
+  min-height: 44px;
   height: auto;
   padding: 12px 16px;
   transition:
@@ -696,7 +698,8 @@
   z-index: 2;
   transform: translate(-50%, -50%);
   height: auto;
-  min-height: 28px;
+  min-height: 44px;
+  min-width: 44px;
   padding: 8px 7px;
   border: 2px solid var(--outline);
   background: var(--surface);
@@ -1016,6 +1019,7 @@ progress::-webkit-progress-value {
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   box-shadow: 3px 3px 0 var(--outline);
+  min-height: 44px;
 }
 .tech-sphere-toggle:hover {
   transform: translate(-1px, -1px);
@@ -1185,6 +1189,8 @@ progress::-webkit-progress-value {
   padding: 6px 10px;
   font: 11px/1.5 var(--font-pixel);
   cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
 }
 .tech-search-chip[aria-pressed='true'] {
   background: var(--gold);
@@ -1365,7 +1371,8 @@ progress::-webkit-progress-value {
   border: 2px solid transparent;
   border-radius: 0;
   padding: 0;
-  min-height: 0;
+  min-height: 44px;
+  min-width: 44px;
   transform: none;
 }
 .fixture-hit:hover,
@@ -1468,14 +1475,14 @@ progress::-webkit-progress-value {
     margin: 17px;
   }
   .room-label {
-    font-size: 6px;
+    font-size: 12px;
     padding: 7px 5px;
   }
   .game-heading h1 {
     font-size: 20px;
   }
   .site-footer {
-    font-size: 6px;
+    font-size: 12px;
   }
   .room-world {
     height: 410px;
@@ -1494,7 +1501,7 @@ progress::-webkit-progress-value {
     gap: 8px;
   }
   .brand-sub {
-    font-size: 5px;
+    font-size: 12px;
   }
   .brand .crest {
     width: 28px;
@@ -1504,7 +1511,7 @@ progress::-webkit-progress-value {
     font-size: 7px;
     padding: 11px 10px;
     gap: 7px;
-    min-height: 38px;
+    min-height: 44px;
   }
   .header-actions {
     gap: 0;
@@ -1513,7 +1520,7 @@ progress::-webkit-progress-value {
     padding: 31px 0 25px;
   }
   .intro .eyebrow {
-    font-size: 6px;
+    font-size: 12px;
     gap: 7px;
   }
   .intro .eyebrow > span {
@@ -1537,17 +1544,17 @@ progress::-webkit-progress-value {
   .world-label {
     left: 14px;
     top: 17px;
-    font-size: 6px;
+    font-size: 12px;
   }
   .castle-cta {
-    font-size: 9px;
+    font-size: 12px;
     gap: 15px;
     padding: 15px 17px;
     min-height: 48px;
     bottom: 57px;
   }
   .castle-coordinate {
-    font-size: 5px;
+    font-size: 12px;
     gap: 8px;
   }
   .world-caption {
@@ -1577,7 +1584,7 @@ progress::-webkit-progress-value {
     flex-direction: column;
     justify-content: center;
     gap: 12px;
-    font-size: 6px;
+    font-size: 12px;
   }
   .site-footer > span:last-child > span {
     margin-left: 0;
@@ -1602,7 +1609,7 @@ progress::-webkit-progress-value {
   .game-hud {
     padding: 12px 10px;
     gap: 8px;
-    font-size: 6px;
+    font-size: 12px;
   }
   .game-hud > span {
     gap: 5px;
@@ -1628,9 +1635,9 @@ progress::-webkit-progress-value {
     margin: 14px;
   }
   .room-label {
-    font-size: 5px;
+    font-size: 12px;
     padding: 5px 4px;
-    min-height: 24px;
+    min-height: 44px;
     border-width: 1px;
   }
   .room-label svg {
@@ -1638,7 +1645,7 @@ progress::-webkit-progress-value {
     height: 7px;
   }
   .courtyard-label {
-    font-size: 5px;
+    font-size: 12px;
   }
   .exploration-log {
     margin: 3px 14px 19px;
@@ -1673,7 +1680,7 @@ progress::-webkit-progress-value {
     font-size: 13px;
   }
   .game-bottom {
-    font-size: 5px;
+    font-size: 12px;
     gap: 5px;
   }
   .game-bottom > span:last-child {
@@ -1706,7 +1713,7 @@ progress::-webkit-progress-value {
     margin-bottom: 2px;
   }
   .object-label {
-    font-size: 5px;
+    font-size: 12px;
     padding: 5px 4px;
     border-width: 1px;
   }
@@ -1732,10 +1739,10 @@ progress::-webkit-progress-value {
     height: 33px;
   }
   .dialogue-content .eyebrow {
-    font-size: 6px;
+    font-size: 12px;
   }
   .dialogue-content h2 {
-    font-size: 10px;
+    font-size: 12px;
     margin: 6px 0 9px;
     overflow-wrap: anywhere;
   }
@@ -1746,8 +1753,8 @@ progress::-webkit-progress-value {
     position: absolute;
     right: 2px;
     top: 2px;
-    width: 23px;
-    height: 23px;
+    width: 44px;
+    height: 44px;
   }
   .tags {
     gap: 5px;
@@ -1809,8 +1816,8 @@ progress::-webkit-progress-value {
     margin-bottom: 0;
   }
   .room-label {
-    font-size: 7px;
-    min-height: 33px;
+    font-size: 12px;
+    min-height: 44px;
   }
 }
 @media (max-width: 700px) {
@@ -1822,8 +1829,8 @@ progress::-webkit-progress-value {
     grid-template-columns: 1fr 1fr;
   }
   .room-label {
-    font-size: 5px;
-    min-height: 28px;
+    font-size: 12px;
+    min-height: 44px;
   }
   .furnished-room {
     height: auto;
@@ -1834,7 +1841,7 @@ progress::-webkit-progress-value {
     height: 7%;
   }
   .fixture-label {
-    font-size: 5px;
+    font-size: 12px;
     padding: 4px;
   }
   .interaction-diamond {
@@ -1857,18 +1864,18 @@ progress::-webkit-progress-value {
     font-size: 7px;
   }
   .header-actions .pixel-button {
-    font-size: 6px;
+    font-size: 12px;
   }
   .room-label {
-    font-size: 4px;
+    font-size: 12px;
   }
   .object-label {
-    font-size: 4px;
+    font-size: 12px;
   }
 }
 @media (max-width: 1000px) and (min-width: 861px) {
   .map-room-name {
-    font-size: 6px;
+    font-size: 12px;
     padding: 4px;
   }
   .map-room-target.room-label {
@@ -1877,9 +1884,9 @@ progress::-webkit-progress-value {
 }
 @media (max-width: 700px) {
   .map-room-name {
-    font-size: 5px;
+    font-size: 12px;
     padding: 3px;
-    min-height: 22px;
+    min-height: 44px;
     gap: 2px;
   }
   .map-room-target.room-label {
@@ -1964,7 +1971,9 @@ progress::-webkit-progress-value {
   position: relative;
   flex: 1 1 0;
   max-width: 72px;
+  min-width: 44px;
   height: var(--h);
+  min-height: 44px;
   border: 2px solid var(--outline);
   color: var(--surface);
   font: 7px/1.4 var(--font-pixel);
@@ -2237,7 +2246,8 @@ progress::-webkit-progress-value {
   display: flex;
   align-items: center;
   gap: 6px;
-  min-height: 36px;
+  min-height: 44px;
+  min-width: 44px;
   padding: 8px 10px;
   font-size: 7px;
   border-radius: 0;
@@ -2306,8 +2316,8 @@ progress::-webkit-progress-value {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 44px;
+  height: 44px;
   border: 2px solid var(--outline);
   background: color-mix(in oklab, var(--secondary) 78%, var(--primary));
   color: var(--primary-foreground);
@@ -2634,8 +2644,8 @@ progress::-webkit-progress-value {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
   border: 2px solid var(--outline);
   background: color-mix(in oklab, var(--surface) 78%, var(--primary));
   color: var(--foreground);

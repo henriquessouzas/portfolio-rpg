@@ -76,8 +76,12 @@ export const dict = {
     projects: 'Projetos',
     autoUpdatedGitHub: 'Atualizado automaticamente do GitHub',
     profile: 'perfil',
+    shelfRoomPrefix: (room: string, name: string) => `${room} / ${name}`,
+    certificateSubtitle: 'Certificado',
 
     // popup
+    closePopup: 'Fechar',
+    popupDragHint: 'Use as setas para mover a janela.',
     shelfPrefix: 'Estante:',
     openCvPt: 'Abrir currículo em português',
     openCvEn: 'Abrir currículo em inglês',
@@ -98,6 +102,8 @@ export const dict = {
     sendMessage: 'Enviar mensagem',
     openGitHub: 'Abrir o GitHub em uma nova aba',
     openLinkedIn: 'Abrir o LinkedIn em uma nova aba',
+    emailSubject: 'Contato pelo portfólio',
+    emailGreeting: (name: string) => `Olá, ${name}!\n\n`,
 
     // tech-search
     searchTech: 'Buscar tecnologia',
@@ -188,8 +194,12 @@ export const dict = {
     projects: 'Projects',
     autoUpdatedGitHub: 'Auto-updated from GitHub',
     profile: 'profile',
+    shelfRoomPrefix: (room: string, name: string) => `${room} / ${name}`,
+    certificateSubtitle: 'Certificate',
 
     // popup
+    closePopup: 'Close',
+    popupDragHint: 'Use arrow keys to move the window.',
     shelfPrefix: 'Shelf:',
     openCvPt: 'Open résumé in Portuguese',
     openCvEn: 'Open résumé in English',
@@ -210,6 +220,8 @@ export const dict = {
     sendMessage: 'Send message',
     openGitHub: 'Open GitHub in a new tab',
     openLinkedIn: 'Open LinkedIn in a new tab',
+    emailSubject: 'Contact via portfolio',
+    emailGreeting: (name: string) => `Hello, ${name}!\n\n`,
 
     // tech-search
     searchTech: 'Search technology',

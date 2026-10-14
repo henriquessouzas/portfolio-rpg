@@ -34,7 +34,7 @@ export function Messenger({ profile }: { profile: Profile }) {
   const linkedin = profile.linkedin.trim();
   const [showForm, setShowForm] = useState(false);
 
-  const emailLink = email ? mailtoUrl({ email, subject: 'Contato pelo portfólio', body: `Olá, ${firstName}!\n\n` }) : '';
+  const emailLink = email ? mailtoUrl({ email, subject: t.emailSubject, body: t.emailGreeting(firstName) }) : '';
 
   const handleEmailClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (!emailLink) {
@@ -71,7 +71,7 @@ export function Messenger({ profile }: { profile: Profile }) {
                 action="https://formsubmit.co/henriquetrabalhodossantos@gmail.com"
                 method="POST"
               >
-                <input type="hidden" name="_subject" value="Contato pelo portfólio" />
+                <input type="hidden" name="_subject" value={t.emailSubject} />
                 <input type="hidden" name="_captcha" value="false" />
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="_replyto" value={email} />
