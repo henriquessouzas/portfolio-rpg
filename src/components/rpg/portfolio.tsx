@@ -294,6 +294,7 @@ function PortfolioInner() {
   }, []);
 
   useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (selected) {
           event.preventDefault();
