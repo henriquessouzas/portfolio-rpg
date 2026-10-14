@@ -5,7 +5,7 @@ export function LangToggle() {
   return (
     <button
       type="button"
-      className="theme-toggle-btn pixel-button"
+      className="lang-toggle-btn pixel-button"
       onClick={toggleLang}
       aria-label={t.langLabel}
       title={t.langLabel}

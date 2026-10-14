@@ -1,5 +1,8 @@
 import { ObjectArt, Hero, Crest } from '@/components/rpg/art';
 import { Button } from '@/components/rpg/ui/button';
+import { ThemeToggle } from '@/components/rpg/theme-toggle';
+import { LangToggle } from '@/components/rpg/lang-toggle';
+import { LangProvider } from '@/hooks/use-lang';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -50,6 +53,7 @@ const NAV = [
   ['icons', 'Ícones'],
   ['hero', 'Herói & Brasão'],
   ['buttons', 'Botões'],
+  ['toggles', 'Toggles'],
   ['shadows', 'Sombras'],
   ['animations', 'Animações'],
 ];
@@ -102,6 +106,7 @@ const TOKENS = [
 
 export default function DesignPage() {
   return (
+    <LangProvider>
     <div style={{ minHeight: '100vh', background: 'var(--background)', color: 'var(--foreground)' }}>
       {/* top bar */}
       <header style={{
@@ -382,6 +387,24 @@ export default function DesignPage() {
           </div>
         </Section>
 
+        {/* ── TOGGLES ── */}
+        <Section id="toggles" title="Toggles">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginBottom: 12, fontFamily: 'var(--font-sans)' }}>
+                ThemeToggle — seletor de tema (Claro / Escuro)
+              </div>
+              <ThemeToggle />
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginBottom: 12, fontFamily: 'var(--font-sans)' }}>
+                LangToggle — alternador de idioma (PT ↔ EN)
+              </div>
+              <LangToggle />
+            </div>
+          </div>
+        </Section>
+
         {/* ── SOMBRAS ── */}
         <Section id="shadows" title="Sombras & Bordas">
           <Row gap={40}>
@@ -476,5 +499,6 @@ export default function DesignPage() {
         </Section>
       </main>
     </div>
+    </LangProvider>
   );
 }

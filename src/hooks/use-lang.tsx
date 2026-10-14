@@ -1,11 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { dict, type Lang, type Dict } from '@/lib/i18n';
 
-type LangContextValue = {
-  lang: Lang;
-  t: Dict;
-  toggleLang: () => void;
-};
+type LangContextValue = { lang: Lang; t: Dict; toggleLang: () => void };
 
 const LangContext = createContext<LangContextValue | null>(null);
 

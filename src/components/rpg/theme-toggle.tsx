@@ -1,10 +1,9 @@
 import { useRef, type KeyboardEvent } from 'react';
-import { Monitor, Moon, Sun } from 'lucide-react';
+import { Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/hooks/use-theme';
 import type { Theme } from '@/lib/theme';
 
-const OPTIONS: { value: Theme; label: string; Icon: typeof Monitor }[] = [
-  { value: 'system', label: 'Sistema', Icon: Monitor },
+const OPTIONS: { value: Theme; label: string; Icon: typeof Sun }[] = [
   { value: 'light', label: 'Claro', Icon: Sun },
   { value: 'dark', label: 'Escuro', Icon: Moon },
 ];
@@ -34,9 +33,7 @@ export function ThemeToggle() {
         return (
           <button
             key={value}
-            ref={(el) => {
-              refs.current[i] = el;
-            }}
+            ref={(el) => { refs.current[i] = el; }}
             type="button"
             role="radio"
             aria-checked={checked}
@@ -45,8 +42,8 @@ export function ThemeToggle() {
             onClick={() => setTheme(value)}
             aria-label={label}
           >
-            <Icon size={13} aria-hidden="true" />
-            <span className="theme-toggle-label sr-only sm:not-sr-only">{label}</span>
+            <Icon size={14} aria-hidden="true" />
+            <span className="theme-toggle-label">{label}</span>
           </button>
         );
       })}

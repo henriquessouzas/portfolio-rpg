@@ -1,7 +1,6 @@
 export type Theme = 'system' | 'light' | 'dark';
 
 const THEME_KEY = 'theme';
-
 const THEME_COLOR_LIGHT = '#faf1dc';
 const THEME_COLOR_DARK = '#1a1426';
 
@@ -12,7 +11,7 @@ export function readStoredTheme(): Theme {
   } catch {
     // localStorage unavailable
   }
-  return 'system';
+  return 'dark';
 }
 
 export function storeTheme(theme: Theme): void {
@@ -27,17 +26,9 @@ export function storeTheme(theme: Theme): void {
   }
 }
 
-export function prefersDark(): boolean {
-  try {
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  } catch {
-    return false;
-  }
-}
-
 export function resolveTheme(theme: Theme): 'light' | 'dark' {
   // Mirror of the inline script in index.html — keep both in sync.
-  return theme === 'system' ? (prefersDark() ? 'dark' : 'light') : theme;
+  return theme === 'light' ? 'light' : 'dark';
 }
 
 export function applyTheme(theme: Theme): void {

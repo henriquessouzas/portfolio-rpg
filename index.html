@@ -8,7 +8,7 @@
     <script>
       try {
         var t = localStorage.getItem('theme');
-        if (t === 'dark' || (t !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (t !== 'light') {
           document.documentElement.classList.add('dark');
           var m = document.querySelector('meta[name="theme-color"]');
           if (m) m.content = '#1a1426';
