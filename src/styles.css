@@ -30,6 +30,7 @@
 }
 
 :root {
+  --tile: 16px;
   color-scheme: light;
   --background: oklch(0.92 0.037 87);
   --foreground: oklch(0.26 0.049 304);
@@ -158,7 +159,8 @@
 .brand-sub {
   display: block;
   color: var(--muted-foreground);
-  font-size: 7px;
+  font-size: 13px;
+  font-family: var(--font-sans);
   margin-top: 3px;
 }
 .header-actions {
@@ -186,7 +188,7 @@
   border: 2px solid var(--outline);
   border-radius: 0;
   box-shadow: 3px 3px 0 var(--outline);
-  font: 9px/1.6 var(--font-pixel);
+  font: 11px/1.6 var(--font-sans);
   min-height: 42px;
   height: auto;
   padding: 12px 16px;
@@ -222,7 +224,7 @@
   display: inline-flex;
   gap: 9px;
   align-items: center;
-  font: 8px/1.8 var(--font-pixel);
+  font: 13px/1.8 var(--font-sans);
   color: var(--muted-foreground);
 }
 .intro .eyebrow > span {
@@ -314,7 +316,7 @@
   position: absolute;
   top: 22px;
   left: 24px;
-  font: 8px/1.6 var(--font-pixel);
+  font: 13px/1.6 var(--font-sans);
   color: var(--scene-ink);
   display: flex;
   align-items: center;
@@ -347,7 +349,7 @@
   width: 100%;
   left: 0;
   color: var(--scene-ink);
-  font: 7px/1.6 var(--font-pixel);
+  font: 12px/1.6 var(--font-sans);
   display: flex;
   justify-content: center;
   gap: 14px;
@@ -394,7 +396,7 @@
   align-items: center;
 }
 .world-caption > span:last-child {
-  font: 7px/1.6 var(--font-pixel);
+  font: 13px/1.6 var(--font-sans);
 }
 .room-directory {
   display: grid;
@@ -429,7 +431,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  font: 7px/1.8 var(--font-pixel);
+  font: 13px/1.8 var(--font-sans);
   color: var(--muted-foreground);
 }
 .site-footer > span {
@@ -509,8 +511,8 @@
 }
 .object-art {
   display: block;
-  width: 64px;
-  height: 64px;
+  width: calc(var(--tile) * 4);
+  height: calc(var(--tile) * 4);
   overflow: visible;
 }
 .hero-sprite {
@@ -701,7 +703,7 @@
   color: var(--ink);
   box-shadow: 2px 2px 0 var(--outline);
   border-radius: 0;
-  font: 7px/1.6 var(--font-pixel);
+  font: 11px/1.6 var(--font-sans);
   gap: 3px;
 }
 .room-label:hover {
@@ -721,7 +723,7 @@
   top: 67%;
   transform: translateX(-50%);
   color: var(--wood);
-  font: 7px var(--font-pixel);
+  font: 12px var(--font-sans);
 }
 .map-hero {
   position: absolute;
@@ -757,7 +759,8 @@
 }
 .exploration-progress > strong > span {
   color: var(--muted-foreground);
-  font-size: 8px;
+  font-size: 13px;
+  font-family: var(--font-sans);
 }
 progress {
   width: 100%;
@@ -895,7 +898,7 @@ progress::-webkit-progress-value {
   background: var(--surface);
   border: 2px solid var(--outline);
   box-shadow: 2px 2px 0 var(--outline);
-  font: 8px/1.7 var(--font-pixel);
+  font: 11px/1.7 var(--font-sans);
   padding: 7px 9px;
 }
 .artifact-selected .object-label {
@@ -904,8 +907,8 @@ progress::-webkit-progress-value {
 .room-hero {
   position: absolute;
   bottom: 8%;
-  width: 40px;
-  height: 54px;
+  width: calc(var(--tile) * 2.5);
+  height: calc(var(--tile) * 3.375);
   transform: translateX(-50%);
   transition: left 0.5s linear;
 }
@@ -974,7 +977,7 @@ progress::-webkit-progress-value {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font: 8px/1.8 var(--font-pixel);
+  font: 13px/1.8 var(--font-sans);
   color: var(--muted-foreground);
 }
 .tech-meter {
@@ -1153,7 +1156,7 @@ progress::-webkit-progress-value {
   margin-top: 18px;
 }
 .tech-search-label {
-  font: 8px/1.8 var(--font-pixel);
+  font: 12px/1.8 var(--font-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted-foreground);
@@ -1188,7 +1191,7 @@ progress::-webkit-progress-value {
   border-color: var(--outline);
 }
 .tech-search-header {
-  font: 8px/1.8 var(--font-pixel);
+  font: 13px/1.8 var(--font-sans);
   color: var(--muted-foreground);
 }
 .tech-search-results {
@@ -1258,7 +1261,7 @@ progress::-webkit-progress-value {
   gap: 24px;
   color: var(--muted-foreground);
   padding-top: 21px;
-  font: 7px/1.8 var(--font-pixel);
+  font: 13px/1.8 var(--font-sans);
 }
 .game-bottom > span:first-child {
   display: flex;
@@ -1266,8 +1269,8 @@ progress::-webkit-progress-value {
   gap: 9px;
 }
 .game-bottom .hero-sprite {
-  width: 20px;
-  height: 27px;
+  width: calc(var(--tile) * 1.25);
+  height: calc(var(--tile) * 1.6875);
 }
 .status-dot {
   margin-left: 11px;
@@ -1376,7 +1379,7 @@ progress::-webkit-progress-value {
   left: 50%;
   bottom: -15px;
   transform: translateX(-50%);
-  font: 7px/1.6 var(--font-pixel);
+  font: 11px/1.6 var(--font-sans);
   background: var(--surface);
   border: 1px solid var(--outline);
   padding: 4px 6px;
@@ -1905,7 +1908,7 @@ progress::-webkit-progress-value {
   color: var(--ink);
   border: 2px solid var(--outline);
   box-shadow: 2px 2px 0 var(--outline);
-  font: 7px/1.4 var(--font-pixel);
+  font: 11px/1.4 var(--font-sans);
 }
 .map-tint {
   opacity: 0.22;
@@ -2048,7 +2051,7 @@ progress::-webkit-progress-value {
   padding: 5px 8px;
   border: 2px solid var(--outline);
   background: color-mix(in oklab, var(--surface) 88%, var(--room-color));
-  font: 7px/1 var(--font-pixel);
+  font: 12px/1 var(--font-sans);
 }
 .book-actions {
   display: flex;
@@ -2065,7 +2068,7 @@ progress::-webkit-progress-value {
   background: var(--gold);
   color: var(--ink);
   text-decoration: none;
-  font: 7px/1 var(--font-pixel);
+  font: 12px/1 var(--font-sans);
   box-shadow: 2px 2px 0 var(--outline);
   cursor: pointer;
 }
@@ -2295,7 +2298,7 @@ progress::-webkit-progress-value {
 }
 .popup-titlebar h2 {
   margin: 0;
-  font: 9px/1.4 var(--font-pixel);
+  font: 12px/1.4 var(--font-sans);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -2415,7 +2418,7 @@ progress::-webkit-progress-value {
   border: 2px solid var(--outline);
   background: var(--primary);
   color: var(--primary-foreground);
-  font: 9px/1.5 var(--font-pixel);
+  font: 13px/1.5 var(--font-sans);
   text-transform: uppercase;
   cursor: pointer;
 }
@@ -2546,12 +2549,12 @@ progress::-webkit-progress-value {
   gap: 10px;
 }
 .hud-bar-left .hero-sprite {
-  width: 32px;
-  height: 32px;
+  width: calc(var(--tile) * 2);
+  height: calc(var(--tile) * 2);
   flex-shrink: 0;
 }
 .hud-bar-visited {
-  font: 8px/1.8 var(--font-pixel);
+  font: 13px/1.8 var(--font-sans);
   color: var(--muted-foreground);
   white-space: nowrap;
 }
@@ -2673,7 +2676,7 @@ progress::-webkit-progress-value {
 .typewriter-hint {
   display: block;
   margin-top: 6px;
-  font: 7px/1.6 var(--font-pixel);
+  font: 12px/1.6 var(--font-sans);
   color: var(--muted-foreground);
   opacity: 0.6;
 }
