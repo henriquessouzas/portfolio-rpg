@@ -2577,3 +2577,71 @@ progress::-webkit-progress-value {
     transition: none;
   }
 }
+
+/* Conquista: Explorador do castelo */
+.achievement-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 1100;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 320px;
+  padding: 16px 14px 16px 16px;
+  background: var(--surface);
+  border: 3px solid var(--outline);
+  box-shadow: 6px 6px 0 var(--outline);
+  animation: achievement-in 0.25s steps(4) forwards;
+}
+@keyframes achievement-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .achievement-toast {
+    animation: none;
+  }
+}
+.achievement-icon {
+  font-size: 22px;
+  color: var(--gold);
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+.achievement-body {
+  flex: 1;
+  min-width: 0;
+}
+.achievement-title {
+  display: block;
+  font: 8px/1.8 var(--font-pixel);
+  color: var(--foreground);
+  letter-spacing: 0.06em;
+}
+.achievement-text {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--muted-foreground);
+  line-height: 1.5;
+}
+.achievement-close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid var(--outline);
+  background: color-mix(in oklab, var(--surface) 78%, var(--primary));
+  color: var(--foreground);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--outline);
+}
+.achievement-close:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--outline);
+}

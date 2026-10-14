@@ -39,6 +39,7 @@ import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
 import { Hud } from './hud';
+import { ExplorerAchievement, hasSeenAchievement, markAchievementSeen } from './explorer-achievement';
 import { Popup } from './popup';
 import { Messenger } from './messenger';
 import { TechSearch } from './arsenal/tech-search';
@@ -84,12 +85,19 @@ export default function Portfolio() {
   const [mapPath, setMapPath] = useState<Point[]>([]);
   const [mapTarget, setMapTarget] = useState<string | null>(null);
   const [focusRoom, setFocusRoom] = useState<RoomId | null>(null);
+  const [showAchievement, setShowAchievement] = useState(false);
   const operation = useRef(0);
   const heading = useRef<HTMLHeadingElement>(null);
   const { books: githubBooks, status: githubBooksStatus, user: githubUser } = useGithubBooks();
 
   useEffect(() => {
-    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (visited.length === 5 && !hasSeenAchievement()) {
+      markAchievementSeen();
+      setShowAchievement(true);
+    }
+  }, [visited.length]);
+
+  useEffect(() => {
     const update = () => setReducedMotion(query.matches);
     update();
     query.addEventListener('change', update);
@@ -770,6 +778,9 @@ export default function Portfolio() {
       <span className="sr-only" role="status">
         {announcement}
       </span>
+      {showAchievement && (
+        <ExplorerAchievement onClose={() => setShowAchievement(false)} />
+      )}
     </div>
   );
 }
