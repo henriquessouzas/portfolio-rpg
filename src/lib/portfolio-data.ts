@@ -1,4 +1,5 @@
 import PF from 'pathfinding';
+import type { Lang } from './i18n';
 
 export type Point = { x: number; y: number };
 export type RoomId = 'B' | 'T' | 'A' | 'R' | 'L';
@@ -183,6 +184,261 @@ export function findPath(start: Point, end: Point, map = castleNavigationGrid): 
     .findPath(start.x, start.y, end.x, end.y, grid)
     .flatMap(([x, y]) => (typeof x === 'number' && typeof y === 'number' ? [{ x, y }] : []));
 }
+const roomsEn: [Room, Room, Room, Room, Room] = [
+  {
+    id: 'B',
+    name: 'Library',
+    category: 'Knowledge',
+    subtitle: 'Every book, a new discovery.',
+    destination: { x: 2, y: 2 },
+    objects: [
+      {
+        name: 'Courses',
+        title: 'Education & Study',
+        description: 'My academic and technical journey in technology and software development.',
+        tags: ['Technology', 'Education'],
+        art: 'book',
+        books: [
+          {
+            title: 'IT Technician',
+            subtitle: 'Cotemig · 2025',
+            description: 'Programming fundamentals, systems development, data handling, spreadsheets and databases.',
+            tags: ['Programming', 'Databases'],
+            color: 'ember',
+          },
+          {
+            title: 'Software Engineering',
+            subtitle: 'PUC Minas · 2026–2030 (expected)',
+            description: 'Degree in software development, systems engineering and computing fundamentals, currently in progress.',
+            tags: ['Software Engineering', 'Computing'],
+            color: 'forest',
+          },
+        ],
+      },
+      {
+        name: 'Certificates',
+        title: 'Certifications',
+        description: 'Courses and learning milestones in technology, AI, data and infrastructure.',
+        tags: ['Certificates', 'Education'],
+        art: 'scroll',
+        books: certificateBooks,
+      },
+      {
+        name: 'Projects',
+        title: 'My public GitHub repositories',
+        description: 'Academic and personal projects published on GitHub.',
+        tags: ['Projects', 'GitHub'],
+        art: 'books',
+        books: [],
+      },
+    ],
+  },
+  {
+    id: 'T',
+    name: 'Throne Room',
+    category: 'My Story',
+    subtitle: 'Every adventure begins with a story.',
+    destination: { x: 6, y: 2 },
+    objects: [
+      {
+        name: 'Throne',
+        title: 'Henrique Santos de Souza',
+        description: 'From Cotemig to DNIT, Direcional Engenharia and Software Engineering at PUC Minas.',
+        tags: ['Technology', 'Story'],
+        art: 'throne',
+        paragraphs: [
+          'My journey in technology began with a technical degree in IT at Cotemig, where I built my foundation in programming, databases and systems development.',
+          'In 2024, I started my professional experience at DNIT, working with technical support and IT infrastructure. During this period I handled computer, notebook and printer maintenance, ticket management and information organisation.',
+          'Later, I worked at Direcional Engenharia, focused on IT and process automation, with exposure to financial routine automation and SQL Server integration.',
+          'These experiences deepened my interest in software development, automation and data handling.',
+          'I am currently studying Software Engineering at PUC Minas and continue to grow through self-study and hands-on projects.',
+        ],
+      },
+      {
+        name: 'Scroll',
+        title: 'About me',
+        description: 'Software Engineering student at PUC Minas and IT Technician from Cotemig.',
+        tags: ['Software', 'Data', 'AI'],
+        art: 'scroll',
+        paragraphs: [
+          'I am a Software Engineering student at PUC Minas and a certified IT Technician from Cotemig, with hands-on experience in IT support, infrastructure and process automation. I am interested in software development, data engineering and artificial intelligence, aiming to build solutions that combine technology, efficiency and good development practices.',
+        ],
+        links: [
+          { label: 'Download résumé (Portuguese) · DOCX', url: profile.cv.pt, download: true },
+          { label: 'Download resume (English) · DOCX', url: profile.cv.en, download: true },
+        ],
+      },
+      {
+        name: 'Trophies',
+        title: 'Highlights',
+        description: 'Education, professional experience and projects that shaped my journey.',
+        tags: ['Highlights'],
+        art: 'trophy',
+        items: [
+          'IT Technician degree from Cotemig.',
+          'Software Engineering degree in progress at PUC Minas.',
+          'Professional experience in technical support and IT infrastructure at DNIT.',
+          'Experience with process automation at Direcional Engenharia.',
+          'Exposure to data integration using SQL Server.',
+          'Participation in academic software development projects.',
+          'Development of a personal portfolio with a visual identity inspired by RPGs and castles.',
+        ],
+      },
+      {
+        name: 'Messenger',
+        title: "Let's write a new story?",
+        description: 'Reach me by email, GitHub or LinkedIn.',
+        tags: ['Contact'],
+        art: 'letter',
+      },
+    ],
+  },
+  {
+    id: 'A',
+    name: 'Chambers',
+    category: 'Beyond the Code',
+    subtitle: 'The human side behind the hero.',
+    destination: { x: 10, y: 2 },
+    objects: [
+      {
+        name: 'Bed',
+        title: 'Where I am',
+        description: 'I am in Belo Horizonte, Minas Gerais, Brazil.',
+        tags: ['Location'],
+        art: 'bed',
+      },
+      {
+        name: 'Desk',
+        title: 'My setup',
+        description: 'My computer and tools.',
+        tags: ['Setup', 'Tools'],
+        art: 'desk',
+        items: ['Desktop computer with NVIDIA GeForce RTX 4060 Ti Super.'],
+      },
+      {
+        name: 'Poster',
+        title: 'Hobbies',
+        description: 'I read sci-fi, romance and fantasy; watch films, series and anime; and play Red Dead Redemption, God of War, Skull: The Hero Slayer and Valorant.',
+        tags: ['Inspiration', 'Hobbies'],
+        art: 'poster',
+        items: [
+          'Reading sci-fi, romance and fantasy books.',
+          'Watching films, series and anime.',
+          'Playing video games, especially Red Dead Redemption, God of War, Skull: The Hero Slayer and Valorant.',
+          'Exploring fictional universes, stories and game narratives.',
+        ],
+      },
+      {
+        name: 'Chest',
+        title: 'Fun facts',
+        description: 'Cybersecurity, automation, games and artificial intelligence are among my interests.',
+        tags: ['Fun facts'],
+        art: 'chest',
+        items: [
+          'I am interested in cybersecurity and understanding how to protect systems and applications.',
+          'I enjoy exploring process automation and ways to make tasks more efficient.',
+          'I am interested in game development and creating my own projects.',
+          'I like learning about new technologies and exploring practical applications of artificial intelligence.',
+        ],
+      },
+    ],
+  },
+  {
+    id: 'R',
+    name: 'Arsenal',
+    category: 'Skills',
+    subtitle: 'The tools to face any mission.',
+    destination: { x: 2, y: 8 },
+    objects: [
+      {
+        name: 'Sword',
+        title: 'Languages',
+        description: 'Languages I use: Java, TypeScript, JavaScript, Python and C#.',
+        tags: ['Languages'],
+        art: 'sword',
+        categories: ['Linguagens'],
+      },
+      {
+        name: 'Bow',
+        title: 'Back-end & Data',
+        description: 'Back-end and data: Node.js, Spring Boot, SQL and SQL Server.',
+        tags: ['Back-end', 'Data'],
+        art: 'bow',
+        categories: ['Back-end', 'Dados'],
+      },
+      {
+        name: 'Shield',
+        title: 'Front-end',
+        description: 'Front-end: HTML, CSS and React.',
+        tags: ['Front-end'],
+        art: 'shield',
+        categories: ['Front-end'],
+      },
+      {
+        name: 'Anvil',
+        title: 'Tools',
+        description: 'Tools: Git, GitHub, RPA and Godot.',
+        tags: ['Tools'],
+        art: 'anvil',
+        categories: ['Ferramentas'],
+      },
+      {
+        name: 'Tech Sphere',
+        title: 'Tech Sphere',
+        description: 'Interactive map of the main technologies and skills I use in software, data and automation.',
+        tags: ['Technologies', 'Skills'],
+        art: 'orb',
+        categories: ['Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas'],
+      },
+    ],
+  },
+  {
+    id: 'L',
+    name: 'Laboratory',
+    category: 'Experiments',
+    subtitle: 'Ideas in transformation. Watch out for the potions.',
+    destination: { x: 10, y: 8 },
+    objects: [
+      {
+        name: 'Blue Potion',
+        title: 'Cybersecurity',
+        description: 'I am interested in cybersecurity and understanding how to protect systems and applications.',
+        tags: ['Interests'],
+        art: 'potion',
+      },
+      {
+        name: 'Green Potion',
+        title: 'Games',
+        description: 'I am interested in game development and creating my own projects. I use Godot.',
+        tags: ['Interests'],
+        art: 'flask',
+      },
+      {
+        name: 'Cauldron',
+        title: 'AI & Automation',
+        description: 'I enjoy exploring process automation and practical applications of artificial intelligence.',
+        tags: ['Interests'],
+        art: 'cauldron',
+      },
+    ],
+  },
+];
+
+const profileEn: Profile = {
+  ...profile,
+  role: 'Software Developer | Software Engineering Student | Software • Data • AI',
+  bio: 'I am a Software Engineering student at PUC Minas and a certified IT Technician from Cotemig, with hands-on experience in IT support, infrastructure and process automation. I am interested in software development, data engineering and artificial intelligence, aiming to build solutions that combine technology, efficiency and good development practices.',
+  location: 'Belo Horizonte, Minas Gerais, Brazil',
+};
+
+export function getRooms(lang: Lang): [Room, Room, Room, Room, Room] {
+  return lang === 'en' ? roomsEn : rooms;
+}
+
+export function getProfile(lang: Lang): Profile {
+  return lang === 'en' ? profileEn : profile;
+}
+
 export const rooms: [Room, Room, Room, Room, Room] = [
   {
     id: 'B',

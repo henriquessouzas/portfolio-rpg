@@ -9,6 +9,7 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { useDraggable } from '@/hooks/use-draggable';
+import { useLang } from '@/hooks/use-lang';
 
 const POPUP_MEMORY = new Map<string, { x: number; y: number }>();
 
@@ -35,6 +36,7 @@ export function Popup({
   footer,
   children,
 }: PopupProps) {
+  const { t } = useLang();
   const titleId = useId();
   const descriptionId = useId();
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -219,7 +221,7 @@ export function Popup({
         <button
           type="button"
           className="popup-close"
-          aria-label="Fechar"
+          aria-label={t.closePopup}
           onPointerDown={(event) => {
             event.stopPropagation();
           }}
@@ -236,7 +238,7 @@ export function Popup({
       </div>
       {footer ? <div className="popup-footer">{footer}</div> : null}
       <span id={descriptionId} className="sr-only">
-        Use as setas para mover a janela.
+        {t.popupDragHint}
       </span>
     </div>
   );

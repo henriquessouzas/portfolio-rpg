@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { searchTechs, type TechSearchItem } from '@/lib/tech-search';
+import { useLang } from '@/hooks/use-lang';
 
 const categories = ['Todas', 'Linguagens', 'Front-end', 'Back-end', 'Dados', 'Ferramentas'] as const;
 
@@ -14,6 +15,7 @@ export function TechSearch({
   selectedName?: string;
   onSelect?: (name: string) => void;
 }) {
+  const { t } = useLang();
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [category, setCategory] = useState<(typeof categories)[number]>('Todas');
@@ -60,7 +62,7 @@ export function TechSearch({
   return (
     <div className="tech-search-panel">
       <label htmlFor="tech-search" className="tech-search-label">
-        Buscar tecnologia
+        {t.searchTech}
       </label>
       <input
         id="tech-search"
@@ -68,12 +70,12 @@ export function TechSearch({
         type="search"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Ex.: React, Docker"
+        placeholder={t.searchPlaceholder}
         className="tech-search-input"
-        aria-label="Buscar tecnologia"
+        aria-label={t.searchTech}
       />
 
-      <div className="tech-search-chips" role="group" aria-label="Filtrar por categoria">
+      <div className="tech-search-chips" role="group" aria-label={t.filterByCategory}>
         {categories.map((chip) => (
           <button
             key={chip}
@@ -88,12 +90,12 @@ export function TechSearch({
       </div>
 
       <div className="tech-search-header" aria-live="polite">
-        <strong>{total} tecnologias</strong>
+        <strong>{t.techCount(total)}</strong>
       </div>
 
       {results.length === 0 ? (
         <div className="tech-search-empty" role="status">
-          <span>Nenhuma tecnologia encontrada.</span>
+          <span>{t.noTechFound}</span>
           <button
             type="button"
             onClick={() => {
@@ -102,7 +104,7 @@ export function TechSearch({
               setCategory('Todas');
             }}
           >
-            Limpar filtros
+            {t.clearFilters}
           </button>
         </div>
       ) : (
@@ -128,7 +130,7 @@ export function TechSearch({
                   <div
                     className="tech-search-progress"
                     role="progressbar"
-                    aria-label={`${tech.name}: ${value}% de domínio`}
+                    aria-label={t.domainPct(tech.name, value)}
                     aria-valuenow={value}
                     aria-valuemin={0}
                     aria-valuemax={100}

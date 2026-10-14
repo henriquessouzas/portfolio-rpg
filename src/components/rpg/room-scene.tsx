@@ -7,7 +7,7 @@ function Furniture({ fixture: f, art }: { fixture: Fixture; art?: string | undef
   const w = f.w * 48,
     h = f.h * 48;
   const icon = (kind: string, x: number, y: number, size: number) => (
-    <svg x={x} y={y} width={size} height={size} viewBox="0 0 64 64">
+    <svg x={x} y={y} width={size} height={size} viewBox="0 0 64 64" shapeRendering="crispEdges">
       <ObjectArt kind={kind} />
     </svg>
   );
@@ -384,7 +384,7 @@ export function RoomScene({
 }) {
   return (
     <div className={`room-world furnished-room room-${room.id}`}>
-      <svg className="furnished-art" viewBox="0 0 960 672" aria-hidden="true">
+      <svg className="furnished-art" viewBox="0 0 960 672" aria-hidden="true" shapeRendering="crispEdges">
         <rect width="960" height="672" className="fill-floor" />
         {Array.from({ length: 20 }, (_, x) =>
           Array.from({ length: 14 }, (_, y) => (

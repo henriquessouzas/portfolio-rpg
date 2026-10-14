@@ -2,6 +2,7 @@ import { Mail } from 'lucide-react';
 import { useState } from 'react';
 import { githubUrl, linkedinUrl, mailtoUrl } from '@/lib/contact';
 import type { Profile } from '@/lib/portfolio-data';
+import { useLang } from '@/hooks/use-lang';
 
 function GitHubMark() {
   return (
@@ -26,13 +27,14 @@ function LinkedInMark() {
 }
 
 export function Messenger({ profile }: { profile: Profile }) {
+  const { t } = useLang();
   const firstName = profile.name.trim().split(/\s+/)[0] || 'amigo';
   const email = profile.email.trim();
   const github = profile.github.trim();
   const linkedin = profile.linkedin.trim();
   const [showForm, setShowForm] = useState(false);
 
-  const emailLink = email ? mailtoUrl({ email, subject: 'Contato pelo portfólio', body: `Olá, ${firstName}!\n\n` }) : '';
+  const emailLink = email ? mailtoUrl({ email, subject: t.emailSubject, body: t.emailGreeting(firstName) }) : '';
 
   const handleEmailClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (!emailLink) {
@@ -46,7 +48,7 @@ export function Messenger({ profile }: { profile: Profile }) {
 
   return (
     <div className="messenger-popup">
-      <p className="messenger-intro">Quer conversar? Escolha um canal.</p>
+      <p className="messenger-intro">{t.messengerIntro}</p>
 
       <div className="messenger-actions">
         {email ? (
@@ -54,13 +56,13 @@ export function Messenger({ profile }: { profile: Profile }) {
             <a
               className="messenger-link"
               href={emailLink}
-              aria-label={`Enviar e-mail para ${email}`}
+              aria-label={`${t.sendEmail} ${email}`}
               onClick={handleEmailClick}
             >
               <span className="messenger-icon" aria-hidden="true">
                 <Mail size={18} />
               </span>
-              <span>Enviar e-mail</span>
+              <span>{t.sendEmail}</span>
             </a>
 
             {showForm ? (
@@ -69,25 +71,25 @@ export function Messenger({ profile }: { profile: Profile }) {
                 action="https://formsubmit.co/henriquetrabalhodossantos@gmail.com"
                 method="POST"
               >
-                <input type="hidden" name="_subject" value="Contato pelo portfólio" />
+                <input type="hidden" name="_subject" value={t.emailSubject} />
                 <input type="hidden" name="_captcha" value="false" />
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="_replyto" value={email} />
 
                 <label>
-                  <span>Seu nome</span>
-                  <input type="text" name="name" placeholder="Seu nome" required />
+                  <span>{t.yourName}</span>
+                  <input type="text" name="name" placeholder={t.yourName} required />
                 </label>
                 <label>
-                  <span>Seu e-mail</span>
+                  <span>{t.yourEmail}</span>
                   <input type="email" name="email" placeholder="seu@email.com" required />
                 </label>
                 <label>
-                  <span>Mensagem</span>
-                  <textarea name="message" rows={5} placeholder="Escreva sua mensagem..." required />
+                  <span>{t.message}</span>
+                  <textarea name="message" rows={5} placeholder={t.writeMessage} required />
                 </label>
                 <button type="submit" className="messenger-submit">
-                  Enviar mensagem
+                  {t.sendMessage}
                 </button>
               </form>
             ) : null}
@@ -102,7 +104,7 @@ export function Messenger({ profile }: { profile: Profile }) {
             href={githubUrl(profile)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Abrir o GitHub em uma nova aba"
+            aria-label={t.openGitHub}
           >
             <span className="messenger-icon" aria-hidden="true">
               <GitHubMark />
@@ -117,7 +119,7 @@ export function Messenger({ profile }: { profile: Profile }) {
             href={linkedinUrl(profile)}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Abrir o LinkedIn em uma nova aba"
+            aria-label={t.openLinkedIn}
           >
             <span className="messenger-icon" aria-hidden="true">
               <LinkedInMark />
