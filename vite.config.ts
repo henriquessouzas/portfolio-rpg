@@ -12,8 +12,5 @@ export default defineConfig({
     setupFiles: ['src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
     exclude: ['**/node_modules/**', '**/dist/**'],
-    environmentMatchGlobs: [
-      ['src/lib/**', 'node'],
-    ],
   },
 });

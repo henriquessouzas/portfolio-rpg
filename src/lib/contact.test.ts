@@ -11,7 +11,7 @@ const baseProfile: Profile = {
   bio: 'Desenvolvo experiências digitais.',
   location: 'São Paulo, Brasil',
   stack: ['React', 'TypeScript'],
-  cvUrl: 'https://example.com/cv',
+  cv: { pt: 'https://example.com/cv-pt.docx', en: 'https://example.com/cv-en.docx' },
   githubFeatured: ['repo-1'],
   githubExclude: [],
   githubOverrides: {},

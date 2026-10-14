@@ -3,14 +3,13 @@ import { canUse3D } from './webgl';
 
 describe('canUse3D', () => {
   const originalMatchMedia = window.matchMedia;
-  const originalConnection = navigator.connection;
 
   afterEach(() => {
     window.history.pushState({}, '', '/');
     window.matchMedia = originalMatchMedia;
     Object.defineProperty(navigator, 'connection', {
       configurable: true,
-      value: originalConnection,
+      value: undefined,
     });
     Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
       configurable: true,

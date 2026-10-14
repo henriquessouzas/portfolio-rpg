@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Lightformer, OrbitControls, useGLTF } from '@react-three/drei';
-import { Box3, CanvasTexture, Color, DoubleSide, Group, Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector3 } from 'three';
+import { Box3, CanvasTexture, Color, DoubleSide, Group, Mesh, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector3 } from 'three';
 import { wall, doorway, base, mid, roof, keepBase, keepMid, keepRoof, tree, rock } from './castle-assets';
 
 type Palette = Record<'sky' | 'grass' | 'grassLight' | 'water' | 'foam' | 'earth' | 'path' | 'flag' | 'pole', string>;
@@ -293,7 +293,7 @@ function GateBridge({ palette }: { palette: Palette }) {
 
 
 
-function Castle({ palette, reducedMotion, entering, onReady }: { palette: Palette; reducedMotion: boolean; entering: boolean; onReady: () => void }) {
+function Castle({ palette, reducedMotion, onReady }: { palette: Palette; reducedMotion: boolean; onReady: () => void }) {
   useEffect(() => { onReady(); }, [onReady]);
   const corners: [number, number, number][] = [[-2, .06, -2], [2, .06, -2], [-2, .06, 2], [2, .06, 2]];
   return <>
@@ -364,7 +364,7 @@ export default function CastleWorld3D(props: Props) {
     <directionalLight position={[-5, 10, 6]} intensity={2.4} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-camera-left={-7} shadow-camera-right={7} shadow-camera-top={7} shadow-camera-bottom={-7} shadow-bias={-.0003}/>
     <Environment resolution={64}><Lightformer position={[0, 8, 0]} rotation-x={Math.PI / 2} scale={[12, 12, 1]} intensity={.7}/><Lightformer color={palette.sky} position={[-5, 3, 0]} rotation-y={Math.PI / 2} scale={[10, 10, 1]} intensity={.5}/></Environment>
     <Landscape palette={palette} reducedMotion={props.reducedMotion}/>
-    <Suspense fallback={null}><Castle palette={palette} reducedMotion={props.reducedMotion} entering={props.entering} onReady={props.onReady}/></Suspense>
+    <Suspense fallback={null}><Castle palette={palette} reducedMotion={props.reducedMotion} onReady={props.onReady}/></Suspense>
     <CameraRig entering={props.entering} reducedMotion={props.reducedMotion} reset={props.reset}/>
   </Canvas>;
 }
