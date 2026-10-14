@@ -110,6 +110,7 @@ function PortfolioInner() {
   }, [visited.length]);
 
   useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => setReducedMotion(query.matches);
     update();
     query.addEventListener('change', update);
