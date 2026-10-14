@@ -40,6 +40,7 @@ import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
 import { Hud } from './hud';
 import { ExplorerAchievement, hasSeenAchievement, markAchievementSeen } from './explorer-achievement';
+import { TypewriterDescription } from './typewriter-description';
 import { Popup } from './popup';
 import { Messenger } from './messenger';
 import { TechSearch } from './arsenal/tech-search';
@@ -559,7 +560,7 @@ export default function Portfolio() {
                           {room.name} / {selected.name}
                         </span>
                         <h3>{selected.title}</h3>
-                        <p>{selected.description}</p>
+                        <TypewriterDescription text={selected.description} reducedMotion={reducedMotion} />
                         <div className="tags">
                           {selected.tags.map((tag) => (
                             <span key={tag}>{tag}</span>
@@ -647,7 +648,7 @@ export default function Portfolio() {
                           {room.name} / {selected.name}
                         </span>
                         <h3>{selected.title}</h3>
-                        <p>{selected.description}</p>
+                        <TypewriterDescription text={selected.description} reducedMotion={reducedMotion} />
                         <div className="tags" style={{ marginBottom: 16 }}>
                           {selected.tags.map((tag) => (
                             <span key={tag}>{tag}</span>
@@ -686,7 +687,7 @@ export default function Portfolio() {
                           {room.name} / {selected.name}
                         </span>
                         <h3>{selected.title}</h3>
-                        <p>{selected.description}</p>
+                        <TypewriterDescription text={selected.description} reducedMotion={reducedMotion} />
                         <div className="tags">
                           {selected.tags.map((tag) => (
                             <span key={tag}>{tag}</span>

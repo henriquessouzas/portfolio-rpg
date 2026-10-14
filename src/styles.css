@@ -2645,3 +2645,40 @@ progress::-webkit-progress-value {
   transform: translate(1px, 1px);
   box-shadow: 1px 1px 0 var(--outline);
 }
+
+/* Typewriter description */
+.typewriter-wrap {
+  cursor: pointer;
+  user-select: none;
+}
+.typewriter-text {
+  margin: 0;
+  color: var(--muted-foreground);
+  font-size: 17px;
+  line-height: 1.55;
+  min-height: 1.55em;
+}
+.typewriter-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background: var(--foreground);
+  vertical-align: text-bottom;
+  margin-left: 1px;
+  animation: tw-blink 0.7s steps(1) infinite;
+}
+@keyframes tw-blink {
+  50% { opacity: 0; }
+}
+.typewriter-hint {
+  display: block;
+  margin-top: 6px;
+  font: 7px/1.6 var(--font-pixel);
+  color: var(--muted-foreground);
+  opacity: 0.6;
+}
+@media (prefers-reduced-motion: reduce) {
+  .typewriter-cursor {
+    animation: none;
+  }
+}
