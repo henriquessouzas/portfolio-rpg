@@ -38,6 +38,7 @@ import { RoomScene } from './room-scene';
 import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
 import { ThemeToggle } from './theme-toggle';
+import { Hud } from './hud';
 import { Popup } from './popup';
 import { Messenger } from './messenger';
 import { TechSearch } from './arsenal/tech-search';
@@ -364,6 +365,7 @@ export default function Portfolio() {
 
         {(screen === 'map' || screen === 'room') && (
           <section className="adventure-screen">
+            <Hud visited={visited.length} />
             <div className="game-heading">
               <div>
                 <span className="eyebrow">A JORNADA CONTINUA</span>
@@ -461,7 +463,16 @@ export default function Portfolio() {
                       {visited.length}
                       <span> / 5</span>
                     </strong>
-                    <progress max="5" value={visited.length} aria-label="Salas descobertas" />
+                    <div
+                      className="exploration-progressbar"
+                      role="progressbar"
+                      aria-label="Progresso da exploração"
+                      aria-valuemin={0}
+                      aria-valuemax={5}
+                      aria-valuenow={visited.length}
+                    >
+                      <span style={{ width: `${(visited.length / 5) * 100}%` }} />
+                    </div>
                   </div>
                   <ul>
                     {rooms.map((r) => (
