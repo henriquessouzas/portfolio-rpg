@@ -33,7 +33,7 @@ import {
   type PlanRoomId,
 } from '@/lib/castle-plan';
 import { Crest, Hero, ObjectArt } from './art';
-import { WindScene } from './wind-scene';
+import { CastleView, type CastleMode } from './castle3d/castle-view';
 import { RoomScene } from './room-scene';
 import { CastleMap } from './map/castle-map';
 import { ShelfView } from './shelf-view';
@@ -113,6 +113,7 @@ function PortfolioInner() {
   const [busy, setBusy] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const [castleMode, setCastleMode] = useState<CastleMode>('image');
   const [announcement, setAnnouncement] = useState('');
   const [mapPath, setMapPath] = useState<Point[]>([]);
   const [mapTarget, setMapTarget] = useState<string | null>(null);
@@ -176,7 +177,7 @@ function PortfolioInner() {
     const token = ++operation.current;
     setBusy(true);
     setTransitioning(true);
-    if (!reducedMotion) await pause(750);
+    if (!reducedMotion) await pause(castleMode === '3d' ? 2600 : 750);
     if (token !== operation.current) return;
     setPosition(MAP_ENTRANCE);
     setScreen('map');
@@ -395,26 +396,7 @@ function PortfolioInner() {
               <p>{t.heroSubtitle}</p>
             </div>
             <div className="castle-world">
-              <Button
-                variant="scene"
-                onClick={() => void enterCastle()}
-                aria-label={t.enterCastle}
-                disabled={busy}
-                className={transitioning ? 'castle-entering' : ''}
-              >
-                <WindScene reducedMotion={reducedMotion} />
-                <span className="scene-vignette" />
-                <span className="world-label">
-                  <span className="live-dot" /> {t.worldLabel}
-                </span>
-                <span className="castle-cta pixel-button pixel-primary">
-                  {busy ? t.openingGates : t.enterCastle}
-                  {!busy && <ArrowRight size={18} />}
-                </span>
-                <span className="castle-coordinate">
-                  {t.castleCoordinate}
-                </span>
-              </Button>
+              <CastleView reducedMotion={reducedMotion} entering={transitioning} onEnter={() => void enterCastle()} onModeChange={setCastleMode}/>
               <div className="corner corner-tl" />
               <div className="corner corner-tr" />
               <div className="corner corner-bl" />

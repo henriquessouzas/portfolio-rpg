@@ -2,6 +2,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
+  useCallback,
   useEffect,
   useId,
   useRef,
@@ -31,7 +32,7 @@ export function Popup({
   title,
   onClose,
   width = 560,
-  initialAnchor = null,
+  initialAnchor: _initialAnchor = null,
   storageKey,
   footer,
   children,
@@ -56,7 +57,7 @@ export function Popup({
     };
   };
 
-  const defaultPosition = () => {
+  const defaultPosition = useCallback(() => {
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const { width: popupWidth, height: popupHeight } = getBounds();
@@ -65,7 +66,8 @@ export function Popup({
       x: clamp((viewportWidth - popupWidth) / 2, 8, Math.max(8, viewportWidth - popupWidth - 8)),
       y: clamp((viewportHeight - popupHeight) / 2, 8, Math.max(8, viewportHeight - popupHeight - 8)),
     };
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [compact, width]);
 
   const [initialPosition] = useState(() => {
     if (storageKey) {
@@ -97,10 +99,10 @@ export function Popup({
     }
   }, [position, storageKey]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     openerRef.current?.focus();
     onClose();
-  };
+  }, [onClose]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -123,7 +125,7 @@ export function Popup({
       window.removeEventListener('resize', handleResize);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleClose, setPosition]);
+  }, [defaultPosition, handleClose, setPosition]);
 
   useEffect(() => {
     return () => {

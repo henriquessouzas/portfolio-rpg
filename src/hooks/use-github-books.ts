@@ -67,7 +67,7 @@ export function useGithubBooks() {
         const repos = await fetchRepos(user);
         if (!active) return;
         updateFromRepos(repos);
-      } catch (error) {
+      } catch {
         if (!active) return;
 
         if (snapshotBooks.length === 0) {
