@@ -20,10 +20,7 @@ type PointerLike = {
   clientY: number;
   pointerId?: number;
   preventDefault?: () => void;
-  currentTarget?: {
-    setPointerCapture?: (pointerId: number) => void;
-    releasePointerCapture?: (pointerId: number) => void;
-  };
+  currentTarget?: EventTarget | null;
 };
 
 const clamp = (value: number, min: number, max: number) =>
@@ -85,7 +82,7 @@ export function useDraggable({
         originY: position.y,
       };
 
-      event.currentTarget?.setPointerCapture?.(event.pointerId ?? 1);
+      (event.currentTarget as Element | null)?.setPointerCapture?.(event.pointerId ?? 1);
     },
     [disabled, position.x, position.y],
   );
