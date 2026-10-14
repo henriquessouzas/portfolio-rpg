@@ -8,12 +8,15 @@ export function Hero({ walking = false }: { walking?: boolean }) {
     >
       <ellipse cx="12" cy="30" rx="9" ry="2" className="sprite-shadow" />
       <path d="M6 16h12v11H6zM4 18h3v9H4zM18 18h3v9h-3z" className="fill-ember" />
-      <path d="M7 7h11v11H7z" className="fill-skin" />
-      <path d="M5 5h14v5H5zM7 2h10v3H7zM4 8h3v5H4zM17 8h3v5h-3z" className="fill-ink" />
+      <path d="M7 7h11v11H7z" className="fill-hero-skin" />
+      <path d="M7 13h2v5H7zM16 13h2v5h-2z" className="fill-hero-skin-shade" />
+      <path d="M7 1h11v3H7zM5 3h15v7H5zM4 8h3v6H4zM18 8h3v6h-3z" className="fill-hero-hair" />
       <path d="M7 18h10v8H7zM6 17h12v3H6z" className="fill-gold" />
-      <path d="M8 26h4v5H7v-3h1zM14 26h4v5h-5v-3h1z" className="fill-ink legs" />
-      <path d="M9 11h2v2H9zM15 11h2v2h-2z" className="fill-ink" />
-      <path d="M5 20h3v5H5zM18 20h3v5h-3z" className="fill-skin" />
+      <path d="M8 26h4v5H7v-3h1zM14 26h4v5h-5v-3h1z" className="fill-hero-boots legs" />
+      <path d="M8 11h4v2H8zM14 11h4v2h-4z" className="fill-hero-eye" />
+      <path d="M9 11h2v2H9zM15 11h2v2h-2z" className="fill-hero-hair" />
+      <path d="M12 14h2v1h-2zM10 16h6v1h-6z" className="fill-hero-skin-shade" />
+      <path d="M5 20h3v5H5zM18 20h3v5h-3z" className="fill-hero-skin" />
       <path d="M18 15h2v12h-2z" className="fill-steel" />
       <path d="M16 24h6v2h-6z" className="fill-gold" />
     </svg>
