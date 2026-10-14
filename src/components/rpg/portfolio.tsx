@@ -48,6 +48,7 @@ import { Messenger } from './messenger';
 import { TechSearch } from './arsenal/tech-search';
 import { roomEntrance, roomGrid, roomLayouts } from '@/lib/room-layouts';
 import { useGithubBooks } from '@/hooks/use-github-books';
+import { parseHash, formatHash } from '@/lib/deep-link';
 
 const LazyTechSphere = lazy(() => import('./tech-sphere/tech-sphere'));
 
@@ -81,8 +82,25 @@ export default function Portfolio() {
 
 function PortfolioInner() {
   const { t } = useLang();
-  const [screen, setScreen] = useState<Screen>('castle');
-  const [room, setRoom] = useState<Room>(rooms[0]);
+
+  // ── deep-link: resolve initial screen/room from hash ──────────────────────
+  const initialTarget = parseHash(window.location.hash);
+  const initialRoom =
+    initialTarget?.kind === 'room'
+      ? (rooms.find((r) => r.id === initialTarget.id) ?? rooms[0])
+      : rooms[0];
+  const initialScreen: Screen =
+    initialTarget?.kind === 'room'
+      ? 'room'
+      : initialTarget?.kind === 'simple'
+        ? 'simple'
+        : 'castle';
+
+  const [screen, setScreen] = useState<Screen>(initialScreen);
+  const [room, setRoom] = useState<Room>(initialRoom);
+  const [visited, setVisited] = useState<string[]>(
+    initialTarget?.kind === 'room' ? [initialTarget.id] : [],
+  );
   const [position, setPosition] = useState<Point>(MAP_ENTRANCE);
   const [roomPosition, setRoomPosition] = useState<Point>(roomEntrance);
   const [selected, setSelected] = useState<Artifact | null>(null);
@@ -91,7 +109,6 @@ function PortfolioInner() {
   const [popupAnchor, setPopupAnchor] = useState<{ x: number; y: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [transitioning, setTransitioning] = useState(false);
-  const [visited, setVisited] = useState<string[]>([]);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [announcement, setAnnouncement] = useState('');
   const [mapPath, setMapPath] = useState<Point[]>([]);
@@ -141,6 +158,9 @@ function PortfolioInner() {
     setMapPath([]);
     setMapTarget(null);
     setScreen(next);
+    const hash =
+      next === 'simple' ? formatHash({ kind: 'simple' }) : '';
+    history.replaceState(null, '', window.location.pathname + hash);
   }
   async function enterCastle() {
     if (busy) return;
@@ -223,6 +243,7 @@ function PortfolioInner() {
     setMapTarget(null);
     setVisited((prev) => (prev.includes(destination.id) ? prev : [...prev, destination.id]));
     setAnnouncement(destination.name);
+    history.replaceState(null, '', window.location.pathname + formatHash({ kind: 'room', id: destination.id }));
     if (destination.id === 'T') void pickObject(destination.objects[0], 0, destination);
   }
 
@@ -245,8 +266,34 @@ function PortfolioInner() {
       })
     : [];
 
+  // hashchange: navigate when user edits the URL bar or uses back/forward
   useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
+    function onHashChange() {
+      const target = parseHash(window.location.hash);
+      if (!target) return;
+      if (target.kind === 'castle') { changeScreen('castle'); return; }
+      if (target.kind === 'simple') { changeScreen('simple'); return; }
+      const dest = rooms.find((r) => r.id === target.id);
+      if (!dest) return;
+      operation.current++;
+      setRoom(dest);
+      setRoomPosition(roomEntrance);
+      setSelected(null);
+      setBook(null);
+      setPopupAnchor(null);
+      setBusy(false);
+      setTransitioning(false);
+      setMapPath([]);
+      setMapTarget(null);
+      setScreen('room');
+      setVisited((prev) => (prev.includes(dest.id) ? prev : [...prev, dest.id]));
+    }
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
       if (event.key === 'Escape') {
         if (selected) {
           event.preventDefault();
