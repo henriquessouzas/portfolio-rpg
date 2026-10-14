@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 export function Hero({ walking = false }: { walking?: boolean }) {
   return (
     <svg
@@ -23,7 +25,7 @@ export function Hero({ walking = false }: { walking?: boolean }) {
   );
 }
 
-export function ObjectArt({ kind, className = '' }: { kind: string; className?: string }) {
+export function ObjectArt({ kind, className = '', style }: { kind: string; className?: string; style?: CSSProperties }) {
   const art: Record<string, React.ReactNode> = {
     sword: (
       <>
@@ -179,6 +181,7 @@ export function ObjectArt({ kind, className = '' }: { kind: string; className?: 
     <svg
       viewBox="0 0 64 64"
       className={`object-art ${className}`}
+      style={style}
       aria-hidden="true"
       strokeWidth="3"
       strokeLinecap="square"
@@ -190,9 +193,9 @@ export function ObjectArt({ kind, className = '' }: { kind: string; className?: 
   );
 }
 
-export function Crest() {
+export function Crest({ style }: { style?: CSSProperties } = {}) {
   return (
-    <svg viewBox="0 0 40 44" aria-hidden="true" className="crest" shapeRendering="crispEdges">
+    <svg viewBox="0 0 40 44" aria-hidden="true" className="crest" style={style} shapeRendering="crispEdges">
       <path d="M4 5h32v22L20 40 4 27z" className="fill-gold stroke-ink" strokeWidth="3" />
       <path d="M11 14h18v14H11zM10 10h5v8h-5zM18 10h5v8h-5zM26 10h5v8h-5z" className="fill-ink" />
       <path d="M17 22h6v7h-6z" className="fill-gold" />

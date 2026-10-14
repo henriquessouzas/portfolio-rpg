@@ -277,7 +277,7 @@ export default function DesignPage() {
                   display: 'grid', placeItems: 'center',
                   background: 'var(--surface)', border: '2px solid var(--outline)',
                 }}>
-                  <ObjectArt kind="sword" className="" />
+                  <ObjectArt kind="sword" className="" style={{ width: '100%', height: '100%' }} />
                 </div>
                 <span style={{ fontSize: 11, fontFamily: 'monospace', color: 'var(--muted-foreground)' }}>
                   ×{n} = {n * 16}px
@@ -305,7 +305,7 @@ export default function DesignPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ fontSize: 11, color: 'var(--muted-foreground)', fontFamily: 'var(--font-sans)' }}>Hero — HUD (32px = ×2)</div>
               <div style={{ width: 48, height: 48, display: 'grid', placeItems: 'center', background: 'var(--floor)', border: '2px solid var(--outline)' }}>
-                <div style={{ width: 'calc(var(--tile) * 2)', height: 'calc(var(--tile) * 2)' }}>
+                <div style={{ width: 'calc(var(--tile) * 2)', height: 'calc(var(--tile) * 2.7)' }}>
                   <Hero />
                 </div>
               </div>
@@ -319,7 +319,7 @@ export default function DesignPage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div style={{ fontSize: 11, color: 'var(--muted-foreground)', fontFamily: 'var(--font-sans)' }}>Crest — footer (18px)</div>
               <div style={{ width: 48, height: 48, display: 'grid', placeItems: 'center', background: 'var(--surface)', border: '2px solid var(--outline)' }}>
-                <div style={{ width: 18, height: 22 }}><Crest /></div>
+                <Crest style={{ width: 18, height: 22 }} />
               </div>
             </div>
           </Row>

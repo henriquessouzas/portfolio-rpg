@@ -86,6 +86,10 @@
   --floor-dark: oklch(0.24 0.03 80);
   --steel: oklch(0.62 0.02 237);
   --ink: var(--foreground);
+  --castle-sky: oklch(0.20 0.06 270);
+  --castle-grass: oklch(0.34 0.08 150);
+  --castle-grass-light: oklch(0.42 0.09 150);
+  --castle-water: oklch(0.32 0.09 250);
 }
 
 @layer base {
@@ -196,7 +200,8 @@
   padding: 12px 16px;
   transition:
     transform 0.1s steps(2),
-    box-shadow 0.1s steps(2);
+    box-shadow 0.1s steps(2),
+    filter 0.18s ease;
 }
 .pixel-primary {
   background: var(--gold);
@@ -205,14 +210,23 @@
 .pixel-secondary {
   background: var(--surface);
   color: var(--ink);
+  transition:
+    transform 0.1s steps(2),
+    box-shadow 0.1s steps(2),
+    filter 0.18s ease,
+    background 0.18s ease;
+}
+.pixel-secondary:hover {
+  background: var(--muted);
 }
 .pixel-button:hover {
-  transform: translate(-1px, -1px);
   box-shadow: 4px 4px 0 var(--outline);
+  filter: brightness(1.14) saturate(1.1);
 }
 .pixel-button:active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--outline);
+  filter: brightness(0.94);
 }
 .pixel-button svg {
   width: 15px;
@@ -344,6 +358,19 @@
 .scene-button:hover .castle-cta {
   transform: translate(-50%, -3px);
   box-shadow: 5px 6px 0 var(--outline);
+}
+.castle-cta:not(:disabled) {
+  animation: cta-pulse 2.4s ease-in-out infinite;
+}
+.castle-cta:hover:not(:disabled),
+.castle-cta:focus-visible:not(:disabled) {
+  animation: none;
+  filter: brightness(1.18) saturate(1.15);
+  box-shadow: 6px 6px 0 var(--outline);
+}
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: var(--shadow-pixel); }
+  50%       { box-shadow: 5px 5px 0 var(--outline), 0 0 12px color-mix(in oklab, var(--gold) 55%, transparent); }
 }
 .castle-coordinate {
   position: absolute;
@@ -2738,3 +2765,21 @@ progress::-webkit-progress-value {
 .fill-hero-boots { fill: var(--hero-boots); }
 /* contorno claro fino: o herói continua visível sobre o mapa escuro */
 .hero-sprite { filter: drop-shadow(0 0 0.7px var(--hero-rim)); }
+
+/* ===== Castelo 3D: cores da paisagem (relidas quando o tema muda) ===== */
+:root {
+  --castle-sky: oklch(0.80 0.08 235);
+  --castle-grass: oklch(0.60 0.12 140);
+  --castle-grass-light: oklch(0.72 0.14 135);
+  --castle-water: oklch(0.62 0.12 235);
+}
+
+/* ===== Castelo 3D: palco e controles ===== */
+.castle-stage { position: relative; display: block; width: 100%; height: 500px; border: 3px solid var(--ink); overflow: hidden; box-shadow: var(--shadow-scene); isolation: isolate; background: var(--castle-sky); }
+.castle-stage.castle-entering .wind-scene { transform: scale(2.9); transform-origin: 50% 64%; }
+.castle-stage > canvas, .castle-stage canvas { touch-action: pan-y; }
+.castle-loading { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; font: 8px/1.6 var(--font-pixel); color: var(--scene-ink); text-shadow: 1px 2px var(--scene-shade); z-index: 2; }
+.castle-stage .world-label, .castle-stage .castle-coordinate { z-index: 2; pointer-events: none; }
+.castle-tools { position: absolute; top: 14px; right: 14px; display: flex; gap: 10px; z-index: 3; }
+.castle-stage .castle-cta { z-index: 3; }
+@media (prefers-reduced-motion: reduce) { .castle-stage.castle-entering .wind-scene { transition: none; } }

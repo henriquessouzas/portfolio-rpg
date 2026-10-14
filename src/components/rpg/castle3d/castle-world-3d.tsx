@@ -1,8 +1,8 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Environment, Lightformer, OrbitControls, useGLTF } from '@react-three/drei';
-import { Box3, CanvasTexture, Color, DoubleSide, Group, Mesh, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector3 } from 'three';
-import { wall, doorway, gate, base, mid, roof, keepBase, keepMid, keepRoof, tree, rock } from './castle-assets';
+import { Box3, CanvasTexture, Color, DoubleSide, Group, Mesh, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector3 } from 'three';
+import { wall, doorway, base, mid, roof, keepBase, keepMid, keepRoof, tree, rock } from './castle-assets';
 
 type Palette = Record<'sky' | 'grass' | 'grassLight' | 'water' | 'foam' | 'earth' | 'path' | 'flag' | 'pole', string>;
 type Props = { reducedMotion: boolean; entering: boolean; reset: number; onReady: () => void; onFailure: () => void };
@@ -81,52 +81,217 @@ function Landscape({ palette, reducedMotion }: { palette: Palette; reducedMotion
     <mesh position-y={-.42} receiveShadow><cylinderGeometry args={[5.2, 4.8, .8, 48]}/><meshStandardMaterial color={palette.earth} roughness={1} flatShading/></mesh>
     <mesh rotation-x={-Math.PI / 2} receiveShadow><circleGeometry args={[5.2, 48]}/><meshStandardMaterial map={grass} roughness={1}/></mesh>
     <mesh position-y={.025} rotation-x={-Math.PI / 2}><ringGeometry args={[3.2, 4.05, 64]}/><meshStandardMaterial map={water} metalness={.22} roughness={.24}/></mesh>
-    <mesh position={[0, .055, 2.35]} rotation-x={-Math.PI / 2} receiveShadow><planeGeometry args={[1.05, 4.2]}/><meshStandardMaterial color={palette.path} roughness={1}/></mesh>
   </>;
 }
 
-function CastleGate({ entering, reducedMotion }: Pick<Props, 'entering' | 'reducedMotion'>) {
-  const { scene } = useGLTF(gate.url);
-  const left = useRef<Group>(null);
-  const right = useRef<Group>(null);
-  const elapsed = useRef(0);
-  // The source is a complete arched gate. Split its geometry at the centre
-  // so the two halves preserve its timber, arch and ironwork as they swing.
-  const leaves = useMemo(() => [-1, 1].map(side => {
-    const leaf = scene.clone(true);
-    leaf.traverse(object => {
-      if (!(object instanceof Mesh)) return;
-      const geometry = object.geometry.clone();
-      const positions = geometry.getAttribute('position');
-      const original = geometry.getIndex();
-      const indices: number[] = [];
-      const count = original?.count ?? positions.count;
-      for (let i = 0; i < count; i += 3) {
-        const a = original?.getX(i) ?? i;
-        const b = original?.getX(i + 1) ?? i + 1;
-        const c = original?.getX(i + 2) ?? i + 2;
-        if ((positions.getZ(a) + positions.getZ(b) + positions.getZ(c)) * side >= 0) indices.push(a, b, c);
-      }
-      geometry.setIndex(indices); object.geometry = geometry;
-      object.castShadow = true; object.receiveShadow = true;
-    });
-    return leaf;
-  }), [scene]);
-  useEffect(() => () => leaves.forEach(leaf => leaf.traverse(object => { if (object instanceof Mesh) object.geometry.dispose(); })), [leaves]);
-  useEffect(() => { elapsed.current = 0; }, [entering]);
-  useFrame((_, rawDelta) => {
-    if (!left.current || !right.current) return;
-    elapsed.current = entering ? elapsed.current + Math.min(rawDelta, .05) : 0;
-    const progress = reducedMotion ? Number(entering) : Math.min(1, Math.max(0, (elapsed.current - .25) / 1.1));
-    const angle = progress * progress * (3 - 2 * progress) * Math.PI * .46;
-    left.current.rotation.y = angle;
-    right.current.rotation.y = -angle;
-  });
-  return <group position={[0, .065, 2.24]} name="castle-gate">
-    <group ref={left} position-x={-.497} name="gate-left-hinge"><group position-x={.497} rotation-y={Math.PI / 2} scale={[1, 1.3, 1.5]}><primitive object={leaves[0]}/></group></group>
-    <group ref={right} position-x={.497} name="gate-right-hinge"><group position-x={-.497} rotation-y={Math.PI / 2} scale={[1, 1.3, 1.5]}><primitive object={leaves[1]}/></group></group>
-  </group>;
+// ─── Gate entrance: portal frame, wooden doors, and bridge ──────────────────
+//
+// Geometry reference (world units, Y-up, Z+ toward camera):
+//   Wall face:        z = 2.00  (front of the muraille)
+//   Doorway gap:      x = ±0.375 edges, total width ≈ 0.75
+//   Wall height:      1.31 (glb) × scaleY 0.9 ≈ 1.18  → opening height 1.10
+//   Wall depth (Z):   1.0 (glb) × scaleZ 0.45 = 0.45
+//   All Y values measured from ground (y=0.065 baseline)
+
+// ── 1. Stone portal frame ────────────────────────────────────────────────────
+// A flat-faced stone frame sitting on the wall face (z=2.0), flush with the
+// opening.  Uses a straight lintel — no arch — so it never overshoots the wall
+// height and creates no floating geometry.
+
+function StonePortal({ palette }: { palette: Palette }) {
+  const STONE  = palette.earth;
+  const STONE2 = '#a89880';   // lighter accent for lintel / quoins
+
+  // Opening dimensions (must stay within the doorway gap)
+  const OW = 0.72;   // opening width  (< gap 0.75 to leave room for frame)
+  const OH = 1.10;   // opening height (< wall height 1.18)
+
+  // Frame dimensions
+  const PW = 0.10;   // pier width (each side)
+  const LH = 0.12;   // lintel height
+  const FD = 0.06;   // frame projection depth (toward camera)
+
+  const Y = 0.065;   // ground offset
+  const Z = 2.00;    // wall face
+
+  // Quoin block positions on each pier (decorative raised blocks)
+  const quoinY = [0.18, 0.46, 0.74, 1.00];
+
+  return (
+    <group position={[0, Y, Z]} name="stone-portal">
+      {/* Left pier */}
+      <mesh position={[-(OW / 2 + PW / 2), OH / 2, FD / 2]} castShadow receiveShadow>
+        <boxGeometry args={[PW, OH + LH, FD]} />
+        <meshStandardMaterial color={STONE} roughness={0.92} metalness={0} />
+      </mesh>
+      {/* Right pier */}
+      <mesh position={[(OW / 2 + PW / 2), OH / 2, FD / 2]} castShadow receiveShadow>
+        <boxGeometry args={[PW, OH + LH, FD]} />
+        <meshStandardMaterial color={STONE} roughness={0.92} metalness={0} />
+      </mesh>
+      {/* Lintel (straight header over the opening) */}
+      <mesh position={[0, OH + LH / 2, FD / 2]} castShadow receiveShadow>
+        <boxGeometry args={[OW + PW * 2 + 0.02, LH, FD + 0.02]} />
+        <meshStandardMaterial color={STONE2} roughness={0.85} metalness={0} />
+      </mesh>
+      {/* Quoin blocks on left pier */}
+      {quoinY.map((qy, i) => (
+        <mesh key={i} position={[-(OW / 2 + PW / 2), qy, FD + 0.008]} castShadow>
+          <boxGeometry args={[PW + 0.02, 0.09, 0.022]} />
+          <meshStandardMaterial color={STONE2} roughness={0.82} metalness={0} />
+        </mesh>
+      ))}
+      {/* Quoin blocks on right pier */}
+      {quoinY.map((qy, i) => (
+        <mesh key={i} position={[(OW / 2 + PW / 2), qy, FD + 0.008]} castShadow>
+          <boxGeometry args={[PW + 0.02, 0.09, 0.022]} />
+          <meshStandardMaterial color={STONE2} roughness={0.82} metalness={0} />
+        </mesh>
+      ))}
+      {/* Stone threshold (soleira) */}
+      <mesh position={[0, -0.03, FD * 1.5]} receiveShadow>
+        <boxGeometry args={[OW + PW * 2, 0.065, FD * 3]} />
+        <meshStandardMaterial color={STONE2} roughness={0.95} metalness={0} />
+      </mesh>
+    </group>
+  );
 }
+
+// ── 2. Static wooden gate ────────────────────────────────────────────────────
+// Two closed door leaves, fully procedural, no animation.
+// Each leaf: main panel + plank lines + cross-rails + metal hinges.
+
+function WoodenDoorLeaf({ side }: { side: -1 | 1 }) {
+  // Leaf dimensions
+  const W = 0.325;   // width — two leaves cover 0.65 of the 0.72 opening
+  const H = 1.44;    // height — 1/3 taller than original 1.08
+  const D = 0.055;   // depth (3D thickness)
+
+  // The doorway GLB has scaleZ=0.65, so the wall depth is 0.65 units.
+  // The doorway is centred at z=2.0, so its front face is at z = 2.0 + 0.65/2 = 2.325.
+  // Place the gate right at that front face so it is fully visible.
+  const CX = side * (W / 2 + 0.01);
+  const Z  = 2.30;   // front face of the doorway arch
+  const Y  = 0.065 + H / 2;
+
+  const WOOD_DARK  = '#4a3020';
+  const WOOD_MID   = '#5c3c22';
+  const WOOD_LIGHT = '#6b4828';
+  const IRON       = '#2a2825';
+
+  const plankX = [-W * 0.25, W * 0.25];
+  const railY  = [H * 0.18 - H / 2, H * 0.50 - H / 2, H * 0.82 - H / 2];
+
+  return (
+    <group position={[CX, Y, Z]} name={`door-leaf-${side < 0 ? 'left' : 'right'}`}>
+      {/* Main panel */}
+      <mesh castShadow receiveShadow>
+        <boxGeometry args={[W, H, D]} />
+        <meshStandardMaterial color={WOOD_DARK} roughness={0.88} metalness={0.04} />
+      </mesh>
+
+      {/* Vertical plank lines */}
+      {plankX.map((px, i) => (
+        <mesh key={i} position={[px, 0, D / 2 + 0.003]}>
+          <boxGeometry args={[0.012, H * 0.96, 0.008]} />
+          <meshStandardMaterial color={WOOD_MID} roughness={0.9} metalness={0} />
+        </mesh>
+      ))}
+
+      {/* Horizontal cross-rails */}
+      {railY.map((ry, i) => (
+        <mesh key={i} position={[0, ry, D / 2 + 0.006]} castShadow>
+          <boxGeometry args={[W * 0.92, 0.055, 0.014]} />
+          <meshStandardMaterial color={WOOD_LIGHT} roughness={0.84} metalness={0} />
+        </mesh>
+      ))}
+
+      {/* Metal hinge plates on outer edge */}
+      {[H * 0.22 - H / 2, H * 0.78 - H / 2].map((hy, i) => (
+        <mesh key={i} position={[side * W / 2, hy, 0]} castShadow>
+          <boxGeometry args={[0.018, 0.07, D + 0.008]} />
+          <meshStandardMaterial color={IRON} roughness={0.55} metalness={0.7} />
+        </mesh>
+      ))}
+
+      {/* Centre seam (closing edge) */}
+      <mesh position={[-side * W / 2, 0, D / 2 + 0.002]}>
+        <boxGeometry args={[0.008, H, 0.006]} />
+        <meshStandardMaterial color="#1a0f08" roughness={1} metalness={0} />
+      </mesh>
+    </group>
+  );
+}
+
+function CastleGate() {
+  return (
+    <group name="castle-gate">
+      <WoodenDoorLeaf side={-1} />
+      <WoodenDoorLeaf side={1}  />
+    </group>
+  );
+}
+
+// ── 3. Bridge ────────────────────────────────────────────────────────────────
+// Stone-slab bridge replacing the old flat path.  Width matches the opening,
+// stone slabs on top, low guard edges, stone abutments at each end.
+
+function GateBridge({ palette }: { palette: Palette }) {
+  const W      = 0.80;   // bridge width = slightly wider than door opening (0.72)
+  const LEN    = 4.20;   // total bridge length (same footprint as old path)
+  const Z_CTR  = 2.35;   // z centre
+  const Y_DECK = 0.062;  // deck surface Y
+  const SLAB_D = 0.05;   // deck thickness
+
+  const STONE  = palette.earth;
+  const STONE2 = '#a89880';
+
+  // Slab division lines (top face) — every ~0.4 units along Z
+  const slabCount = 10;
+
+  return (
+    <group name="gate-bridge">
+      {/* ── Deck slab ── */}
+      <mesh position={[0, Y_DECK - SLAB_D / 2, Z_CTR]} castShadow receiveShadow>
+        <boxGeometry args={[W, SLAB_D, LEN]} />
+        <meshStandardMaterial color={STONE} roughness={0.96} metalness={0} />
+      </mesh>
+
+      {/* ── Slab joint lines (thin dark strips across the bridge top) ── */}
+      {Array.from({ length: slabCount - 1 }, (_, i) => {
+        const z = Z_CTR - LEN / 2 + (i + 1) * (LEN / slabCount);
+        return (
+          <mesh key={i} position={[0, Y_DECK + 0.001, z]}>
+            <boxGeometry args={[W, 0.004, 0.012]} />
+            <meshStandardMaterial color="#3a2e22" roughness={1} metalness={0} />
+          </mesh>
+        );
+      })}
+
+      {/* ── Low guard edges (left and right) ── */}
+      {([-1, 1] as const).map(side => (
+        <mesh key={side} position={[side * (W / 2 + 0.025), Y_DECK + 0.04, Z_CTR]} castShadow receiveShadow>
+          <boxGeometry args={[0.05, 0.08, LEN]} />
+          <meshStandardMaterial color={STONE2} roughness={0.9} metalness={0} />
+        </mesh>
+      ))}
+
+      {/* ── Stone abutment at castle end (connects bridge to threshold) ── */}
+      <mesh position={[0, Y_DECK - 0.02, 2.06]} castShadow receiveShadow>
+        <boxGeometry args={[W + 0.14, 0.10, 0.18]} />
+        <meshStandardMaterial color={STONE2} roughness={0.88} metalness={0} />
+      </mesh>
+
+      {/* ── Stone abutment at far end ── */}
+      <mesh position={[0, Y_DECK - 0.02, 4.44]} castShadow receiveShadow>
+        <boxGeometry args={[W + 0.14, 0.10, 0.18]} />
+        <meshStandardMaterial color={STONE2} roughness={0.88} metalness={0} />
+      </mesh>
+    </group>
+  );
+}
+
+
 
 function Castle({ palette, reducedMotion, entering, onReady }: { palette: Palette; reducedMotion: boolean; entering: boolean; onReady: () => void }) {
   useEffect(() => { onReady(); }, [onReady]);
@@ -146,7 +311,9 @@ function Castle({ palette, reducedMotion, entering, onReady }: { palette: Palett
     </group>)}
     <Piece url={doorway.url} position={[-.375, .06, 2]} scale={[1.5, 1.3, .65]}/>
     <Piece url={doorway.url} position={[.375, .06, 2]} scale={[1.5, 1.3, .65]} rotation={Math.PI}/>
-    <CastleGate entering={entering} reducedMotion={reducedMotion}/>
+    <StonePortal palette={palette}/>
+    <GateBridge palette={palette}/>
+    <CastleGate />
     <group position={[0, .06, -.65]}>
       <Piece url={keepBase.url} position={[0, 0, 0]} scale={[1.7, 1.3, 1.5]}/>
       <Piece url={keepMid.url} position={[0, 1.3, 0]} scale={[1.7, 1.25, 1.5]}/>

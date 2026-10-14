@@ -95,7 +95,7 @@ export function useDraggable({
       if (!dragRef.current.active) return;
       const dx = event.clientX - dragRef.current.startX;
       const dy = event.clientY - dragRef.current.startY;
-      setPosition((prev) => ({
+      setPosition((_prev) => ({
         x: dragRef.current.originX + dx,
         y: dragRef.current.originY + dy,
       }));

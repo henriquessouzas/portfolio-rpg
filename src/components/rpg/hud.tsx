@@ -1,6 +1,4 @@
 import { Hero } from './art';
-import { ThemeToggle } from './theme-toggle';
-import { LangToggle } from './lang-toggle';
 import { useLang } from '@/hooks/use-lang';
 
 export function Hud({ visited }: { visited: number }) {
@@ -16,10 +14,6 @@ export function Hud({ visited }: { visited: number }) {
         >
           {t.roomsVisited(visited)}
         </span>
-      </div>
-      <div style={{ display: 'flex', gap: 4 }}>
-        <LangToggle />
-        <ThemeToggle />
       </div>
     </div>
   );
