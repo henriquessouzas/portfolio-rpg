@@ -475,6 +475,20 @@
 .site-footer > span:last-child > span {
   margin-left: 12px;
 }
+.site-footer-design-link {
+  font: 11px/1 var(--font-pixel);
+  color: var(--muted-foreground);
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.site-footer-design-link:hover,
+.site-footer-design-link:focus-visible {
+  color: var(--foreground);
+  opacity: 1;
+  outline-offset: 4px;
+}
 .fill-gold {
   fill: var(--gold);
 }

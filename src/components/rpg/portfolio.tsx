@@ -826,6 +826,13 @@ function PortfolioInner() {
         <span>
           HENRIQUE SANTOS DE SOUZA <span>{t.copyright}</span>
         </span>
+        <a
+          href="/design"
+          className="site-footer-design-link"
+          aria-label="Design System"
+        >
+          Design
+        </a>
       </footer>
       <span className="sr-only" role="status">
         {announcement}
